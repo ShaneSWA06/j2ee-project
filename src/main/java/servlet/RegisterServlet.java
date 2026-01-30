@@ -89,7 +89,7 @@ public class RegisterServlet extends HttpServlet {
                 "VALUES (?, ?, ?, 'CUSTOMER', ?, ?, ?, ?, ?)");
             ps.setString(1, username);
             ps.setString(2, email);
-            ps.setString(3, password);
+            ps.setString(3, util.PasswordUtil.hashPassword(password));
             ps.setString(4, name);
             ps.setString(5, phone);
             ps.setString(6, relationship);
