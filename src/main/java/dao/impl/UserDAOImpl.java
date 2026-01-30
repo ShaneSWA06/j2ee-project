@@ -88,18 +88,24 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User validateLogin(String usernameOrEmail, String password) throws SQLException {
         String sql = "SELECT user_id, username, email, name, password, role, created_at " +
-                     "FROM app_user WHERE (username = ? OR email = ?) AND password = ?";
+                     "FROM app_user WHERE (username = ? OR email = ?)";
         
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             
             ps.setString(1, usernameOrEmail);
             ps.setString(2, usernameOrEmail);
-            ps.setString(3, password);
             
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return extractUserFromResultSet(rs);
+                    User user = extractUserFromResultSet(rs);
+                    String storedPassword = user.getPassword();
+                    
+                    // Check hashed password (new users) OR plain text (existing users)
+                    if (util.PasswordUtil.checkPassword(password, storedPassword) || 
+                        password.equals(storedPassword)) {
+                        return user;
+                    }
                 }
             }
         }
@@ -116,7 +122,7 @@ public class UserDAOImpl implements UserDAO {
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getName());
-            ps.setString(4, user.getPassword());
+            ps.setString(4, util.PasswordUtil.hashPassword(user.getPassword()));
             ps.setString(5, user.getRole());
             
             int rowsAffected = ps.executeUpdate();

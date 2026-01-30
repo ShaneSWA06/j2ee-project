@@ -88,7 +88,7 @@ public class ResetPasswordServlet extends HttpServlet {
                 // Update password and clear reset token
                 ps = conn.prepareStatement(
                     "UPDATE app_user SET password = ?, reset_token = NULL WHERE user_id = ?");
-                ps.setString(1, newPassword);
+                ps.setString(1, util.PasswordUtil.hashPassword(newPassword));
                 ps.setInt(2, userId);
                 int result = ps.executeUpdate();
 
