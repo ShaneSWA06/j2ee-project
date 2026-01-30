@@ -1,0 +1,126 @@
+package model;
+
+import java.io.Serializable;
+
+/**
+ * User represents a user in the app_user table
+ * Can be either an ADMIN or CUSTOMER based on role
+ */
+public class User implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private int userId;
+    private String username;
+    private String email;
+    private String name;
+    private String password;
+    private String role; // "ADMIN" or "CUSTOMER"
+    private String resetToken;
+    private java.sql.Timestamp resetTokenExpiry;
+    private java.sql.Timestamp createdAt;
+
+    // Constructors
+    public User() {
+    }
+
+    public User(int userId, String username, String email, String name, String role) {
+        this.userId = userId;
+        this.username = username;
+        this.email = email;
+        this.name = name;
+        this.role = role;
+    }
+
+    // Getters and Setters
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public java.sql.Timestamp getResetTokenExpiry() {
+        return resetTokenExpiry;
+    }
+
+    public void setResetTokenExpiry(java.sql.Timestamp resetTokenExpiry) {
+        this.resetTokenExpiry = resetTokenExpiry;
+    }
+
+    public java.sql.Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(java.sql.Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    // Helper methods
+    public boolean isAdmin() {
+        return "ADMIN".equals(role);
+    }
+
+    public boolean isCustomer() {
+        return "CUSTOMER".equals(role);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                ", role='" + role + '\'' +
+                '}';
+    }
+}

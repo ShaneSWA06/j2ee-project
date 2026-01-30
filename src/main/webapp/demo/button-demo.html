@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enhanced Button Theme Demo - SilverCare</title>
+    <link rel="stylesheet" href="../assets/css/app.css" />
+    <style>
+      .demo-container {
+        max-width: 900px;
+        margin: 4rem auto;
+        padding: 3rem;
+        background: var(--bg-card);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .demo-section {
+        margin-bottom: 3rem;
+      }
+
+      .demo-section h2 {
+        color: var(--coral);
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+      }
+
+      .button-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .button-showcase {
+        text-align: center;
+        padding: 1.5rem;
+        background: var(--bg-soft);
+        border-radius: var(--radius);
+      }
+
+      .button-showcase p {
+        margin-top: 0.75rem;
+        font-size: 0.875rem;
+        color: var(--text-soft);
+        font-weight: 600;
+      }
+
+      .nav-demo {
+        background: var(--bg-card);
+        padding: 1.5rem;
+        border-radius: var(--radius);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .feature-list {
+        background: var(--cream);
+        padding: 1.5rem;
+        border-radius: var(--radius);
+        margin-top: 2rem;
+      }
+
+      .feature-list h3 {
+        color: var(--text-dark);
+        margin-bottom: 1rem;
+        font-size: 1.125rem;
+      }
+
+      .feature-list ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .feature-list li {
+        padding: 0.5rem 0;
+        color: var(--text-body);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .feature-list li::before {
+        content: "✨";
+        font-size: 1.25rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="demo-container">
+      <div style="text-align: center; margin-bottom: 3rem">
+        <h1 style="color: var(--coral); margin-bottom: 0.5rem">
+          🎨 Enhanced Button Theme
+        </h1>
+        <p style="color: var(--text-soft); font-size: 1.125rem">
+          Modern, Premium & Eye-Catching Designs
+        </p>
+      </div>
+
+      <!-- Primary Buttons -->
+      <div class="demo-section">
+        <h2>Primary Buttons (Login & Signup)</h2>
+        <div class="button-grid">
+          <div class="button-showcase">
+            <button class="btn btn-primary">Login</button>
+            <p>Standard Primary</p>
+          </div>
+          <div class="button-showcase">
+            <button class="btn btn-primary btn-lg">Create Account</button>
+            <p>Large Primary</p>
+          </div>
+          <div class="button-showcase">
+            <button class="btn btn-primary btn-sm">Sign In</button>
+            <p>Small Primary</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Secondary Buttons -->
+      <div class="demo-section">
+        <h2>Secondary Buttons</h2>
+        <div class="button-grid">
+          <div class="button-showcase">
+            <button class="btn btn-secondary">Learn More</button>
+            <p>Standard Secondary</p>
+          </div>
+          <div class="button-showcase">
+            <button class="btn btn-secondary btn-lg">Get Started</button>
+            <p>Large Secondary</p>
+          </div>
+          <div class="button-showcase">
+            <button class="btn btn-secondary btn-sm">View Details</button>
+            <p>Small Secondary</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Outline Buttons -->
+      <div class="demo-section">
+        <h2>Outline Buttons</h2>
+        <div class="button-grid">
+          <div class="button-showcase">
+            <button class="btn btn-outline">Explore</button>
+            <p>Standard Outline</p>
+          </div>
+          <div class="button-showcase">
+            <button class="btn btn-outline btn-lg">Join Now</button>
+            <p>Large Outline</p>
+          </div>
+          <div class="button-showcase">
+            <button class="btn btn-outline btn-sm">More Info</button>
+            <p>Small Outline</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navbar Buttons -->
+      <div class="demo-section">
+        <h2>Navbar Authentication Buttons</h2>
+        <div class="nav-demo">
+          <a href="#" class="nav-btn nav-btn-signin">Sign In</a>
+          <a href="#" class="nav-btn nav-btn-signup">Sign Up</a>
+        </div>
+      </div>
+
+      <!-- Features List -->
+      <div class="feature-list">
+        <h3>🚀 New Button Features</h3>
+        <ul>
+          <li>Animated gradient backgrounds with smooth color transitions</li>
+          <li>Shimmer effect on hover for premium feel</li>
+          <li>Enhanced shadows with coral tint for depth</li>
+          <li>Smooth scale and lift animations on interaction</li>
+          <li>Fill-from-left animation on outline buttons</li>
+          <li>Cubic bezier easing for natural motion</li>
+          <li>Active state feedback for better UX</li>
+          <li>Consistent theme across all button variants</li>
+        </ul>
+      </div>
+
+      <!-- Interactive Demo -->
+      <div class="demo-section" style="margin-top: 3rem">
+        <h2>Try It Yourself!</h2>
+        <div
+          style="
+            background: var(--bg-soft);
+            padding: 2rem;
+            border-radius: var(--radius);
+            text-align: center;
+          "
+        >
+          <p style="margin-bottom: 1.5rem; color: var(--text-body)">
+            Hover over any button to see the smooth animations and gradient
+            effects in action!
+          </p>
+          <div
+            style="
+              display: flex;
+              gap: 1rem;
+              justify-content: center;
+              flex-wrap: wrap;
+            "
+          >
+            <button class="btn btn-primary btn-lg">Login Now</button>
+            <button class="btn btn-outline btn-lg">Sign Up Free</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Note -->
+      <div
+        style="
+          text-align: center;
+          margin-top: 3rem;
+          padding-top: 2rem;
+          border-top: 1px solid rgba(0, 0, 0, 0.06);
+        "
+      >
+        <p style="color: var(--text-soft); font-size: 0.875rem">
+          All buttons now feature premium gradients, smooth animations, and
+          modern hover effects! 🎉
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

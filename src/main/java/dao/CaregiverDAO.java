@@ -1,0 +1,47 @@
+package dao;
+
+import model.Caregiver;
+import java.sql.SQLException;
+import java.util.List;
+
+/**
+ * CaregiverDAO - Data Access Object interface for Caregiver operations
+ */
+public interface CaregiverDAO {
+    
+    /**
+     * Get caregiver by ID
+     */
+    Caregiver getCaregiverById(int caregiverId) throws SQLException;
+    
+    /**
+     * Get all caregivers
+     */
+    List<Caregiver> getAllCaregivers() throws SQLException;
+    
+    /**
+     * Get only available caregivers
+     */
+    List<Caregiver> getAvailableCaregivers() throws SQLException;
+    
+    /**
+     * Create a new caregiver
+     * @return the created caregiver with generated ID
+     */
+    Caregiver createCaregiver(Caregiver caregiver) throws SQLException;
+    
+    /**
+     * Update existing caregiver
+     */
+    boolean updateCaregiver(Caregiver caregiver) throws SQLException;
+    
+    /**
+     * Delete caregiver by ID
+     */
+    boolean deleteCaregiver(int caregiverId) throws SQLException;
+    
+    /**
+     * Search caregivers by query string
+     */
+    List<Caregiver> searchCaregivers(String query) throws SQLException;
+}
