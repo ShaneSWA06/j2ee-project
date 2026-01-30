@@ -1,6 +1,0 @@
-# Ignore JSP files - they break with Prettier formatting
-*.jsp
-
-# Ignore other web files if needed
-# *.html
-# *.css
