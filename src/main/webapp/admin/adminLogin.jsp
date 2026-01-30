@@ -22,7 +22,7 @@ String errorMsg = request.getParameter("err");
     </div>
   <% } %>
 
-  <form method="post" action="${pageContext.request.contextPath}/admin/loginProcess.jsp">
+  <form method="post" action="${pageContext.request.contextPath}/LoginServlet">
     <div class="card"><label>Username</label><input type="text" name="username" required style="width:100%"/></div>
     <div class="card"><label>Password</label><input type="password" name="password" required style="width:100%"/></div>
     <p style="margin-top:12px"><button class="btn btn-primary" type="submit">Login</button></p>
