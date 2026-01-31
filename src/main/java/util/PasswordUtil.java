@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import java.util.Base64;
 
 public class PasswordUtil {
-    
+
     public static String hashPassword(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -14,7 +14,7 @@ public class PasswordUtil {
             throw new RuntimeException("Error hashing password", e);
         }
     }
-    
+
     public static boolean checkPassword(String plainPassword, String storedHash) {
         if (storedHash == null || plainPassword == null) {
             return false;

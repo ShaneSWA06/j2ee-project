@@ -1,14 +1,14 @@
 package db;
 
 import java.sql.Connection;
-import java.sql.Statement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class PaymentSchemaInit {
     public static void main(String[] args) {
         try (Connection conn = DBUtil.getConnection();
              Statement stmt = conn.createStatement()) {
-            
+
             System.out.println("Initializing payment schema...");
 
             // Create payment table
@@ -33,7 +33,7 @@ public class PaymentSchemaInit {
                     System.out.println("Note: " + e.getMessage());
                 }
             }
-            
+
             System.out.println("Payment schema initialized successfully.");
 
         } catch (SQLException e) {

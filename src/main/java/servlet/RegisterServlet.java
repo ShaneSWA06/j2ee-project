@@ -1,12 +1,5 @@
 package servlet;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Cookie;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,6 +7,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import db.DBUtil;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * RegisterServlet handles customer registration
@@ -120,9 +119,15 @@ public class RegisterServlet extends HttpServlet {
                 "/customer/registerCustomer.jsp?err=" + e.getMessage());
         } finally {
             // Clean up resources
-            if (rs != null) try { rs.close(); } catch (SQLException ignore) {}
-            if (ps != null) try { ps.close(); } catch (SQLException ignore) {}
-            if (conn != null) try { conn.close(); } catch (SQLException ignore) {}
+            if (rs != null) {
+				try { rs.close(); } catch (SQLException ignore) {}
+			}
+            if (ps != null) {
+				try { ps.close(); } catch (SQLException ignore) {}
+			}
+            if (conn != null) {
+				try { conn.close(); } catch (SQLException ignore) {}
+			}
         }
     }
 }

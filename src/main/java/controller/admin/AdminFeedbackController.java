@@ -1,21 +1,20 @@
 package controller.admin;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
+import dao.CaregiverDAO;
+import dao.DAOFactory;
+import dao.FeedbackDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
-
-import dao.FeedbackDAO;
-import dao.CaregiverDAO;
-import dao.DAOFactory;
-import model.Feedback;
 import model.Caregiver;
+import model.Feedback;
 
 /**
  * AdminFeedbackController - Handles feedback management for admins
@@ -35,14 +34,16 @@ public class AdminFeedbackController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         if (!isAdminLoggedIn(request)) {
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp?err=unauthorised");
             return;
         }
 
         String action = request.getParameter("action");
-        if (action == null) action = "list";
+        if (action == null) {
+			action = "list";
+		}
 
         try {
             switch (action) {
@@ -67,14 +68,16 @@ public class AdminFeedbackController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         if (!isAdminLoggedIn(request)) {
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp?err=unauthorised");
             return;
         }
 
         String action = request.getParameter("action");
-        if (action == null) action = "list";
+        if (action == null) {
+			action = "list";
+		}
 
         try {
             switch (action) {
@@ -95,7 +98,7 @@ public class AdminFeedbackController extends HttpServlet {
 
     private void listFeedback(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        
+
         List<Feedback> feedbackList = feedbackDAO.getAllFeedback();
         request.setAttribute("feedbackList", feedbackList);
         request.getRequestDispatcher("/admin/adminFeedbackList.jsp").forward(request, response);
@@ -103,7 +106,7 @@ public class AdminFeedbackController extends HttpServlet {
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        
+
         String feedbackIdParam = request.getParameter("feedbackId");
         if (feedbackIdParam == null || feedbackIdParam.trim().isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/admin/feedback?err=missing_id");
@@ -112,7 +115,7 @@ public class AdminFeedbackController extends HttpServlet {
 
         int feedbackId = Integer.parseInt(feedbackIdParam);
         Feedback feedback = feedbackDAO.getFeedbackById(feedbackId);
-        
+
         if (feedback == null) {
             response.sendRedirect(request.getContextPath() + "/admin/feedback?err=not_found");
             return;
@@ -126,7 +129,7 @@ public class AdminFeedbackController extends HttpServlet {
 
     private void showDeleteConfirmation(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        
+
         String feedbackIdParam = request.getParameter("feedbackId");
         if (feedbackIdParam == null || feedbackIdParam.trim().isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/admin/feedback?err=missing_id");
@@ -135,7 +138,7 @@ public class AdminFeedbackController extends HttpServlet {
 
         int feedbackId = Integer.parseInt(feedbackIdParam);
         Feedback feedback = feedbackDAO.getFeedbackById(feedbackId);
-        
+
         if (feedback == null) {
             response.sendRedirect(request.getContextPath() + "/admin/feedback?err=not_found");
             return;
@@ -147,7 +150,7 @@ public class AdminFeedbackController extends HttpServlet {
 
     private void updateFeedback(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        
+
         String feedbackIdStr = request.getParameter("feedbackId");
         String ratingStr = request.getParameter("rating");
         String caregiverIdStr = request.getParameter("caregiver_id");
@@ -162,11 +165,11 @@ public class AdminFeedbackController extends HttpServlet {
         Feedback feedback = new Feedback();
         feedback.setFeedbackId(feedbackId);
         feedback.setRating(Integer.parseInt(ratingStr));
-        
+
         if (caregiverIdStr != null && !caregiverIdStr.trim().isEmpty()) {
             feedback.setCaregiverId(Integer.parseInt(caregiverIdStr));
         }
-        
+
         feedback.setComment(comment != null ? comment.trim() : "");
 
         boolean updated = feedbackDAO.updateFeedback(feedback);
@@ -180,7 +183,7 @@ public class AdminFeedbackController extends HttpServlet {
 
     private void deleteFeedback(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        
+
         String feedbackIdStr = request.getParameter("feedbackId");
 
         if (feedbackIdStr == null || feedbackIdStr.trim().isEmpty()) {
@@ -200,7 +203,9 @@ public class AdminFeedbackController extends HttpServlet {
 
     private boolean isAdminLoggedIn(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if (session == null) return false;
+        if (session == null) {
+			return false;
+		}
         Integer userId = (Integer) session.getAttribute("sessUserId");
         String role = (String) session.getAttribute("sessUserRole");
         return userId != null && "ADMIN".equals(role);

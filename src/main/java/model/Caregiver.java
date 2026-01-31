@@ -15,7 +15,7 @@ public class Caregiver implements Serializable {
     private String email;
     private boolean isAvailable;
     private java.sql.Timestamp createdAt;
-    
+
     // Extended fields
     private String qualifications;
     private String specialties;
@@ -26,7 +26,7 @@ public class Caregiver implements Serializable {
     public Caregiver() {
     }
 
-    public Caregiver(int caregiverId, String name, String specialization, 
+    public Caregiver(int caregiverId, String name, String specialization,
                      String phone, String email, boolean isAvailable) {
         this.caregiverId = caregiverId;
         this.name = name;

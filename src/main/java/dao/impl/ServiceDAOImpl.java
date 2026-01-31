@@ -1,10 +1,15 @@
 package dao.impl;
 
-import dao.ServiceDAO;
-import db.DBUtil;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import dao.ServiceDAO;
+import db.DBUtil;
 import model.Service;
 
 /**
@@ -19,10 +24,10 @@ public class ServiceDAOImpl implements ServiceDAO {
                      "FROM service s " +
                      "LEFT JOIN service_category c ON s.category_id = c.category_id " +
                      "WHERE s.service_id = ?";
-        
+
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+
             ps.setInt(1, serviceId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -62,10 +67,10 @@ public class ServiceDAOImpl implements ServiceDAO {
                      "LEFT JOIN service_category c ON s.category_id = c.category_id " +
                      "WHERE s.category_id = ? AND s.is_active = TRUE " +
                      "ORDER BY s.service_id ASC";
-        
+
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+
             ps.setInt(1, categoryId);
             try (ResultSet rs = ps.executeQuery()) {
                 List<Service> services = new ArrayList<>();
@@ -81,19 +86,19 @@ public class ServiceDAOImpl implements ServiceDAO {
     public Service createService(Service service) throws SQLException {
         String sql = "INSERT INTO service (service_name, description, base_price, duration_minutes, category_id, is_active) " +
                      "VALUES (?, ?, ?, ?, ?, ?)";
-        
+
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            
+
             ps.setString(1, service.getServiceName());
             ps.setString(2, service.getDescription());
             ps.setDouble(3, service.getBasePrice());
             ps.setInt(4, service.getDurationMinutes());
             ps.setInt(5, service.getCategoryId());
             ps.setBoolean(6, service.isActive());
-            
+
             int rowsAffected = ps.executeUpdate();
-            
+
             if (rowsAffected > 0) {
                 try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
@@ -110,10 +115,10 @@ public class ServiceDAOImpl implements ServiceDAO {
     public boolean updateService(Service service) throws SQLException {
         String sql = "UPDATE service SET service_name = ?, description = ?, base_price = ?, " +
                      "duration_minutes = ?, category_id = ?, is_active = ? WHERE service_id = ?";
-        
+
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+
             ps.setString(1, service.getServiceName());
             ps.setString(2, service.getDescription());
             ps.setDouble(3, service.getBasePrice());
@@ -121,7 +126,7 @@ public class ServiceDAOImpl implements ServiceDAO {
             ps.setInt(5, service.getCategoryId());
             ps.setBoolean(6, service.isActive());
             ps.setInt(7, service.getServiceId());
-            
+
             return ps.executeUpdate() > 0;
         }
     }
@@ -129,10 +134,10 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public boolean deleteService(int serviceId) throws SQLException {
         String sql = "DELETE FROM service WHERE service_id = ?";
-        
+
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+
             ps.setInt(1, serviceId);
             return ps.executeUpdate() > 0;
         }
@@ -143,11 +148,11 @@ public class ServiceDAOImpl implements ServiceDAO {
      */
     private List<Service> executeServiceQuery(String sql) throws SQLException {
         List<Service> services = new ArrayList<>();
-        
+
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            
+
             while (rs.next()) {
                 services.add(extractServiceFromResultSet(rs));
             }

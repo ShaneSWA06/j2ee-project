@@ -1,12 +1,5 @@
 package servlet;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,6 +14,12 @@ import com.stripe.model.PaymentIntent;
 import dao.DAOFactory;
 import dao.PaymentDAO;
 import db.DBUtil;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.CartItem;
 import model.Payment;
 import service.StripeService;
@@ -103,32 +102,34 @@ public class CheckoutServlet extends HttpServlet {
                 ps.setString(6, item.getNotes());
 
                 ps.executeUpdate();
-                
+
                 try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
                         bookingIds.add(rs.getInt(1));
                     }
                 }
-                
+
                 totalAmount += item.getBasePrice();
             }
-            
+
             // Commit bookings first
             conn.commit();
-            
+
             // Calculate Total with GST (9%)
             double gstRate = 0.09;
             double gstAmount = totalAmount * gstRate;
             double grandTotal = totalAmount + gstAmount;
-            long amountCents = (long) Math.round(grandTotal * 100);
+            long amountCents = Math.round(grandTotal * 100);
 
             // Create Stripe PaymentIntent
             try {
                 String bookingIdsStr = bookingIds.toString();
-                if (bookingIdsStr.length() > 500) bookingIdsStr = bookingIdsStr.substring(0, 497) + "...";
-                
+                if (bookingIdsStr.length() > 500) {
+					bookingIdsStr = bookingIdsStr.substring(0, 497) + "...";
+				}
+
                 PaymentIntent intent = stripeService.createPaymentIntent(amountCents, "sgd", bookingIdsStr);
-                
+
                 // Create local Payment record
                 Payment payment = new Payment();
                 if (!bookingIds.isEmpty()) {
@@ -139,15 +140,15 @@ public class CheckoutServlet extends HttpServlet {
                 payment.setPaymentMethod("stripe");
                 payment.setTransactionId(intent.getId());
                 payment.setStatus("Pending");
-                
+
                 paymentDAO.createPayment(payment);
-                
+
                 // Set attributes for Payment Page
                 request.setAttribute("clientSecret", intent.getClientSecret());
                 request.setAttribute("amount", grandTotal);
             request.setAttribute("subtotal", totalAmount);
             request.setAttribute("gst", gstAmount);
-            
+
             // Load Stripe Public Key from properties
             String stripePublicKey = "pk_test_PLACEHOLDER";
             try {
@@ -162,10 +163,10 @@ public class CheckoutServlet extends HttpServlet {
                 e.printStackTrace();
             }
             request.setAttribute("stripePublicKey", stripePublicKey);
-            
+
             // Forward to payment page
                 request.getRequestDispatcher("/customer/payment.jsp").forward(request, response);
-                
+
             } catch (Exception e) {
                 e.printStackTrace();
                 response.sendRedirect(request.getContextPath() + "/customer/viewCart.jsp?error=payment_init_failed&msg=" + e.getMessage());
@@ -178,7 +179,9 @@ public class CheckoutServlet extends HttpServlet {
             e.printStackTrace();
             response.sendRedirect(request.getContextPath() + "/customer/viewCart.jsp?error=" + e.getMessage());
         } finally {
-            if (ps != null) try { ps.close(); } catch (SQLException ignore) {}
+            if (ps != null) {
+				try { ps.close(); } catch (SQLException ignore) {}
+			}
             if (conn != null) {
                 try { conn.setAutoCommit(true); conn.close(); } catch (SQLException ignore) {}
             }

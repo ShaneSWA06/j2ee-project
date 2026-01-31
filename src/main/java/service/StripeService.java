@@ -20,7 +20,7 @@ public class StripeService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         if (API_KEY != null) {
             Stripe.apiKey = API_KEY;
         } else {

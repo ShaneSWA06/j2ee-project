@@ -1,17 +1,17 @@
 package controller.admin;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
 import dao.DAOFactory;
 import dao.PaymentDAO;
-import model.Payment;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
+import model.Payment;
 
 @WebServlet("/admin/payments")
 public class AdminPaymentController extends HttpServlet {
@@ -26,7 +26,7 @@ public class AdminPaymentController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         try {
             List<Payment> payments = paymentDAO.getAllPayments();
             request.setAttribute("payments", payments);

@@ -1,12 +1,5 @@
 package servlet;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,6 +7,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import db.DBUtil;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  * ResetPasswordServlet verifies the reset code and updates the password
@@ -125,9 +124,15 @@ public class ResetPasswordServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() +
                 "/auth/resetPassword.jsp?err=" + e.getMessage());
         } finally {
-            if (rs != null) try { rs.close(); } catch (SQLException ignore) {}
-            if (ps != null) try { ps.close(); } catch (SQLException ignore) {}
-            if (conn != null) try { conn.close(); } catch (SQLException ignore) {}
+            if (rs != null) {
+				try { rs.close(); } catch (SQLException ignore) {}
+			}
+            if (ps != null) {
+				try { ps.close(); } catch (SQLException ignore) {}
+			}
+            if (conn != null) {
+				try { conn.close(); } catch (SQLException ignore) {}
+			}
         }
     }
 }

@@ -1,18 +1,17 @@
 package controller.admin;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
+import dao.DAOFactory;
+import dao.UserDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
-
-import dao.UserDAO;
-import dao.DAOFactory;
 import model.User;
 
 /**
@@ -31,14 +30,16 @@ public class AdminClientController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         if (!isAdminLoggedIn(request)) {
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp?err=unauthorised");
             return;
         }
 
         String action = request.getParameter("action");
-        if (action == null) action = "list";
+        if (action == null) {
+			action = "list";
+		}
 
         try {
             switch (action) {
@@ -63,14 +64,16 @@ public class AdminClientController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         if (!isAdminLoggedIn(request)) {
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp?err=unauthorised");
             return;
         }
 
         String action = request.getParameter("action");
-        if (action == null) action = "list";
+        if (action == null) {
+			action = "list";
+		}
 
         try {
             switch (action) {
@@ -91,7 +94,7 @@ public class AdminClientController extends HttpServlet {
 
     private void listClients(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        
+
         List<User> clients = userDAO.getUsersByRole("CUSTOMER");
         request.setAttribute("clients", clients);
         request.getRequestDispatcher("/admin/adminClientList.jsp").forward(request, response);
@@ -99,7 +102,7 @@ public class AdminClientController extends HttpServlet {
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        
+
         String userIdParam = request.getParameter("userId");
         if (userIdParam == null || userIdParam.trim().isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/admin/client?err=missing_id");
@@ -108,7 +111,7 @@ public class AdminClientController extends HttpServlet {
 
         int userId = Integer.parseInt(userIdParam);
         User user = userDAO.getUserById(userId);
-        
+
         if (user == null || !"CUSTOMER".equals(user.getRole())) {
             response.sendRedirect(request.getContextPath() + "/admin/client?err=not_found");
             return;
@@ -120,7 +123,7 @@ public class AdminClientController extends HttpServlet {
 
     private void showDeleteConfirmation(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        
+
         String userIdParam = request.getParameter("userId");
         if (userIdParam == null || userIdParam.trim().isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/admin/client?err=missing_id");
@@ -129,7 +132,7 @@ public class AdminClientController extends HttpServlet {
 
         int userId = Integer.parseInt(userIdParam);
         User user = userDAO.getUserById(userId);
-        
+
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/admin/client?err=not_found");
             return;
@@ -141,7 +144,7 @@ public class AdminClientController extends HttpServlet {
 
     private void updateClient(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        
+
         String userIdStr = request.getParameter("userId");
         String username = request.getParameter("username");
         String email = request.getParameter("email");
@@ -171,7 +174,7 @@ public class AdminClientController extends HttpServlet {
 
     private void deleteClient(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        
+
         String userIdStr = request.getParameter("userId");
 
         if (userIdStr == null || userIdStr.trim().isEmpty()) {
@@ -191,7 +194,9 @@ public class AdminClientController extends HttpServlet {
 
     private boolean isAdminLoggedIn(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if (session == null) return false;
+        if (session == null) {
+			return false;
+		}
         Integer userId = (Integer) session.getAttribute("sessUserId");
         String role = (String) session.getAttribute("sessUserRole");
         return userId != null && "ADMIN".equals(role);

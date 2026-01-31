@@ -1,18 +1,18 @@
 package servlet.pub;
 
+import java.io.IOException;
+import java.util.List;
+
+import dao.CategoryDAO;
 import dao.DAOFactory;
 import dao.ServiceDAO;
-import dao.CategoryDAO;
-import model.Service;
-import model.Category;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
+import model.Category;
+import model.Service;
 
 @WebServlet("/mvc/public/serviceDetails")
 public class ServiceDetailsServlet extends HttpServlet {

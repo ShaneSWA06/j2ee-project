@@ -1,12 +1,17 @@
 package dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
+
 import dao.CaregiverDAO;
 import db.DBUtil;
 import model.Caregiver;
-
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * CaregiverDAOImpl - Implementation of CaregiverDAO using JDBC
@@ -17,10 +22,10 @@ public class CaregiverDAOImpl implements CaregiverDAO {
     public Caregiver getCaregiverById(int caregiverId) throws SQLException {
         String sql = "SELECT caregiver_id, name, qualifications, specialties, experience_years, bio, phone, email, is_active, created_at " +
                      "FROM caregiver WHERE caregiver_id = ?";
-        
+
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+
             ps.setInt(1, caregiverId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -35,11 +40,11 @@ public class CaregiverDAOImpl implements CaregiverDAO {
     public List<Caregiver> getAllCaregivers() throws SQLException {
         String sql = "SELECT caregiver_id, name, qualifications, specialties, experience_years, bio, phone, email, is_active, created_at " +
                      "FROM caregiver ORDER BY caregiver_id ASC";
-        
+
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            
+
             List<Caregiver> caregivers = new ArrayList<>();
             while (rs.next()) {
                 caregivers.add(extractCaregiverFromResultSet(rs));
@@ -52,11 +57,11 @@ public class CaregiverDAOImpl implements CaregiverDAO {
     public List<Caregiver> getAvailableCaregivers() throws SQLException {
         String sql = "SELECT caregiver_id, name, qualifications, specialties, experience_years, bio, phone, email, is_active, created_at " +
                      "FROM caregiver WHERE is_active = TRUE ORDER BY caregiver_id ASC";
-        
+
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            
+
             List<Caregiver> caregivers = new ArrayList<>();
             while (rs.next()) {
                 caregivers.add(extractCaregiverFromResultSet(rs));
@@ -83,7 +88,7 @@ public class CaregiverDAOImpl implements CaregiverDAO {
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql.toString())) {
-            
+
             if (query != null && !query.trim().isEmpty()) {
                 String searchPattern = "%" + query.trim() + "%";
                 ps.setString(1, searchPattern);
@@ -106,10 +111,10 @@ public class CaregiverDAOImpl implements CaregiverDAO {
     public Caregiver createCaregiver(Caregiver caregiver) throws SQLException {
         String sql = "INSERT INTO caregiver (name, qualifications, specialties, experience_years, bio, phone, email, is_active) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        
+
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            
+
             ps.setString(1, caregiver.getName());
             ps.setString(2, caregiver.getQualifications());
             ps.setString(3, caregiver.getSpecialties());
@@ -122,9 +127,9 @@ public class CaregiverDAOImpl implements CaregiverDAO {
             ps.setString(6, caregiver.getPhone());
             ps.setString(7, caregiver.getEmail());
             ps.setBoolean(8, caregiver.isAvailable());
-            
+
             int rowsAffected = ps.executeUpdate();
-            
+
             if (rowsAffected > 0) {
                 try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
@@ -141,10 +146,10 @@ public class CaregiverDAOImpl implements CaregiverDAO {
     public boolean updateCaregiver(Caregiver caregiver) throws SQLException {
         String sql = "UPDATE caregiver SET name = ?, qualifications = ?, specialties = ?, experience_years = ?, bio = ?, " +
                      "phone = ?, email = ?, is_active = ? WHERE caregiver_id = ?";
-        
+
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+
             ps.setString(1, caregiver.getName());
             ps.setString(2, caregiver.getQualifications());
             ps.setString(3, caregiver.getSpecialties());
@@ -158,7 +163,7 @@ public class CaregiverDAOImpl implements CaregiverDAO {
             ps.setString(7, caregiver.getEmail());
             ps.setBoolean(8, caregiver.isAvailable());
             ps.setInt(9, caregiver.getCaregiverId());
-            
+
             return ps.executeUpdate() > 0;
         }
     }
@@ -166,10 +171,10 @@ public class CaregiverDAOImpl implements CaregiverDAO {
     @Override
     public boolean deleteCaregiver(int caregiverId) throws SQLException {
         String sql = "DELETE FROM caregiver WHERE caregiver_id = ?";
-        
+
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            
+
             ps.setInt(1, caregiverId);
             return ps.executeUpdate() > 0;
         }

@@ -1,21 +1,20 @@
 package controller.admin;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
+import dao.CategoryDAO;
+import dao.DAOFactory;
+import dao.ServiceDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
-
-import dao.ServiceDAO;
-import dao.CategoryDAO;
-import dao.DAOFactory;
-import model.Service;
 import model.Category;
+import model.Service;
 
 /**
  * AdminServiceController - Handles all service management operations
@@ -35,14 +34,16 @@ public class AdminServiceController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         if (!isAdminLoggedIn(request)) {
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp?err=unauthorised");
             return;
         }
 
         String action = request.getParameter("action");
-        if (action == null) action = "list";
+        if (action == null) {
+			action = "list";
+		}
 
         try {
             switch (action) {
@@ -70,14 +71,16 @@ public class AdminServiceController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         if (!isAdminLoggedIn(request)) {
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp?err=unauthorised");
             return;
         }
 
         String action = request.getParameter("action");
-        if (action == null) action = "list";
+        if (action == null) {
+			action = "list";
+		}
 
         try {
             switch (action) {
@@ -101,7 +104,7 @@ public class AdminServiceController extends HttpServlet {
 
     private void listServices(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        
+
         List<Service> services = serviceDAO.getAllServices();
         request.setAttribute("services", services);
         request.getRequestDispatcher("/admin/adminServiceList.jsp").forward(request, response);
@@ -109,7 +112,7 @@ public class AdminServiceController extends HttpServlet {
 
     private void showCreateForm(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        
+
         List<Category> categories = categoryDAO.getAllCategories();
         request.setAttribute("categories", categories);
         request.getRequestDispatcher("/admin/adminServiceCreate.jsp").forward(request, response);
@@ -117,7 +120,7 @@ public class AdminServiceController extends HttpServlet {
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        
+
         String serviceIdParam = request.getParameter("serviceId");
         if (serviceIdParam == null || serviceIdParam.trim().isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/admin/service?err=missing_id");
@@ -126,7 +129,7 @@ public class AdminServiceController extends HttpServlet {
 
         int serviceId = Integer.parseInt(serviceIdParam);
         Service service = serviceDAO.getServiceById(serviceId);
-        
+
         if (service == null) {
             response.sendRedirect(request.getContextPath() + "/admin/service?err=not_found");
             return;
@@ -140,7 +143,7 @@ public class AdminServiceController extends HttpServlet {
 
     private void showDeleteConfirmation(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        
+
         String serviceIdParam = request.getParameter("serviceId");
         if (serviceIdParam == null || serviceIdParam.trim().isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/admin/service?err=missing_id");
@@ -149,7 +152,7 @@ public class AdminServiceController extends HttpServlet {
 
         int serviceId = Integer.parseInt(serviceIdParam);
         Service service = serviceDAO.getServiceById(serviceId);
-        
+
         if (service == null) {
             response.sendRedirect(request.getContextPath() + "/admin/service?err=not_found");
             return;
@@ -161,7 +164,7 @@ public class AdminServiceController extends HttpServlet {
 
     private void createService(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        
+
         String serviceName = request.getParameter("service_name");
         String description = request.getParameter("description");
         String basePriceStr = request.getParameter("base_price");
@@ -194,7 +197,7 @@ public class AdminServiceController extends HttpServlet {
 
     private void updateService(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        
+
         String serviceIdStr = request.getParameter("serviceId");
         String serviceName = request.getParameter("service_name");
         String description = request.getParameter("description");
@@ -229,7 +232,7 @@ public class AdminServiceController extends HttpServlet {
 
     private void deleteService(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        
+
         String serviceIdStr = request.getParameter("serviceId");
 
         if (serviceIdStr == null || serviceIdStr.trim().isEmpty()) {
@@ -249,7 +252,9 @@ public class AdminServiceController extends HttpServlet {
 
     private boolean isAdminLoggedIn(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if (session == null) return false;
+        if (session == null) {
+			return false;
+		}
         Integer userId = (Integer) session.getAttribute("sessUserId");
         String role = (String) session.getAttribute("sessUserRole");
         return userId != null && "ADMIN".equals(role);

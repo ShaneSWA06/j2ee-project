@@ -1,18 +1,17 @@
 package controller.admin;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
 import dao.CategoryDAO;
 import dao.DAOFactory;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.Category;
 
 /**
@@ -36,7 +35,7 @@ public class AdminCategoryController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         // Check authentication
         if (!isAdminLoggedIn(request)) {
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp?err=unauthorised");
@@ -77,7 +76,7 @@ public class AdminCategoryController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         // Check authentication
         if (!isAdminLoggedIn(request)) {
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp?err=unauthorised");
@@ -114,7 +113,7 @@ public class AdminCategoryController extends HttpServlet {
      */
     private void listCategories(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        
+
         List<Category> categories = categoryDAO.getAllCategories();
         request.setAttribute("categories", categories);
         request.getRequestDispatcher("/admin/adminCategoryList.jsp").forward(request, response);
@@ -125,7 +124,7 @@ public class AdminCategoryController extends HttpServlet {
      */
     private void showCreateForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         request.getRequestDispatcher("/admin/adminCategoryCreate.jsp").forward(request, response);
     }
 
@@ -134,7 +133,7 @@ public class AdminCategoryController extends HttpServlet {
      */
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        
+
         String categoryIdParam = request.getParameter("categoryId");
         if (categoryIdParam == null || categoryIdParam.trim().isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/admin/category?err=missing_id");
@@ -143,7 +142,7 @@ public class AdminCategoryController extends HttpServlet {
 
         int categoryId = Integer.parseInt(categoryIdParam);
         Category category = categoryDAO.getCategoryById(categoryId);
-        
+
         if (category == null) {
             response.sendRedirect(request.getContextPath() + "/admin/category?err=not_found");
             return;
@@ -158,7 +157,7 @@ public class AdminCategoryController extends HttpServlet {
      */
     private void showDeleteConfirmation(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        
+
         String categoryIdParam = request.getParameter("categoryId");
         if (categoryIdParam == null || categoryIdParam.trim().isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/admin/category?err=missing_id");
@@ -167,7 +166,7 @@ public class AdminCategoryController extends HttpServlet {
 
         int categoryId = Integer.parseInt(categoryIdParam);
         Category category = categoryDAO.getCategoryById(categoryId);
-        
+
         if (category == null) {
             response.sendRedirect(request.getContextPath() + "/admin/category?err=not_found");
             return;
@@ -182,7 +181,7 @@ public class AdminCategoryController extends HttpServlet {
      */
     private void createCategory(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        
+
         String categoryName = request.getParameter("category_name");
         String description = request.getParameter("description");
 
@@ -210,7 +209,7 @@ public class AdminCategoryController extends HttpServlet {
      */
     private void updateCategory(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        
+
         String categoryIdParam = request.getParameter("categoryId");
         String categoryName = request.getParameter("category_name");
         String description = request.getParameter("description");
@@ -246,7 +245,7 @@ public class AdminCategoryController extends HttpServlet {
      */
     private void deleteCategory(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        
+
         String categoryIdParam = request.getParameter("categoryId");
 
         if (categoryIdParam == null || categoryIdParam.trim().isEmpty()) {

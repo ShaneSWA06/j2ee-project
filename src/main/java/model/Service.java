@@ -22,7 +22,7 @@ public class Service implements Serializable {
     public Service() {
     }
 
-    public Service(int serviceId, String serviceName, String description, 
+    public Service(int serviceId, String serviceName, String description,
                    double basePrice, int durationMinutes, int categoryId, boolean isActive) {
         this.serviceId = serviceId;
         this.serviceName = serviceName;

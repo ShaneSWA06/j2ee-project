@@ -1,12 +1,5 @@
 package servlet;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,6 +8,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import db.DBUtil;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.CartItem;
 
 /**
@@ -76,7 +75,7 @@ public class AddToCartServlet extends HttpServlet {
         @SuppressWarnings("unchecked")
         ArrayList<CartItem> cart = (ArrayList<CartItem>) session.getAttribute("shoppingCart");
         if (cart == null) {
-            cart = new ArrayList<CartItem>();
+            cart = new ArrayList<>();
         }
 
         Connection conn = null;
@@ -128,8 +127,12 @@ public class AddToCartServlet extends HttpServlet {
                                 item.setCaregiverName(rsCg.getString("name"));
                             }
                         } finally {
-                            if (rsCg != null) try { rsCg.close(); } catch (Exception ignore) {}
-                            if (psCg != null) try { psCg.close(); } catch (Exception ignore) {}
+                            if (rsCg != null) {
+								try { rsCg.close(); } catch (Exception ignore) {}
+							}
+                            if (psCg != null) {
+								try { psCg.close(); } catch (Exception ignore) {}
+							}
                         }
                     } catch (NumberFormatException ignore) {
                         // Invalid caregiver ID, just skip
@@ -156,9 +159,15 @@ public class AddToCartServlet extends HttpServlet {
                 "/public/serviceDetails.jsp?err=" + e.getMessage());
         } finally {
             // Clean up resources
-            if (rs != null) try { rs.close(); } catch (SQLException ignore) {}
-            if (ps != null) try { ps.close(); } catch (SQLException ignore) {}
-            if (conn != null) try { conn.close(); } catch (SQLException ignore) {}
+            if (rs != null) {
+				try { rs.close(); } catch (SQLException ignore) {}
+			}
+            if (ps != null) {
+				try { ps.close(); } catch (SQLException ignore) {}
+			}
+            if (conn != null) {
+				try { conn.close(); } catch (SQLException ignore) {}
+			}
         }
     }
 }

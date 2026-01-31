@@ -1,25 +1,24 @@
 package controller.customer;
 
+import java.io.IOException;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.util.List;
+
+import dao.BookingDAO;
+import dao.CaregiverDAO;
+import dao.DAOFactory;
+import dao.ServiceDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.sql.Date;
-import java.sql.Time;
-import java.util.List;
-
-import dao.BookingDAO;
-import dao.ServiceDAO;
-import dao.CaregiverDAO;
-import dao.DAOFactory;
 import model.Booking;
-import model.Service;
 import model.Caregiver;
+import model.Service;
 
 /**
  * BookingController - Handles customer booking operations
@@ -41,14 +40,16 @@ public class BookingController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         if (!isCustomerLoggedIn(request)) {
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp?err=notLoggedIn");
             return;
         }
 
         String action = request.getParameter("action");
-        if (action == null) action = "list";
+        if (action == null) {
+			action = "list";
+		}
 
         try {
             switch (action) {
@@ -70,14 +71,16 @@ public class BookingController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         if (!isCustomerLoggedIn(request)) {
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp?err=notLoggedIn");
             return;
         }
 
         String action = request.getParameter("action");
-        if (action == null) action = "create";
+        if (action == null) {
+			action = "create";
+		}
 
         try {
             switch (action) {
@@ -95,10 +98,10 @@ public class BookingController extends HttpServlet {
 
     private void listMyBookings(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        
+
         HttpSession session = request.getSession();
         int userId = (Integer) session.getAttribute("sessUserId");
-        
+
         List<Booking> bookings = bookingDAO.getBookingsByUser(userId);
         request.setAttribute("bookings", bookings);
         request.getRequestDispatcher("/customer/myBookings.jsp").forward(request, response);
@@ -106,18 +109,18 @@ public class BookingController extends HttpServlet {
 
     private void showCreateForm(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        
+
         String serviceIdParam = request.getParameter("serviceId");
-        
+
         if (serviceIdParam != null && !serviceIdParam.trim().isEmpty()) {
             int serviceId = Integer.parseInt(serviceIdParam);
             Service service = serviceDAO.getServiceById(serviceId);
             request.setAttribute("service", service);
         }
-        
+
         List<Service> services = serviceDAO.getActiveServices();
         List<Caregiver> caregivers = caregiverDAO.getAvailableCaregivers();
-        
+
         request.setAttribute("services", services);
         request.setAttribute("caregivers", caregivers);
         request.getRequestDispatcher("/customer/createBooking.jsp").forward(request, response);
@@ -125,10 +128,10 @@ public class BookingController extends HttpServlet {
 
     private void createBooking(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        
+
         HttpSession session = request.getSession();
         int userId = (Integer) session.getAttribute("sessUserId");
-        
+
         String serviceIdStr = request.getParameter("service_id");
         String bookingDateStr = request.getParameter("booking_date");
         String bookingTimeStr = request.getParameter("booking_time");
@@ -148,8 +151,8 @@ public class BookingController extends HttpServlet {
 
             // Validate date is not in the past
             if (bookingDate.before(today)) {
-                response.sendRedirect(request.getContextPath() + 
-                    "/customer/booking?action=create&serviceId=" + serviceId + 
+                response.sendRedirect(request.getContextPath() +
+                    "/customer/booking?action=create&serviceId=" + serviceId +
                     "&err=" + java.net.URLEncoder.encode("Booking date cannot be in the past", "UTF-8"));
                 return;
             }
@@ -157,8 +160,8 @@ public class BookingController extends HttpServlet {
             // Validate service exists and is active
             Service service = serviceDAO.getServiceById(serviceId);
             if (service == null || !service.isActive()) {
-                response.sendRedirect(request.getContextPath() + 
-                    "/customer/booking?action=create&err=" + 
+                response.sendRedirect(request.getContextPath() +
+                    "/customer/booking?action=create&err=" +
                     java.net.URLEncoder.encode("Service is not available", "UTF-8"));
                 return;
             }
@@ -166,11 +169,11 @@ public class BookingController extends HttpServlet {
             Booking booking = new Booking();
             booking.setUserId(userId);
             booking.setServiceId(serviceId);
-            
+
             if (caregiverIdStr != null && !caregiverIdStr.trim().isEmpty()) {
                 booking.setCaregiverId(Integer.parseInt(caregiverIdStr));
             }
-            
+
             booking.setBookingDate(bookingDate);
             booking.setBookingTime(Time.valueOf(bookingTimeStr + ":00"));
             booking.setStatus("Pending");
@@ -181,19 +184,21 @@ public class BookingController extends HttpServlet {
             if (created != null) {
                 response.sendRedirect(request.getContextPath() + "/customer/booking?success=created");
             } else {
-                response.sendRedirect(request.getContextPath() + 
+                response.sendRedirect(request.getContextPath() +
                     "/customer/booking?action=create&serviceId=" + serviceId + "&err=create_failed");
             }
         } catch (Exception e) {
-            response.sendRedirect(request.getContextPath() + 
-                "/customer/booking?action=create&err=" + 
+            response.sendRedirect(request.getContextPath() +
+                "/customer/booking?action=create&err=" +
                 java.net.URLEncoder.encode(e.getMessage(), "UTF-8"));
         }
     }
 
     private boolean isCustomerLoggedIn(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if (session == null) return false;
+        if (session == null) {
+			return false;
+		}
         Integer userId = (Integer) session.getAttribute("sessUserId");
         return userId != null;
     }

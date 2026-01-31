@@ -1,8 +1,9 @@
 package dao;
 
-import model.Payment;
 import java.sql.SQLException;
 import java.util.List;
+
+import model.Payment;
 
 public interface PaymentDAO {
     Payment createPayment(Payment payment) throws SQLException;

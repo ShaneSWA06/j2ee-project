@@ -1,11 +1,5 @@
 package servlet;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 
 import com.stripe.model.PaymentIntent;
@@ -13,8 +7,12 @@ import com.stripe.model.PaymentIntent;
 import dao.BookingDAO;
 import dao.DAOFactory;
 import dao.PaymentDAO;
-import model.Payment;
-import service.StripeService;    
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import service.StripeService;
 
 @WebServlet("/PaymentSuccessServlet")
 public class PaymentSuccessServlet extends HttpServlet {
@@ -33,9 +31,9 @@ public class PaymentSuccessServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String paymentIntentId = request.getParameter("payment_intent");
-        
+
         if (paymentIntentId == null) {
             response.sendRedirect(request.getContextPath() + "/customer/viewCart.jsp?error=invalid_payment");
             return;
@@ -44,14 +42,14 @@ public class PaymentSuccessServlet extends HttpServlet {
         try {
             // Verify with Stripe
             PaymentIntent intent = stripeService.retrievePaymentIntent(paymentIntentId);
-            
+
             if ("succeeded".equals(intent.getStatus())) {
                 // Update Payment Status
                 paymentDAO.updatePaymentStatus(paymentIntentId, "Paid");
-                
+
                 // Update Bookings Status using Metadata
                 String bookingIdsStr = intent.getMetadata().get("Bookings"); // e.g., "[1, 2, 3]"
-                
+
                 if (bookingIdsStr != null) {
                     bookingIdsStr = bookingIdsStr.replace("[", "").replace("]", "");
                     if (!bookingIdsStr.isEmpty()) {
@@ -70,10 +68,10 @@ public class PaymentSuccessServlet extends HttpServlet {
 
                 // Clear cart
                 request.getSession().removeAttribute("shoppingCart");
-                
+
                 // Redirect to bookings
                 response.sendRedirect(request.getContextPath() + "/customer/myBookings.jsp?success=payment_complete");
-                
+
             } else {
                  response.sendRedirect(request.getContextPath() + "/customer/viewCart.jsp?error=payment_not_succeeded&status=" + intent.getStatus());
             }

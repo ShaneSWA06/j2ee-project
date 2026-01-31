@@ -1,18 +1,17 @@
 package controller.admin;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
 import dao.CaregiverDAO;
 import dao.DAOFactory;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.Caregiver;
 
 /**
@@ -31,14 +30,16 @@ public class AdminCaregiverController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         if (!isAdminLoggedIn(request)) {
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp?err=unauthorised");
             return;
         }
 
         String action = request.getParameter("action");
-        if (action == null) action = "list";
+        if (action == null) {
+			action = "list";
+		}
 
         try {
             switch (action) {
@@ -66,14 +67,16 @@ public class AdminCaregiverController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         if (!isAdminLoggedIn(request)) {
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp?err=unauthorised");
             return;
         }
 
         String action = request.getParameter("action");
-        if (action == null) action = "list";
+        if (action == null) {
+			action = "list";
+		}
 
         try {
             switch (action) {
@@ -97,7 +100,7 @@ public class AdminCaregiverController extends HttpServlet {
 
     private void listCaregivers(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        
+
         List<Caregiver> caregivers = caregiverDAO.getAllCaregivers();
         request.setAttribute("caregivers", caregivers);
         request.getRequestDispatcher("/admin/adminCaregiverList.jsp").forward(request, response);
@@ -105,13 +108,13 @@ public class AdminCaregiverController extends HttpServlet {
 
     private void showCreateForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         request.getRequestDispatcher("/admin/adminCaregiverCreate.jsp").forward(request, response);
     }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        
+
         String caregiverIdParam = request.getParameter("caregiverId");
         if (caregiverIdParam == null || caregiverIdParam.trim().isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/admin/caregiver?err=missing_id");
@@ -120,7 +123,7 @@ public class AdminCaregiverController extends HttpServlet {
 
         int caregiverId = Integer.parseInt(caregiverIdParam);
         Caregiver caregiver = caregiverDAO.getCaregiverById(caregiverId);
-        
+
         if (caregiver == null) {
             response.sendRedirect(request.getContextPath() + "/admin/caregiver?err=not_found");
             return;
@@ -132,7 +135,7 @@ public class AdminCaregiverController extends HttpServlet {
 
     private void showDeleteConfirmation(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        
+
         String caregiverIdParam = request.getParameter("caregiverId");
         if (caregiverIdParam == null || caregiverIdParam.trim().isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/admin/caregiver?err=missing_id");
@@ -141,7 +144,7 @@ public class AdminCaregiverController extends HttpServlet {
 
         int caregiverId = Integer.parseInt(caregiverIdParam);
         Caregiver caregiver = caregiverDAO.getCaregiverById(caregiverId);
-        
+
         if (caregiver == null) {
             response.sendRedirect(request.getContextPath() + "/admin/caregiver?err=not_found");
             return;
@@ -153,7 +156,7 @@ public class AdminCaregiverController extends HttpServlet {
 
     private void createCaregiver(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        
+
         String name = request.getParameter("name");
         String qualifications = request.getParameter("qualifications");
         String specialties = request.getParameter("specialties"); // Map to specialization/specialties
@@ -173,7 +176,7 @@ public class AdminCaregiverController extends HttpServlet {
         caregiver.setQualifications(qualifications != null ? qualifications.trim() : "");
         caregiver.setSpecialties(specialties != null ? specialties.trim() : "");
         caregiver.setSpecialization(specialties != null ? specialties.trim() : ""); // Sync legacy field
-        
+
         if (experienceYearsStr != null && !experienceYearsStr.trim().isEmpty()) {
             try {
                 caregiver.setExperienceYears(Integer.parseInt(experienceYearsStr.trim()));
@@ -182,7 +185,7 @@ public class AdminCaregiverController extends HttpServlet {
                 caregiver.setExperienceYears(0);
             }
         }
-        
+
         caregiver.setBio(bio != null ? bio.trim() : "");
         caregiver.setPhone(phone != null ? phone.trim() : "");
         caregiver.setEmail(email != null ? email.trim() : "");
@@ -199,7 +202,7 @@ public class AdminCaregiverController extends HttpServlet {
 
     private void updateCaregiver(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        
+
         String caregiverIdStr = request.getParameter("caregiverId");
         String name = request.getParameter("name");
         String qualifications = request.getParameter("qualifications");
@@ -222,7 +225,7 @@ public class AdminCaregiverController extends HttpServlet {
         caregiver.setQualifications(qualifications != null ? qualifications.trim() : "");
         caregiver.setSpecialties(specialties != null ? specialties.trim() : "");
         caregiver.setSpecialization(specialties != null ? specialties.trim() : ""); // Sync legacy field
-        
+
         if (experienceYearsStr != null && !experienceYearsStr.trim().isEmpty()) {
             try {
                 caregiver.setExperienceYears(Integer.parseInt(experienceYearsStr.trim()));
@@ -230,7 +233,7 @@ public class AdminCaregiverController extends HttpServlet {
                 // Ignore
             }
         }
-        
+
         caregiver.setBio(bio != null ? bio.trim() : "");
         caregiver.setPhone(phone != null ? phone.trim() : "");
         caregiver.setEmail(email != null ? email.trim() : "");
@@ -247,7 +250,7 @@ public class AdminCaregiverController extends HttpServlet {
 
     private void deleteCaregiver(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        
+
         String caregiverIdStr = request.getParameter("caregiverId");
 
         if (caregiverIdStr == null || caregiverIdStr.trim().isEmpty()) {
@@ -267,7 +270,9 @@ public class AdminCaregiverController extends HttpServlet {
 
     private boolean isAdminLoggedIn(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if (session == null) return false;
+        if (session == null) {
+			return false;
+		}
         Integer userId = (Integer) session.getAttribute("sessUserId");
         String role = (String) session.getAttribute("sessUserRole");
         return userId != null && "ADMIN".equals(role);

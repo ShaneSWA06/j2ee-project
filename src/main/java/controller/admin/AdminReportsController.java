@@ -1,12 +1,5 @@
 package controller.admin;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,6 +11,12 @@ import java.util.List;
 import java.util.Map;
 
 import db.DBUtil;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  * AdminReportsController - Handles data fetching for reports dashboard
@@ -29,7 +28,7 @@ public class AdminReportsController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         if (!isAdminLoggedIn(request)) {
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp?err=unauthorised");
             return;
@@ -38,16 +37,16 @@ public class AdminReportsController extends HttpServlet {
         try (Connection conn = DBUtil.getConnection()) {
             // 1. fetch summary stats
             fetchSummaryStats(conn, request);
-            
+
             // 2. fetch upcoming schedule
             fetchUpcomingSchedule(conn, request);
-            
+
             // 3. fetch popular services
             fetchPopularServices(conn, request);
-            
+
             // Forward to JSP
             request.getRequestDispatcher("/admin/adminReports.jsp").forward(request, response);
-            
+
         } catch (SQLException e) {
             throw new ServletException("Database error generating reports", e);
         }
@@ -66,13 +65,17 @@ public class AdminReportsController extends HttpServlet {
         // Total customers
         try (PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM app_user WHERE role='CUSTOMER'");
              ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) totalCustomers = rs.getInt(1);
+            if (rs.next()) {
+				totalCustomers = rs.getInt(1);
+			}
         }
 
         // Total bookings
         try (PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM booking");
              ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) totalBookings = rs.getInt(1);
+            if (rs.next()) {
+				totalBookings = rs.getInt(1);
+			}
         }
 
         // Bookings by status
@@ -81,28 +84,38 @@ public class AdminReportsController extends HttpServlet {
             while (rs.next()) {
                 String status = rs.getString("status");
                 int count = rs.getInt(2);
-                if ("Pending".equals(status)) pendingBookings = count;
-                else if ("Confirmed".equals(status)) confirmedBookings = count;
-                else if ("Completed".equals(status)) completedBookings = count;
+                if ("Pending".equals(status)) {
+					pendingBookings = count;
+				} else if ("Confirmed".equals(status)) {
+					confirmedBookings = count;
+				} else if ("Completed".equals(status)) {
+					completedBookings = count;
+				}
             }
         }
 
         // Total caregivers
         try (PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM caregiver WHERE is_active=TRUE");
              ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) totalCaregivers = rs.getInt(1);
+            if (rs.next()) {
+				totalCaregivers = rs.getInt(1);
+			}
         }
 
         // Total services
         try (PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM service WHERE is_active=TRUE");
              ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) totalServices = rs.getInt(1);
+            if (rs.next()) {
+				totalServices = rs.getInt(1);
+			}
         }
 
         // Average rating
         try (PreparedStatement ps = conn.prepareStatement("SELECT AVG(star_rating) FROM feedback");
              ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) avgRating = rs.getDouble(1);
+            if (rs.next()) {
+				avgRating = rs.getDouble(1);
+			}
         }
 
         request.setAttribute("totalCustomers", totalCustomers);
@@ -129,10 +142,10 @@ public class AdminReportsController extends HttpServlet {
                      "LIMIT 10";
 
         List<Map<String, Object>> schedule = new ArrayList<>();
-        
+
         try (PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            
+
             while (rs.next()) {
                 Map<String, Object> item = new HashMap<>();
                 item.put("booking_id", rs.getInt("booking_id"));
@@ -160,10 +173,10 @@ public class AdminReportsController extends HttpServlet {
                      "LIMIT 5";
 
         List<Map<String, Object>> popularServices = new ArrayList<>();
-        
+
         try (PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            
+
             while (rs.next()) {
                 Map<String, Object> item = new HashMap<>();
                 item.put("service_name", rs.getString("service_name"));
@@ -176,7 +189,9 @@ public class AdminReportsController extends HttpServlet {
 
     private boolean isAdminLoggedIn(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if (session == null) return false;
+        if (session == null) {
+			return false;
+		}
         Integer userId = (Integer) session.getAttribute("sessUserId");
         String role = (String) session.getAttribute("sessUserRole");
         return userId != null && "ADMIN".equals(role);

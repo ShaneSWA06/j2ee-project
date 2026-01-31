@@ -1,12 +1,16 @@
 package dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
 import dao.PaymentDAO;
 import db.DBUtil;
 import model.Payment;
-
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class PaymentDAOImpl implements PaymentDAO {
 
@@ -14,19 +18,19 @@ public class PaymentDAOImpl implements PaymentDAO {
     public Payment createPayment(Payment payment) throws SQLException {
         String sql = "INSERT INTO payment (booking_id, amount, currency, payment_method, transaction_id, status) " +
                      "VALUES (?, ?, ?, ?, ?, ?)";
-        
+
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            
+
             ps.setInt(1, payment.getBookingId());
             ps.setDouble(2, payment.getAmount());
             ps.setString(3, payment.getCurrency());
             ps.setString(4, payment.getPaymentMethod());
             ps.setString(5, payment.getTransactionId());
             ps.setString(6, payment.getStatus());
-            
+
             int affectedRows = ps.executeUpdate();
-            
+
             if (affectedRows == 0) {
                 throw new SQLException("Creating payment failed, no rows affected.");
             }
