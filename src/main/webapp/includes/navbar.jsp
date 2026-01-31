@@ -19,8 +19,8 @@
           String userRole = (String) session.getAttribute("sessUserRole");
           if ("ADMIN".equals(userRole)) { 
         %>
-          <li><a class="nav-link" href="${pageContext.request.contextPath}/admin/adminDashboard.jsp">Admin Panel</a></li>
-          <li><a class="nav-link" href="${pageContext.request.contextPath}/admin/logout.jsp">Logout</a></li>
+          <li><a class="nav-link" href="${pageContext.request.contextPath}/admin/dashboard">Admin Panel</a></li>
+          <li><a class="nav-link" href="${pageContext.request.contextPath}/logout">Logout</a></li>
         <% } else if (session.getAttribute("sessUserId") != null) {
              @SuppressWarnings("unchecked")
              ArrayList<CartItem> cart = (ArrayList<CartItem>) session.getAttribute("shoppingCart");
@@ -38,7 +38,7 @@
           </li>
           <li><a class="nav-link" href="${pageContext.request.contextPath}/customer/customerHome.jsp">Account</a></li>
           <li>
-            <a class="nav-link" href="${pageContext.request.contextPath}/customer/logout.jsp"
+            <a class="nav-link" href="${pageContext.request.contextPath}/logout"
                <% if (cartCount > 0) { %>
                  onclick="return confirmLogout(<%= cartCount %>);"
                <% } %>

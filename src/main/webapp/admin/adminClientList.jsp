@@ -23,6 +23,6 @@
 <c:otherwise><tr><td colspan="5" style="text-align:center; padding:20px;">No clients found.</td></tr></c:otherwise>
 </c:choose>
 </table>
-<p style="margin-top:20px"><a class="btn" href="${pageContext.request.contextPath}/admin/adminDashboard.jsp">Back</a></p>
+<p style="margin-top:20px"><a class="btn" href="${pageContext.request.contextPath}/admin/dashboard">Back</a></p>
 </div>
 <jsp:include page="../includes/footer.jsp"/>
