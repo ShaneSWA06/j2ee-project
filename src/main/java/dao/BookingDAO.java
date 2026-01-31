@@ -41,6 +41,11 @@ public interface BookingDAO {
     boolean updateBookingStatus(int bookingId, String status) throws SQLException;
     
     /**
+     * Update booking payment status
+     */
+    boolean updatePaymentStatus(int bookingId, String paymentStatus) throws SQLException;
+
+    /**
      * Delete booking by ID
      */
     boolean deleteBooking(int bookingId) throws SQLException;

@@ -49,4 +49,11 @@ public class DAOFactory {
     public static FeedbackDAO getFeedbackDAO() {
         return new FeedbackDAOImpl();
     }
+
+    /**
+     * Get PaymentDAO instance
+     */
+    public static PaymentDAO getPaymentDAO() {
+        return new PaymentDAOImpl();
+    }
 }

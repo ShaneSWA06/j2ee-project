@@ -8,6 +8,7 @@
     <div class="card"><h3>Manage Services</h3><p><a class="btn btn-primary" href="${pageContext.request.contextPath}/admin/service">Manage</a></p></div>
     <div class="card"><h3>Manage Caregivers</h3><p><a class="btn btn-primary" href="${pageContext.request.contextPath}/admin/caregiver">Manage</a></p></div>
     <div class="card"><h3>Manage Bookings</h3><p><a class="btn btn-primary" href="${pageContext.request.contextPath}/admin/booking">Manage</a></p></div>
+    <div class="card"><h3>Sales & Payments</h3><p><a class="btn btn-primary" href="${pageContext.request.contextPath}/admin/payments">View</a></p></div>
     <div class="card"><h3>Manage Clients</h3><p><a class="btn btn-primary" href="${pageContext.request.contextPath}/admin/client">Manage</a></p></div>
     <div class="card"><h3>Feedback</h3><p><a class="btn btn-primary" href="${pageContext.request.contextPath}/admin/feedback">Manage</a></p></div>
     <div class="card"><h3>Reports & Analytics</h3><p><a class="btn btn-primary" href="${pageContext.request.contextPath}/admin/reports">View</a></p></div>

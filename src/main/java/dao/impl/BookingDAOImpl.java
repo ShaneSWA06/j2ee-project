@@ -163,6 +163,20 @@ public class BookingDAOImpl implements BookingDAO {
     }
 
     @Override
+    public boolean updatePaymentStatus(int bookingId, String paymentStatus) throws SQLException {
+        String sql = "UPDATE booking SET payment_status = ? WHERE booking_id = ?";
+        
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, paymentStatus);
+            ps.setInt(2, bookingId);
+            
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    @Override
     public boolean deleteBooking(int bookingId) throws SQLException {
         String sql = "DELETE FROM booking WHERE booking_id = ?";
         

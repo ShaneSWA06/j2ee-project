@@ -10,24 +10,37 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
+import com.stripe.model.PaymentIntent;
+
+import dao.DAOFactory;
+import dao.PaymentDAO;
 import db.DBUtil;
 import model.CartItem;
+import model.Payment;
+import service.StripeService;
 
 /**
  * CheckoutServlet processes the shopping cart checkout
- * Converts all cart items into actual bookings using database transaction
- * Demonstrates ArrayList processing and transaction management
+ * Initiates Stripe payment flow
  */
 @WebServlet("/CheckoutServlet")
 public class CheckoutServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    private PaymentDAO paymentDAO;
+    private StripeService stripeService;
 
-    /**
-     * Handle both GET and POST requests
-     */
+    @Override
+    public void init() throws ServletException {
+        paymentDAO = DAOFactory.getPaymentDAO();
+        stripeService = new StripeService();
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -40,22 +53,17 @@ public class CheckoutServlet extends HttpServlet {
         processCheckout(request, response);
     }
 
-    /**
-     * Process the checkout operation
-     */
     private void processCheckout(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
 
-        // Check if user is logged in
         Integer userId = (Integer) session.getAttribute("sessUserId");
         if (userId == null) {
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp?err=notLoggedIn");
             return;
         }
 
-        // Get cart from session (ArrayList)
         @SuppressWarnings("unchecked")
         ArrayList<CartItem> cart = (ArrayList<CartItem>) session.getAttribute("shoppingCart");
 
@@ -66,26 +74,24 @@ public class CheckoutServlet extends HttpServlet {
 
         Connection conn = null;
         PreparedStatement ps = null;
+        List<Integer> bookingIds = new ArrayList<>();
 
         try {
             conn = DBUtil.getConnection();
-            // Start transaction
             conn.setAutoCommit(false);
 
             String insertSQL = "INSERT INTO booking (user_id, service_id, caregiver_id, booking_date, " +
-                              "booking_time, status, notes, created_at) " +
-                              "VALUES (?, ?, ?, ?, ?, 'Pending', ?, CURRENT_TIMESTAMP)";
+                              "booking_time, status, notes, created_at, payment_status) " +
+                              "VALUES (?, ?, ?, ?, ?, 'Pending', ?, CURRENT_TIMESTAMP, 'Unpaid')";
 
-            ps = conn.prepareStatement(insertSQL);
+            ps = conn.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
 
-            int successCount = 0;
+            double totalAmount = 0;
 
-            // Process each item in the cart (ArrayList iteration)
             for (CartItem item : cart) {
                 ps.setInt(1, userId);
                 ps.setInt(2, item.getServiceId());
 
-                // Set caregiver ID (null if not selected)
                 if (item.getCaregiverId() != null) {
                     ps.setInt(3, item.getCaregiverId());
                 } else {
@@ -96,49 +102,85 @@ public class CheckoutServlet extends HttpServlet {
                 ps.setTime(5, java.sql.Time.valueOf(item.getBookingTime() + ":00"));
                 ps.setString(6, item.getNotes());
 
-                int result = ps.executeUpdate();
-                if (result > 0) {
-                    successCount++;
+                ps.executeUpdate();
+                
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        bookingIds.add(rs.getInt(1));
+                    }
                 }
+                
+                totalAmount += item.getBasePrice();
             }
+            
+            // Commit bookings first
+            conn.commit();
+            
+            // Calculate Total with GST (9%)
+            double gstRate = 0.09;
+            double gstAmount = totalAmount * gstRate;
+            double grandTotal = totalAmount + gstAmount;
+            long amountCents = (long) Math.round(grandTotal * 100);
 
-            // Commit transaction if all bookings were created
-            if (successCount == cart.size()) {
-                conn.commit();
-
-                // Clear the cart from session
-                session.removeAttribute("shoppingCart");
-
-                // Redirect to bookings page with success message
-                response.sendRedirect(request.getContextPath() +
-                    "/customer/myBookings.jsp?success=checkout&count=" + successCount);
-            } else {
-                // Rollback if not all bookings were successful
-                conn.rollback();
-                response.sendRedirect(request.getContextPath() +
-                    "/customer/viewCart.jsp?error=checkout_partial_failure");
+            // Create Stripe PaymentIntent
+            try {
+                String bookingIdsStr = bookingIds.toString();
+                if (bookingIdsStr.length() > 500) bookingIdsStr = bookingIdsStr.substring(0, 497) + "...";
+                
+                PaymentIntent intent = stripeService.createPaymentIntent(amountCents, "sgd", bookingIdsStr);
+                
+                // Create local Payment record
+                Payment payment = new Payment();
+                if (!bookingIds.isEmpty()) {
+                    payment.setBookingId(bookingIds.get(0)); // Link to first booking
+                }
+                payment.setAmount(grandTotal);
+                payment.setCurrency("SGD");
+                payment.setPaymentMethod("stripe");
+                payment.setTransactionId(intent.getId());
+                payment.setStatus("Pending");
+                
+                paymentDAO.createPayment(payment);
+                
+                // Set attributes for Payment Page
+                request.setAttribute("clientSecret", intent.getClientSecret());
+                request.setAttribute("amount", grandTotal);
+            request.setAttribute("subtotal", totalAmount);
+            request.setAttribute("gst", gstAmount);
+            
+            // Load Stripe Public Key from properties
+            String stripePublicKey = "pk_test_PLACEHOLDER";
+            try {
+                java.util.Properties props = new java.util.Properties();
+                try (java.io.InputStream input = getClass().getClassLoader().getResourceAsStream("stripe.properties")) {
+                    if (input != null) {
+                        props.load(input);
+                        stripePublicKey = props.getProperty("stripe.publishable.key");
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            request.setAttribute("stripePublicKey", stripePublicKey);
+            
+            // Forward to payment page
+                request.getRequestDispatcher("/customer/payment.jsp").forward(request, response);
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.sendRedirect(request.getContextPath() + "/customer/viewCart.jsp?error=payment_init_failed&msg=" + e.getMessage());
             }
 
         } catch (SQLException e) {
-            // Rollback on error
             if (conn != null) {
-                try {
-                    conn.rollback();
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
+                try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
             }
             e.printStackTrace();
-            response.sendRedirect(request.getContextPath() +
-                "/customer/viewCart.jsp?error=" + e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/customer/viewCart.jsp?error=" + e.getMessage());
         } finally {
-            // Clean up resources
             if (ps != null) try { ps.close(); } catch (SQLException ignore) {}
             if (conn != null) {
-                try {
-                    conn.setAutoCommit(true); // Reset auto-commit
-                    conn.close();
-                } catch (SQLException ignore) {}
+                try { conn.setAutoCommit(true); conn.close(); } catch (SQLException ignore) {}
             }
         }
     }
