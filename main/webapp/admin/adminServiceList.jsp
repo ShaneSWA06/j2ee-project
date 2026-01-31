@@ -66,7 +66,7 @@
   </table>
   
   <p style="margin-top:20px">
-    <a class="btn" href="${pageContext.request.contextPath}/admin/adminDashboard.jsp">Back to Dashboard</a>
+    <a class="btn" href="${pageContext.request.contextPath}/admin/dashboard">Back to Dashboard</a>
   </p>
 </div>
 <jsp:include page="../includes/footer.jsp"/>
