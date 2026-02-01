@@ -22,6 +22,9 @@
   <% } else if (error != null) { %>
       <div class="card" style="background: #f8d7da; border-color: #f5c6cb; color: #721c24; margin-bottom: 16px;">
         <p style="margin: 0;"><strong>⚠ Error:</strong> <%= error %></p>
+        <% if (request.getParameter("msg") != null) { %>
+            <p style="margin: 4px 0 0 0; font-size: 0.9em;"><%= request.getParameter("msg") %></p>
+        <% } %>
       </div>
   <% } %>
 

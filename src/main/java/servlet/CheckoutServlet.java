@@ -1,6 +1,8 @@
 package servlet;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -169,7 +171,13 @@ public class CheckoutServlet extends HttpServlet {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                response.sendRedirect(request.getContextPath() + "/customer/viewCart.jsp?error=payment_init_failed&msg=" + e.getMessage());
+                String errorMsg = "Payment initialization failed";
+                try {
+                    if (e.getMessage() != null) {
+                        errorMsg = URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8);
+                    }
+                } catch (Exception ignore) {}
+                response.sendRedirect(request.getContextPath() + "/customer/viewCart.jsp?error=payment_init_failed&msg=" + errorMsg);
             }
 
         } catch (SQLException e) {
@@ -177,7 +185,13 @@ public class CheckoutServlet extends HttpServlet {
                 try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
             }
             e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/customer/viewCart.jsp?error=" + e.getMessage());
+            String errorMsg = "Database error";
+            try {
+                if (e.getMessage() != null) {
+                    errorMsg = URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8);
+                }
+            } catch (Exception ignore) {}
+            response.sendRedirect(request.getContextPath() + "/customer/viewCart.jsp?error=" + errorMsg);
         } finally {
             if (ps != null) {
 				try { ps.close(); } catch (SQLException ignore) {}

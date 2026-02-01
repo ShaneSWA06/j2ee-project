@@ -14,6 +14,7 @@ import model.Category;
 
 @WebServlet("/mvc/public/serviceCategories")
 public class ServiceCategoriesServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
     private CategoryDAO categoryDAO;
 
     @Override

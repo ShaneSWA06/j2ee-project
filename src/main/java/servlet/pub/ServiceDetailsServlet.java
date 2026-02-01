@@ -1,5 +1,6 @@
 package servlet.pub;
 
+// Trigger rebuild
 import java.io.IOException;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import model.Service;
 
 @WebServlet("/mvc/public/serviceDetails")
 public class ServiceDetailsServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
     private ServiceDAO serviceDAO;
     private CategoryDAO categoryDAO;
 
