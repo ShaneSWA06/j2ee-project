@@ -53,4 +53,19 @@
         <error-code>500</error-code>
         <location>/error/500.jsp</location>
     </error-page>
+    
+    <jsp-config>
+        <taglib>
+            <taglib-uri>jakarta.tags.core</taglib-uri>
+            <taglib-location>/WEB-INF/tld/c.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>jakarta.tags.fmt</taglib-uri>
+            <taglib-location>/WEB-INF/tld/fmt.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>jakarta.tags.functions</taglib-uri>
+            <taglib-location>/WEB-INF/tld/fn.tld</taglib-location>
+        </taglib>
+    </jsp-config>
 </web-app>

@@ -15,6 +15,9 @@ public class StripeService {
                 if (input != null) {
                     props.load(input);
                     API_KEY = props.getProperty("stripe.secret.key");
+                    if (API_KEY != null) {
+                        API_KEY = API_KEY.trim();
+                    }
                 }
             }
         } catch (Exception e) {

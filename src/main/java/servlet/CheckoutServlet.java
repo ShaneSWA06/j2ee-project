@@ -152,18 +152,34 @@ public class CheckoutServlet extends HttpServlet {
             request.setAttribute("gst", gstAmount);
 
             // Load Stripe Public Key from properties
-            String stripePublicKey = "pk_test_PLACEHOLDER";
+            String stripePublicKey = null;
             try {
                 java.util.Properties props = new java.util.Properties();
-                try (java.io.InputStream input = getClass().getClassLoader().getResourceAsStream("stripe.properties")) {
-                    if (input != null) {
-                        props.load(input);
+                java.io.InputStream input = getClass().getClassLoader().getResourceAsStream("stripe.properties");
+                if (input == null) {
+                    input = Thread.currentThread().getContextClassLoader().getResourceAsStream("stripe.properties");
+                }
+
+                if (input != null) {
+                    try (java.io.InputStream is = input) {
+                        props.load(is);
                         stripePublicKey = props.getProperty("stripe.publishable.key");
+                        if (stripePublicKey != null) {
+                            stripePublicKey = stripePublicKey.trim();
+                        }
                     }
+                } else {
+                    System.err.println("CheckoutServlet: stripe.properties not found in classpath");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            if (stripePublicKey == null || stripePublicKey.trim().isEmpty()) {
+                stripePublicKey = "pk_test_PLACEHOLDER_ERROR";
+                System.err.println("CheckoutServlet: Failed to load stripe.publishable.key");
+            }
+
             request.setAttribute("stripePublicKey", stripePublicKey);
 
             // Forward to payment page

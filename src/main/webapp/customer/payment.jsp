@@ -40,40 +40,108 @@
 
 <script src="https://js.stripe.com/v3/"></script>
 <script>
-    // Initialize Stripe
-    const stripe = Stripe('<%= request.getAttribute("stripePublicKey") %>');
-    const clientSecret = '<%= request.getAttribute("clientSecret") %>';
+    document.addEventListener("DOMContentLoaded", async () => {
+        const publicKey = '<%= request.getAttribute("stripePublicKey") %>';
+        const clientSecret = '<%= request.getAttribute("clientSecret") %>';
+        
+        console.log("Initializing Stripe...");
+        console.log("Public Key present:", !!publicKey && publicKey !== 'null');
+        
+        // Diagnostic display (remove in production)
+        const debugInfo = document.createElement("div");
+        debugInfo.style.fontSize = "10px";
+        debugInfo.style.color = "#888";
+        debugInfo.style.textAlign = "center";
+        debugInfo.style.marginTop = "5px";
+        debugInfo.innerHTML = "Debug: Key prefix = " + (publicKey ? publicKey.substring(0, 8) + "..." : "null") + 
+                              " (Length: " + (publicKey ? publicKey.length : 0) + ")" +
+                              "<br>Client Secret prefix = " + (clientSecret ? clientSecret.substring(0, 8) + "..." : "null");
+        document.querySelector(".card").appendChild(debugInfo);
 
-    const appearance = {
-        theme: 'stripe',
-    };
-    
-    // Pass the clientSecret to the elements instance
-    const elements = stripe.elements({ appearance, clientSecret });
-    const paymentElement = elements.create("payment");
-    paymentElement.mount("#payment-element");
-
-    const form = document.getElementById("payment-form");
-
-    form.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        setLoading(true);
-
-        const { error } = await stripe.confirmPayment({
-            elements,
-            confirmParams: {
-                // Return URL where Stripe redirects after payment
-                return_url: window.location.origin + "<%= request.getContextPath() %>/PaymentSuccessServlet",
-            },
-        });
-
-        if (error) {
-            // Show error to your customer
-            showMessage(error.message);
-            setLoading(false);
-        } else {
-            // Your customer will be redirected to your `return_url`
+        if (!publicKey || publicKey === 'null' || publicKey.trim() === '') {
+            showMessage("Error: Missing Stripe Public Key.");
+            return;
         }
+
+        if (publicKey.includes("PLACEHOLDER")) {
+            showMessage("Configuration Error: Stripe Public Key is using the placeholder value. Server restart required.");
+            return;
+        }
+        
+        if (!clientSecret || clientSecret === 'null' || clientSecret.trim() === '') {
+            showMessage("Error: Missing Payment Intent Client Secret.");
+            return;
+        }
+
+        let stripe;
+        try {
+            stripe = Stripe(publicKey);
+        } catch (e) {
+            console.error("Stripe Initialization Error:", e);
+            showMessage("Error initializing Stripe: " + e.message);
+            return;
+        }
+
+        const appearance = {
+            theme: 'stripe',
+        };
+        
+        let elements;
+        try {
+            elements = stripe.elements({ appearance, clientSecret });
+            const paymentElement = elements.create("payment");
+            
+            // Listener for ready event
+            paymentElement.on('ready', function() {
+                console.log("Payment Element Ready");
+                setLoading(false); // Enable button
+            });
+
+            // Listener for load error
+            paymentElement.on('loaderror', function(event) {
+                console.error("Payment Element Load Error:", event);
+                showMessage("Failed to load payment form: " + (event.error ? event.error.message : "Unknown error"));
+            });
+
+            paymentElement.mount("#payment-element");
+        } catch (e) {
+            console.error("Elements Initialization Error:", e);
+            showMessage("Error creating payment element: " + e.message);
+            return;
+        }
+
+        const form = document.getElementById("payment-form");
+        // Disable button initially until ready
+        setLoading(true);
+        document.querySelector("#button-text").textContent = "Loading Payment Form...";
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            setLoading(true);
+
+            try {
+                const { error } = await stripe.confirmPayment({
+                    elements,
+                    confirmParams: {
+                        // Return URL where Stripe redirects after payment
+                        return_url: window.location.origin + "<%= request.getContextPath() %>/PaymentSuccessServlet",
+                    },
+                });
+
+                if (error) {
+                    // Show error to your customer
+                    console.error("Stripe Confirm Error:", error);
+                    showMessage(error.message);
+                    setLoading(false);
+                } else {
+                    // Your customer will be redirected to your `return_url`
+                }
+            } catch (e) {
+                console.error("Payment Submission Error:", e);
+                showMessage("An unexpected error occurred: " + e.message);
+                setLoading(false);
+            }
+        });
     });
 
     // Helper functions
