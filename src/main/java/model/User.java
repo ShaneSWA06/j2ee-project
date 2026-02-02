@@ -18,6 +18,12 @@ public class User implements Serializable {
     private String resetToken;
     private java.sql.Timestamp resetTokenExpiry;
     private java.sql.Timestamp createdAt;
+    
+    // Additional Profile Fields
+    private String phone;
+    private String address;
+    private String relationship;
+    private String careNotes;
 
     // Constructors
     public User() {
@@ -102,6 +108,38 @@ public class User implements Serializable {
 
     public void setCreatedAt(java.sql.Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getRelationship() {
+        return relationship;
+    }
+
+    public void setRelationship(String relationship) {
+        this.relationship = relationship;
+    }
+
+    public String getCareNotes() {
+        return careNotes;
+    }
+
+    public void setCareNotes(String careNotes) {
+        this.careNotes = careNotes;
     }
 
     // Helper methods
