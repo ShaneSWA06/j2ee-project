@@ -20,6 +20,17 @@
     <a href="<%= request.getContextPath() %>/public/serviceDetails.jsp" class="btn btn-secondary">View All Services</a>
   </div>
 
+  <!-- Special Medical Escort Service -->
+  <div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--coral);">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+              <h3>🚑 Medical Escort Service</h3>
+              <p style="margin-bottom: 0;">Professional accompaniment for medical appointments (Dialysis, Checkups, Therapy)</p>
+          </div>
+          <a href="${pageContext.request.contextPath}/customer/medical-escort" class="btn btn-primary">Book Escort</a>
+      </div>
+  </div>
+
   <div class="grid" style="margin-top: 12px;">
     <% if (error != null) { %>
       <div class="card" style="grid-column: 1 / -1; border-color: rgba(180, 35, 24, 0.35); background: rgba(180, 35, 24, 0.06);">

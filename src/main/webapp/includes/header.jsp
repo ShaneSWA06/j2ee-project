@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/app.css?v=4" />
-    <script src="${pageContext.request.contextPath}/assets/js/theme.js?v=4"></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/app.css?v=5" />
+    <script src="${pageContext.request.contextPath}/assets/js/theme.js?v=5"></script>
   </head>
   <body>
