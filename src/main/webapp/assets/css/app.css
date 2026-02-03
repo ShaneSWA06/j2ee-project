@@ -6,20 +6,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
 
 :root {
-  /* Dark Slate + Amber Color Palette */
+  /* Khaki Accent Palette */
   --background: #0a0a0f;
   --background-alt: #12121a;
   --foreground: #fafafa;
   --muted: #1a1a24;
   --muted-foreground: #71717a;
-  --accent: #f59e0b;
+  --accent: #f0e68c;
   --accent-foreground: #0a0a0f;
-  --accent-muted: rgba(245, 158, 11, 0.15);
+  --accent-muted: rgba(240, 230, 140, 0.15);
   --border: rgba(255, 255, 255, 0.08);
   --border-hover: rgba(255, 255, 255, 0.15);
   --card: rgba(26, 26, 36, 0.6);
   --card-solid: #1a1a24;
-  --ring: #f59e0b;
+  --ring: #f0e68c;
 
   /* Typography - Warm & Approachable for Caregiving */
   --font-display: "Poppins", system-ui, sans-serif;
@@ -39,11 +39,11 @@
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
   --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.4);
-  --glow-sm: 0 0 20px rgba(245, 158, 11, 0.15);
-  --glow-md: 0 0 40px rgba(245, 158, 11, 0.2);
-  --glow-lg: 0 0 60px rgba(245, 158, 11, 0.25);
+  --glow-sm: 0 0 20px rgba(240, 230, 140, 0.15);
+  --glow-md: 0 0 40px rgba(240, 230, 140, 0.2);
+  --glow-lg: 0 0 60px rgba(240, 230, 140, 0.25);
   --border-glow:
-    0 0 0 1px rgba(245, 158, 11, 0.3), 0 0 20px rgba(245, 158, 11, 0.15);
+    0 0 0 1px rgba(240, 230, 140, 0.3), 0 0 20px rgba(240, 230, 140, 0.15);
 }
 
 /* ========== RESET & BASE ========== */
@@ -347,7 +347,7 @@ a:focus-visible {
 
 .btn:hover {
   filter: brightness(1.1);
-  box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+  box-shadow: 0 0 20px rgba(240, 230, 140, 0.4);
   transform: translateY(-1px);
   color: var(--accent-foreground);
 }
@@ -373,7 +373,7 @@ a:focus-visible {
 
 .btn-primary:hover {
   filter: brightness(1.1);
-  box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+  box-shadow: 0 0 20px rgba(240, 230, 140, 0.4);
   transform: translateY(-1px);
   color: var(--accent-foreground);
 }
@@ -400,7 +400,7 @@ a:focus-visible {
   background: var(--accent-muted);
   border-color: var(--accent);
   color: var(--accent);
-  box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+  box-shadow: 0 0 15px rgba(240, 230, 140, 0.2);
 }
 
 .btn-secondary:active {
@@ -411,14 +411,14 @@ a:focus-visible {
 .btn-outline {
   background: transparent;
   color: var(--accent);
-  border: 1px solid rgba(245, 158, 11, 0.5);
+  border: 1px solid rgba(240, 230, 140, 0.5);
 }
 
 .btn-outline:hover {
   background: var(--accent-muted);
   border-color: var(--accent);
   color: var(--accent);
-  box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
+  box-shadow: 0 0 15px rgba(240, 230, 140, 0.2);
 }
 
 /* Ghost button - no border, amber text */
