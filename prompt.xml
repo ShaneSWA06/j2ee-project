@@ -31,474 +31,372 @@ Always aim to:
 </role>
 
 <design-system>
-# Design Style: Minimalist Monochrome
+# Design Style: Linear / Modern
 
 ## Design Philosophy
 
-### Core Principle
+**Core Principles:** Precision, depth, and fluidity define this design system. Every surface exists in three-dimensional space, illuminated by soft ambient light sources that breathe and move. The design communicates "premium developer tools"—fast, responsive, and obsessively crafted like Linear, Vercel, or Raycast. Nothing is arbitrary: every shadow has three layers, every gradient transitions through multiple colors, every animation uses refined expo-out easing. The goal is software that feels expensive without feeling ostentatious.
 
-**Reduction to Essence.** Minimalist Monochrome strips design down to its most fundamental elements: black, white, and typography. There are no accent colors to hide behind, no gradients to soften edges, no shadows to create false depth. Every design decision must stand on its own merit. This is design as discipline—where restraint becomes the ultimate form of expression.
+**Vibe:** Cinematic meets technical minimalism. Imagine a developer's code editor crossed with a Blade Runner interface—deep near-blacks (#050506, never pure black) punctuated by soft pools of indigo light. The aesthetic is sophisticated but never cold, using warmth from accent glows (#5E6AD2 at varying opacities) to create inviting depth. It should feel like looking through frosted glass into a high-end application running at night. Dark, but not oppressive. Technical, but not sterile. Precise, but not rigid.
 
-### Visual Vibe
+**Differentiation:** The signature of this style is **layered ambient lighting and interactive depth**. Unlike flat dark modes or simple gradient overlays, this creates genuine atmospheric presence through:
 
-**Emotional Keywords**: Austere, Authoritative, Timeless, Editorial, Intellectual, Dramatic, Refined, Stark, Confident, Uncompromising
+1. **Multi-layer background system:** Four stacked gradients + noise texture + grid overlay create depth without any single dominant element
+2. **Animated gradient blobs:** Large (900-1400px), heavily blurred shapes float slowly across the canvas, simulating cinematic lighting pools
+3. **Mouse-tracking spotlights:** Interactive surfaces respond to cursor position with radial gradient glows (300px diameter, 15% opacity)
+4. **Scroll-linked parallax:** Hero content fades, scales, and translates based on scroll position for cinematic depth
+5. **Multi-layer shadows:** Every elevated surface uses 3-4 shadow layers: border highlight + soft diffuse + ambient darkness + optional accent glow
+6. **Precision micro-interactions:** All animations are 200-300ms with expo-out easing. Movements are tiny (4-8px max). Scale changes are subtle (0.98-1.02). Nothing bounces or overshoots.
 
-This is the visual language of:
-- High-end fashion editorials (Vogue, Harper's Bazaar covers)
-- Architectural monographs and museum catalogs
-- Luxury brand identities (Chanel, Celine, Bottega Veneta)
-- Award-winning book design and fine typography
-- Gallery exhibition materials
-
-The design commands respect through its confidence. It doesn't need color to be interesting—it uses scale, contrast, rhythm, and negative space to create visual drama.
-
-### What This Design Is NOT
-
-- ❌ Colorful or playful
-- ❌ Soft, rounded, or friendly
-- ❌ Gradient-based or with accent colors
-- ❌ Shadow-heavy or "elevated"
-- ❌ Generic or template-like
-- ❌ Busy or cluttered
-- ❌ Similar to "Minimalist Modern" (no blue accents, no gradients, no rounded corners)
-
-### The DNA of Minimalist Monochrome
-
-#### 1. Pure Black & White Palette
-No grays for primary elements—use true black (#000000) and true white (#FFFFFF). Gray is reserved only for secondary text and borders. The stark contrast creates immediate visual impact and forces deliberate hierarchy decisions.
-
-#### 2. Serif Typography as Hero
-Unlike modern sans-serif minimalism, this style embraces classical serif typefaces. The serif adds sophistication, editorial weight, and timeless elegance. Typography isn't just content—it's the primary visual element.
-
-#### 3. Oversized Type Scale
-Headlines don't just inform—they dominate. Expect 8xl, 9xl, and custom larger sizes. Words become graphic elements. Single words or short phrases can fill entire viewport widths.
-
-#### 4. Line-Based Visual System
-Instead of filled shapes, shadows, or backgrounds, this design uses lines: hairlines, thick rules, borders, underlines, strikethroughs. Lines create structure without mass.
-
-#### 5. Sharp Geometric Precision
-Zero border radius everywhere. Perfect 90-degree corners. Precise alignments. The geometry is architectural—think Bauhaus meets editorial print design.
-
-#### 6. Dramatic Negative Space
-Whitespace isn't empty—it's active. Generous margins and padding create breathing room that makes the black elements more impactful. The page breathes.
-
-#### 7. Inversion for Emphasis
-Instead of accent colors, use color inversion (black background, white text) to highlight important elements. This creates drama without breaking the monochrome rule.
-
-### Differentiation from Minimalist Modern
-
-| Aspect | Minimalist Modern | Minimalist Monochrome |
-|--------|-------------------|----------------------|
-| Colors | Blue accent + gradients | Pure black & white only |
-| Typography | Sans-serif (Inter) | Serif (Playfair Display) |
-| Corners | Rounded (lg, xl, 2xl) | Sharp (0px everywhere) |
-| Depth | Shadows, glows, elevation | Flat, 2D, no shadows |
-| Visual elements | Gradient fills, colored icons | Lines, borders, typography |
-| Vibe | Contemporary tech | Editorial luxury |
-| Personality | Confident & approachable | Austere & commanding |
+**The "Software Feel":** This design should feel like using a desktop application, not a website. Interactions are instant and precise. Hover states are immediate. Focus rings are prominent. Everything responds to the cursor. The aesthetic borrows from native macOS/Windows design systems—subtle transparency, soft glows, refined typography, obsessive attention to 1px details.
 
 ---
 
-## Design Token System
+## Design Token System (The DNA)
 
-### Colors (Strictly Monochrome)
+### Color Strategy: Deep Space with Ambient Light
 
+The palette is built on near-black bases with a single saturated indigo accent. Depth comes from layered translucency and soft light sources, not harsh shadows.
+
+| Token | Value | Usage |
+|:------|:------|:------|
+| `background-deep` | `#020203` | Absolute darkest — footer, deepest layers |
+| `background-base` | `#050506` | Primary page canvas |
+| `background-elevated` | `#0a0a0c` | Elevated surfaces, mock interfaces |
+| `surface` | `rgba(255,255,255,0.05)` | Card backgrounds, containers |
+| `surface-hover` | `rgba(255,255,255,0.08)` | Hovered card state |
+| `foreground` | `#EDEDEF` | Primary text — bright but not pure white |
+| `foreground-muted` | `#8A8F98` | Body text, descriptions, metadata |
+| `foreground-subtle` | `rgba(255,255,255,0.60)` | Tertiary text, placeholders |
+| `accent` | `#5E6AD2` | Primary interactive color — buttons, links, glows |
+| `accent-bright` | `#6872D9` | Hover state for accent |
+| `accent-glow` | `rgba(94,106,210,0.3)` | Glow effects, ambient lighting |
+| `border-default` | `rgba(255,255,255,0.06)` | Subtle hairline borders |
+| `border-hover` | `rgba(255,255,255,0.10)` | Border on hover |
+| `border-accent` | `rgba(94,106,210,0.30)` | Accent-tinted borders for emphasis |
+
+### Background System: Layered Ambient Lighting
+
+The background is never flat. It's a composition of multiple layers:
+
+**Layer 1 — Base Gradient:**
 ```
-background:       #FFFFFF (Pure white)
-foreground:       #000000 (Pure black)
-muted:            #F5F5F5 (Off-white for subtle backgrounds)
-mutedForeground:  #525252 (Dark gray for secondary text)
-accent:           #000000 (Black IS the accent)
-accentForeground: #FFFFFF (White on black)
-border:           #000000 (Black borders)
-borderLight:      #E5E5E5 (Light gray for subtle dividers)
-card:             #FFFFFF (White cards)
-cardForeground:   #000000 (Black text)
-ring:             #000000 (Black focus rings)
+bg-[radial-gradient(ellipse_at_top,#0a0a0f_0%,#050506_50%,#020203_100%)]
 ```
+A radial gradient emanating from top-center creates vertical depth.
 
-**Rule**: No other colors. Ever. The palette is absolute.
+**Layer 2 — Noise Texture:**
+A subtle SVG noise pattern at `opacity: 0.015` adds tactile quality and prevents banding.
 
-### Typography
+**Layer 3 — Animated Gradient Blobs:**
+Multiple large, heavily blurred shapes create ambient "light pools":
+- Primary blob: Top-center, `blur-[150px]`, 900×1400px, accent color at 25% opacity
+- Secondary blob: Left side, `blur-[120px]`, 600×800px, purple/pink mix at 15% opacity
+- Tertiary blob: Right side, `blur-[100px]`, 500×700px, indigo/blue mix at 12% opacity
+- Bottom accent: Lower area, pulsing animation, accent at 10% opacity
 
-**Font Stack**:
-- **Display/Headlines**: `"Playfair Display", Georgia, serif` - Elegant, high-contrast serif with beautiful italics
-- **Body**: `"Source Serif 4", Georgia, serif` - Highly readable serif for long-form text
-- **Mono/Labels**: `"JetBrains Mono", monospace` - For dates, metadata, technical details
-
-**Type Scale** (Dramatic range):
-```
-xs:   0.75rem   (12px) - Fine print, metadata
-sm:   0.875rem  (14px) - Captions, labels
-base: 1rem     (16px) - Body text minimum
-lg:   1.125rem (18px) - Body text preferred
-xl:   1.25rem  (20px) - Lead paragraphs
-2xl:  1.5rem   (24px) - Section intros
-3xl:  2rem     (32px) - Subheadings
-4xl:  2.5rem   (40px) - Section titles
-5xl:  3.5rem   (56px) - Page titles
-6xl:  4.5rem   (72px) - Hero subheadings
-7xl:  6rem     (96px) - Hero headlines
-8xl:  8rem     (128px) - Display headlines
-9xl:  10rem    (160px) - Oversized statements
-```
-
-**Tracking & Leading**:
-- Headlines: `tracking-tight` (-0.025em) or `tracking-tighter` (-0.05em)
-- Body: `tracking-normal` (0)
-- Small caps/Labels: `tracking-widest` (0.1em)
-- Line heights: `leading-none` (1) for display, `leading-relaxed` (1.625) for body
-
-### Border Radius
-
-```
-ALL VALUES: 0px
-```
-
-No exceptions. Every element has sharp, 90-degree corners. This is non-negotiable and defines the style's architectural character.
-
-### Borders & Lines
-
-```
-hairline:  1px solid #E5E5E5  (Subtle dividers)
-thin:      1px solid #000000  (Standard borders)
-medium:    2px solid #000000  (Emphasis borders)
-thick:     4px solid #000000  (Heavy rules, section dividers)
-ultra:     8px solid #000000  (Maximum impact)
-```
-
-**Usage**:
-- Horizontal rules between sections (thick or ultra)
-- Vertical dividers between columns (thin)
-- Card borders (thin or medium)
-- Underlines for links (thin, on hover)
-
-### Shadows
-
-```
-NONE
-```
-
-This design has zero drop shadows. Depth is created through:
-- Color inversion (black/white swap)
-- Border weight variation
-- Scale contrast
-- Negative space
-
-### Textures & Patterns
-
-**CRITICAL**: These textures are REQUIRED to prevent flat design. Apply strategically across sections.
-
-**Primary Pattern: Horizontal Lines (Global)**
+**Blob Animation:** Blobs float slowly using keyframe animations:
 ```css
-background-image: repeating-linear-gradient(
-  0deg,
-  transparent,
-  transparent 1px,
-  #000 1px,
-  #000 2px
-);
-background-size: 100% 4px;
-opacity: 0.015;
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(1deg); }
+}
+/* Duration: 8-10s, ease-in-out, infinite */
 ```
 
-**Secondary Pattern: Grid (for editorial sections like Product Detail)**
-```css
-background-image:
-  linear-gradient(#00000008 1px, transparent 1px),
-  linear-gradient(90deg, #00000008 1px, transparent 1px);
-background-size: 40px 40px;
-opacity: 0.015;
+**Layer 4 — Grid Overlay:**
+A subtle 64px grid pattern at `opacity: 0.02` adds technical precision.
+
+---
+
+### Typography System
+
+**Font Stack:** `"Inter", "Geist Sans", system-ui, sans-serif`
+
+**Type Scale & Weights:**
+
+| Level | Size | Weight | Tracking | Usage |
+|:------|:-----|:-------|:---------|:------|
+| Display | `text-7xl` to `text-8xl` | `font-semibold` | `tracking-[-0.03em]` | Hero headlines |
+| H1 | `text-5xl` to `text-6xl` | `font-semibold` | `tracking-tight` | Section headers |
+| H2 | `text-3xl` to `text-4xl` | `font-semibold` | `tracking-tight` | Subsection headers |
+| H3 | `text-xl` to `text-2xl` | `font-semibold` | `tracking-tight` | Card titles |
+| Body Large | `text-lg` to `text-xl` | `font-normal` | default | Lead paragraphs |
+| Body | `text-sm` to `text-base` | `font-normal` | default | Standard content |
+| Label | `text-xs` | `font-mono` | `tracking-widest` | Section tags, metadata |
+
+**Gradient Text Treatment:**
+Headlines use gradient fills for dimensionality:
+```
+bg-gradient-to-b from-white via-white/95 to-white/70 bg-clip-text text-transparent
 ```
 
-**Diagonal Lines (for process/timeline sections)**
-```css
-background-image: repeating-linear-gradient(
-  45deg,
-  transparent,
-  transparent 40px,
-  #00000008 40px,
-  #00000008 42px
-);
-opacity: 0.01;
+For accent emphasis, use animated gradient:
+```
+bg-gradient-to-r from-[#5E6AD2] via-indigo-400 to-[#5E6AD2] bg-clip-text text-transparent
+/* With background-size: 200% and animation for shimmer effect */
 ```
 
-**Noise Texture (global, for paper-like quality)**
-```css
-background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-opacity: 0.02;
-```
+**Line Heights:**
+- Headlines: `leading-tight` or `leading-none`
+- Body text: `leading-relaxed`
 
-**Inverted Section Textures**
-For dark backgrounds (Stats, Final CTA), use white-based textures:
-```css
-/* Vertical lines for Stats */
-background-image: repeating-linear-gradient(
-  90deg,
-  transparent,
-  transparent 1px,
-  #fff 1px,
-  #fff 2px
-);
-background-size: 4px 100%;
-opacity: 0.03;
+---
 
-/* Radial gradient for Final CTA */
-background-image: radial-gradient(
-  circle at top center,
-  #ffffff,
-  transparent 70%
-);
-opacity: 0.05;
+### Radius & Border System
+
+| Element | Radius | Border |
+|:--------|:-------|:-------|
+| Large containers | `rounded-2xl` (16px) | `border border-white/[0.06]` |
+| Cards | `rounded-2xl` (16px) | `border border-white/[0.06]` |
+| Buttons | `rounded-lg` (8px) | Inset shadow instead of border |
+| Inputs | `rounded-lg` (8px) | `border border-white/10` |
+| Badges/Pills | `rounded-full` | `border border-accent/30` |
+| Icons containers | `rounded-xl` (12px) | `border border-white/10` |
+
+**Border Gradients on Hover:**
+Cards can have animated gradient borders that fade in on hover:
+```css
+background: linear-gradient(to bottom, rgba(94,106,210,0.3), transparent);
+mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+mask-composite: exclude;
+padding: 1px;
 ```
 
 ---
 
-## Component Stylings
+### Shadow & Glow System
+
+**Multi-Layer Shadow Formula:**
+Shadows combine multiple layers for realistic depth:
+
+```
+/* Card default */
+shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_2px_20px_rgba(0,0,0,0.4),0_0_40px_rgba(0,0,0,0.2)]
+
+/* Card hover */
+shadow-[0_0_0_1px_rgba(255,255,255,0.1),0_8px_40px_rgba(0,0,0,0.5),0_0_80px_rgba(94,106,210,0.1)]
+```
+
+**Accent Glow for CTAs:**
+```
+shadow-[0_0_0_1px_rgba(94,106,210,0.5),0_4px_12px_rgba(94,106,210,0.3),inset_0_1px_0_0_rgba(255,255,255,0.2)]
+```
+
+**Inner Highlight:**
+Buttons and elevated surfaces get a subtle top edge highlight:
+```
+shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1)]
+```
+
+---
+
+## Component Styling Principles
 
 ### Buttons
 
-**Primary Button**:
-```
-- Background: #000000 (black)
-- Text: #FFFFFF (white)
-- Border: none
-- Padding: px-8 py-4 (generous)
-- Font: uppercase, tracking-widest, font-medium, text-sm
-- Hover: Invert to white bg, black text, black border
-- Transition: Instant (no easing, 0ms or 100ms max)
+**Primary Button:**
+- Background: Solid accent color (`bg-[#5E6AD2]`)
+- Text: White
+- Shadow: Multi-layer with accent glow
+- Hover: Slightly brighter (`bg-[#6872D9]`), increased glow
+- Active: `scale-[0.98]`, reduced shadow
+- Shine effect: Pseudo-element gradient sweep on hover
+
+**Secondary Button:**
+- Background: `bg-white/[0.05]`
+- Text: `text-[#EDEDEF]`
+- Border: Inset shadow only
+- Hover: `bg-white/[0.08]`, subtle outer glow
+
+**Ghost Button:**
+- Background: Transparent
+- Text: Muted foreground
+- Hover: `bg-white/[0.05]`, text brightens
+
+### Cards & Containers
+
+**Base Card:**
+- Background: `bg-gradient-to-b from-white/[0.08] to-white/[0.02]`
+- Border: 1px at 6% white opacity
+- Radius: `rounded-2xl`
+- Inner glow line: 1px gradient at top edge
+- Mouse-tracking spotlight effect (optional)
+
+**Spotlight Effect:**
+Cards track mouse position and render a radial gradient that follows the cursor:
+```jsx
+// Radial gradient, 300px diameter, accent color at 15% opacity
+// Positioned at mouse coordinates relative to card
+// Opacity transitions on hover
 ```
 
-**Secondary/Outline Button**:
-```
-- Background: transparent
-- Text: #000000
-- Border: 2px solid #000000
-- Hover: Fill black, text white
-```
+**Card Variants:**
+- `default`: Standard glass effect
+- `glass`: More translucent with backdrop blur
+- `gradient`: Subtle accent gradient overlay
 
-**Ghost Button**:
-```
-- Background: transparent
-- Text: #000000
-- Border: none
-- Text decoration: underline on hover
-- Style: Looks like a text link
-```
+### Form Inputs
 
-**Button Shape**: Always rectangular, never rounded. Consider adding a small arrow (→) for CTAs.
+- Background: `bg-[#0F0F12]`
+- Border: `border-white/10`
+- Focus: `border-[#5E6AD2]` with accent glow ring
+- Text: `text-gray-100`
+- Placeholder: `text-gray-500`
 
-### Cards/Containers
+### Interactive States
 
-**Standard Card**:
-```
-- Background: #FFFFFF
-- Border: 1px solid #000000
-- Padding: p-6 or p-8
-- No shadow, no radius
-```
+**Hover Principles:**
+- Movement is minimal: `y: -4px` to `y: -8px` maximum
+- Duration: `200-300ms`
+- Easing: `[0.16, 1, 0.3, 1]` (expo out)
+- Changes: Border brightens, glow increases, subtle scale
 
-**Inverted Card** (for emphasis):
-```
-- Background: #000000
-- Text: #FFFFFF
-- Border: none
-- Use sparingly for highlighted content
-```
+**Focus States:**
+- Ring: `ring-2 ring-[#5E6AD2]/50 ring-offset-2 ring-offset-[#050506]`
 
-**Borderless Card**:
-```
-- No border, no background
-- Content separated by generous whitespace
-- Use horizontal rules above/below if needed
-```
+**Active States:**
+- Scale: `scale-[0.98]`
+- Shadow: Reduced depth
 
-### Inputs
-
-**Text Input**:
-```
-- Background: #FFFFFF
-- Border: 2px solid #000000 (bottom only, or full)
-- No radius
-- Placeholder: #525252 italic
-- Focus: Border thickens to 3px or 4px
-- No colored focus ring—just border change
-```
-
-**Textarea**: Same as input, with visible resize handle.
+**Mobile Menu:**
+- Toggle button appears on screens < 768px
+- Animated dropdown with `opacity` and `y` transform (0.2s duration)
+- Semi-transparent backdrop: `bg-[#050506]/95` with `backdrop-blur-xl`
+- Vertical navigation links with hover states
+- Full-width CTA button at bottom
+- Menu icon transitions between hamburger (`Menu`) and close (`X`) icons
 
 ---
 
-## Layout Strategy
+## Layout Principles
 
-### Container
-```
-max-width: max-w-6xl (72rem / 1152px)
-padding: px-6 md:px-8 lg:px-12
-```
+### Spacing Scale
+Base unit: 4px. Use Tailwind's default scale consistently.
 
-### Section Spacing
-```
-Vertical padding: py-24 md:py-32 lg:py-40
-Between sections: Thick horizontal rule (4px or 8px black)
-```
+| Context | Spacing |
+|:--------|:--------|
+| Section padding | `py-24` to `py-32` |
+| Container max-width | `container` with responsive padding |
+| Card padding | `p-6` to `p-8` |
+| Element gaps | `gap-4` to `gap-8` |
+| Between sections | `py-32` (128px) |
 
-### Grid System
-- Use CSS Grid for precise control
-- 12-column base grid for flexibility
-- Strong alignment to vertical rhythm
+### Grid Philosophy
 
----
+**Asymmetric Bento Grids:**
+Feature grids should NOT be uniform. Use varying spans:
+- 6-column base grid on desktop
+- Mix of `col-span-2`, `col-span-3`, `col-span-4`
+- Variable row heights with `auto-rows-[180px]` as baseline
+- One "hero" card spanning 4 columns and 2 rows
 
-## Effects & Animation
+**Responsive Breakpoints:**
+- Mobile (`< 768px`): Single column, stacked layout with reduced padding
+- Tablet (`md: 768px`): 2-3 columns, intermediate grid layouts
+- Desktop (`lg: 1024px+`): Full grid expression with asymmetric layouts
 
-**Motion Philosophy**: **Minimal and Instant**
+**Mobile-Specific Adjustments:**
+- Section padding scales: `py-16` (mobile) → `py-24` (tablet) → `py-32` (desktop)
+- Hero typography: `text-4xl` (mobile) → `text-5xl` (tablet) → `text-7xl`/`text-8xl` (desktop)
+- Body text: `text-base` (mobile) → `text-lg` (tablet) → `text-xl` (desktop)
+- Navigation: Hamburger menu with animated slide-down panel on mobile (`Menu`/`X` icons), inline links on desktop
+- Cards: Full-width on mobile, grid on desktop
+- Bento grids: Single column mobile, full asymmetric layout desktop
 
-This design favors stillness and instant state changes. When animation exists, it's:
-- **Instant**: 0-100ms transitions maximum
-- **Binary**: Sharp on/off states, not gradual
-- **Purposeful**: Only for state changes (hover, focus)
+### Section Flow
 
-**Hover Effects** (Applied):
-- **Cards/Features**: Full color inversion (bg, text, borders) with 100ms transition
-- **Buttons**: Color inversion with transition-none for instant feedback
-- **Blog Images**: Border thickens (2px → 4px), image scales 105% and removes grayscale (300ms)
-- **Links**: Underline appearance (instant)
-- **Testimonials**: Quote mark opacity increases, bottom border thickens
-
-**Focus States** (Accessibility Required):
-- **Buttons**: 3px solid outline with 3px offset
-- **Inputs**: Border thickens from 2px to 4px (bottom only)
-- **Links**: Border appears/thickens
-- **Interactive elements**: 3px solid outline with 2px offset
-- All outlines use `focus-visible` to avoid mouse click outlines
-
-**Specific Implementations**:
-```tsx
-// Feature card hover
-className="group bg-[var(--background)] p-8 transition-colors duration-100 hover:bg-[var(--foreground)] hover:text-[var(--background)]"
-
-// Blog image hover
-className="border-2 transition-all duration-100 group-hover:border-[4px]"
-className="grayscale transition-all duration-300 group-hover:scale-105 group-hover:grayscale-0"
-
-// Testimonial hover
-className="group-hover:opacity-20 transition-opacity duration-100" // quote mark
-className="transition-all duration-100 group-hover:border-t-[3px]" // border
-```
-
-**No**:
-- Bouncy animations
-- Floating elements
-- Parallax scrolling
-- Slow easing functions
-- Gradient animations
+- Sections separated by subtle `border-t border-white/[0.06]`
+- Gradient line accents: `bg-gradient-to-r from-transparent via-white/10 to-transparent`
+- Occasional overlapping sections using negative margins
 
 ---
 
-## Iconography
+## The "Bold Factor" (Signature Elements)
 
-**Style**: Outlined, thin strokes (strokeWidth: 1 or 1.5)
+These elements MUST be present for authenticity:
 
-**Usage**:
-- Icons inside circles with black stroke, white fill
-- Or standalone with no container
-- Size: Consistent 20px or 24px
-- Color: Always black (#000000)
+1. **Animated Ambient Blobs:** Multiple layered, floating gradient shapes create cinematic lighting. Without these, the design becomes flat and generic.
 
-**Lucide Icons Settings**:
-```tsx
-<Icon size={20} strokeWidth={1.5} className="text-black" />
-```
+2. **Mouse-Tracking Spotlights:** Interactive surfaces respond to cursor position with soft radial glow effects. This creates the "magical" interaction feel.
 
----
+3. **Gradient Typography:** Headlines use vertical gradients (white to semi-transparent) and accent gradients with animation for key phrases.
 
-## Responsive Strategy
+4. **Multi-Layer Shadows:** Never single shadows. Always combine: border highlight + soft diffuse shadow + optional accent glow.
 
-**Mobile Adaptations**:
-- Maintain sharp corners and black/white palette
-- Reduce oversized headlines (9xl → 5xl on mobile)
-- Stack columns vertically
-- Borders become full-width horizontal rules
-- Generous vertical spacing maintained
+5. **Parallax/Scroll Effects:** Hero content fades and scales on scroll. Elements reveal with staggered animations. This adds cinematic depth.
 
-**Key Principle**: The monochrome drama must survive on mobile. Don't default to generic mobile patterns.
+6. **Precision Micro-Interactions:** All animations are quick (200-300ms), use expo-out easing, and movements are tiny (4-8px). Never bouncy or exaggerated.
 
 ---
 
-## Accessibility
+## Anti-Patterns (What to Avoid)
 
-**Contrast**: Pure black on white exceeds WCAG AAA requirements (21:1 ratio).
+1. **Flat backgrounds:** Never use a single solid color. Always layer gradients, noise, and ambient light.
 
-**Focus States** (REQUIRED for all interactive elements):
-```
-Buttons & Primary Interactive Elements:
-- Outline: 3px solid #000000
-- Outline-offset: 3px
-- Use focus-visible to prevent mouse click outlines
+2. **Pure black (`#000000`):** Use near-blacks like `#050506` or `#020203` for softer appearance.
 
-Text Inputs:
-- Border thickens from 2px to 4px on focus
-- Bottom border only
-- No outline (border change is sufficient)
+3. **Pure white text:** Use `#EDEDEF` or similar off-white to reduce harshness.
 
-Links in Navigation:
-- Border appears/thickens on focus-visible
-- Consistent with hover state
+4. **Large hover movements:** Keep transforms under 8px. This isn't playful—it's precise.
 
-Secondary Interactive Elements (social icons, FAQ buttons):
-- Outline: 3px solid #000000
-- Outline-offset: 2px
-```
+5. **Uniform grids:** Bento layouts should have variety in card sizes. Avoid same-size-everything.
 
-**Implementation**:
-```tsx
-// Button focus
-focus-visible:outline focus-visible:outline-3 focus-visible:outline-[var(--foreground)] focus-visible:outline-offset-3
+6. **Harsh borders:** Borders should be nearly invisible (`6-10%` white opacity), not prominent.
 
-// Input focus
-focus:border-b-[4px] focus:outline-none focus-visible:border-b-[4px]
+7. **Colorful accent overuse:** The accent color is for highlights and interaction, not decoration. Most of the UI is monochromatic.
 
-// Link focus
-focus-visible:border-[var(--foreground)] focus-visible:outline-none
-```
+8. **Bouncy animations:** Use expo-out easing, not spring physics. Movements should be swift and decisive.
 
-**Skip Links**: Visible, black button at top of page.
-
-**Touch Targets**: Minimum 44px×44px for all interactive elements on mobile.
+9. **Missing glow effects:** Accent buttons without glow look incomplete. The soft light emission is part of the language.
 
 ---
 
-## Bold Choices (Non-Negotiable)
+## Animation & Motion
 
-1. **Oversized Hero Typography**: At least one word in 8xl or larger (9xl on desktop)
-2. **Hero Decorative Elements**: Thick rule with small bordered square for visual punctuation
-3. **Inverted Stats Section**: Black background, white text, with subtle vertical line texture
-4. **No Accent Colors**: Resist the temptation—black IS the accent
-5. **Heavy Horizontal Rules**: 4px black lines between ALL major sections
-6. **Editorial Pull Quotes**: Testimonials as large italic serif with oversized quotation marks
-7. **Sharp Everything**: Zero border-radius across all elements
-8. **Instant Interactions**: 100ms transitions maximum, mostly instant
-9. **Typography as Graphics**: Headlines that function as visual elements, not just text
-10. **Layered Textures**: Multiple subtle patterns for depth (NOT flat design)
-11. **Boxed Drop Cap**: First paragraph of Product Detail has bordered box drop cap
-12. **Elevated Pricing Tier**: Highlighted tier extends vertically on desktop
-13. **Hover Inversions**: Feature cards and pricing tiers invert on hover
-14. **Image Borders Thicken**: Blog images border weight increases on hover with scale effect
+**Timing:**
+- Quick interactions: `200ms`
+- Standard transitions: `300ms`
+- Entrance animations: `600ms`
+- Background blob float: `8000-10000ms`
+
+**Easing:**
+- Primary: `[0.16, 1, 0.3, 1]` (expo-out)
+- Hover: `ease-out`
+
+**Entrance Patterns:**
+- Fade up: `opacity: 0 → 1`, `y: 24px → 0`
+- Scale in: `opacity: 0 → 1`, `scale: 0.95 → 1`
+- Stagger children: `0.08s` delay between items
+
+**Scroll-Triggered:**
+- Viewport threshold: `15-20%` visibility
+- Once: true (don't re-animate on scroll back)
+
+**Parallax (Hero):**
+- Opacity: Fades from `1 → 0` over first 50% of scroll
+- Scale: Shrinks from `1 → 0.95`
+- Y position: Moves down `0 → 100px`
 
 ---
 
-## What Success Looks Like
+## Accessibility Considerations
 
-A successfully implemented Minimalist Monochrome design should feel like:
-- Opening a high-end fashion magazine
-- Walking through a modern art gallery
-- Reading an award-winning architectural monograph
-- Browsing a luxury brand's website
+**Contrast:**
+- Primary text (`#EDEDEF` on `#050506`): ~15:1 ratio ✓
+- Muted text (`#8A8F98` on `#050506`): ~6:1 ratio ✓
+- Accent on dark: Ensure 4.5:1 minimum for interactive elements
 
-It should NOT feel like:
-- A generic website template
-- A tech startup landing page
-- Something that "needs a pop of color"
-- Minimalist Modern with the colors removed
+**Focus States:**
+- Always visible focus rings using accent color
+- `ring-offset` matches background color
+
+**Motion:**
+- Respect `prefers-reduced-motion`
+- Provide fallbacks for parallax and floating animations
+- Essential interactions should work without animation
+
+**Color Independence:**
+- Don't rely solely on accent color for meaning
+- Use icons, labels, and position to reinforce state
 </design-system>

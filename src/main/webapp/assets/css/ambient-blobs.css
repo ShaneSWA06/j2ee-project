@@ -1,0 +1,53 @@
+/* Animated Ambient Gradient Blobs */
+.ambient-blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(150px);
+  opacity: 0.25;
+  pointer-events: none;
+  animation: float 10s ease-in-out infinite;
+}
+
+.ambient-blob-1 {
+  top: -200px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 900px;
+  height: 1400px;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+  z-index: 2;
+}
+
+.ambient-blob-2 {
+  top: 30%;
+  left: -300px;
+  width: 600px;
+  height: 800px;
+  background: radial-gradient(circle, #9333ea 0%, transparent 70%);
+  filter: blur(120px);
+  opacity: 0.15;
+  z-index: 2;
+  animation-delay: -3s;
+}
+
+.ambient-blob-3 {
+  top: 50%;
+  right: -250px;
+  width: 500px;
+  height: 700px;
+  background: radial-gradient(circle, #3b82f6 0%, transparent 70%);
+  filter: blur(100px);
+  opacity: 0.12;
+  z-index: 2;
+  animation-delay: -6s;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(1deg);
+  }
+}

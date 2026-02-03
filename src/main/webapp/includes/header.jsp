@@ -10,8 +10,13 @@
     <title><%= request.getParameter("title") != null ? request.getParameter("title") : "SilverCare Home Support Portal" %></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/app.css?v=14" />
-    <script src="${pageContext.request.contextPath}/assets/js/theme.js?v=14"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/app.css?v=15" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/ambient-blobs.css?v=15" />
+    <script src="${pageContext.request.contextPath}/assets/js/theme.js?v=15"></script>
   </head>
   <body>
+    <!-- Ambient Gradient Blobs -->
+    <div class="ambient-blob ambient-blob-1"></div>
+    <div class="ambient-blob ambient-blob-2"></div>
+    <div class="ambient-blob ambient-blob-3"></div>
