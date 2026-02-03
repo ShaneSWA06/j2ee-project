@@ -60,6 +60,12 @@ public class LoginServlet extends HttpServlet {
             User user = userDAO.validateLogin(username, password);
 
             if (user != null) {
+                // Check verification status
+                if (!user.isVerified()) {
+                    response.sendRedirect(request.getContextPath() + "/auth/login.jsp?err=not_verified");
+                    return;
+                }
+
                 // Login successful
                 HttpSession session = request.getSession();
                 session.setAttribute("sessUserId", user.getUserId());

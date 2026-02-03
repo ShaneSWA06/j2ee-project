@@ -42,6 +42,10 @@ if (cookies != null) {
       <p style="margin: 0; font-size: 16px;"><strong>✓ Success:</strong>
       <% if ("registered".equals(successMsg)) { %>
         Registration successful! Please login with your credentials.
+      <% } else if ("verify_email".equals(successMsg)) { %>
+        Registration successful! Please check your email to verify your account.
+      <% } else if ("verified".equals(successMsg)) { %>
+        Email verified successfully! You can now login.
       <% } else if ("password_reset_success".equals(successMsg)) { %>
         Password reset successful! You can now login with your new password.
       <% } else { %>

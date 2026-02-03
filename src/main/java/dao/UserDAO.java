@@ -67,4 +67,14 @@ public interface UserDAO {
      * Clear reset token after password reset
      */
     boolean clearResetToken(int userId) throws SQLException;
+
+    /**
+     * Get user by verification token
+     */
+    User getUserByVerificationToken(String token) throws SQLException;
+
+    /**
+     * Mark user as verified
+     */
+    boolean verifyUser(int userId) throws SQLException;
 }

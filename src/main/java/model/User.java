@@ -25,6 +25,10 @@ public class User implements Serializable {
     private String relationship;
     private String careNotes;
 
+    // Email Verification Fields
+    private boolean isVerified;
+    private String verificationToken;
+
     // Constructors
     public User() {
     }
@@ -110,6 +114,23 @@ public class User implements Serializable {
         this.createdAt = createdAt;
     }
 
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean isVerified) {
+        this.isVerified = isVerified;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
+    }
+
+    // Additional Profile Getters and Setters
     public String getPhone() {
         return phone;
     }

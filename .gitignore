@@ -36,3 +36,5 @@ hs_err_pid*
 # Local Config
 src/main/webapp/WEB-INF/classes/stripe.properties
 src/main/resources/stripe.properties
+src/main/webapp/WEB-INF/classes/mail.properties
+src/main/resources/mail.properties

@@ -1,18 +1,18 @@
 package servlet;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.UUID;
 
-import db.DBUtil;
+import dao.DAOFactory;
+import dao.UserDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.User;
+import service.EmailService;
 
 /**
  * RegisterServlet handles customer registration
@@ -58,57 +58,48 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
         try {
-            conn = DBUtil.getConnection();
+            UserDAO userDAO = DAOFactory.getUserDAO();
 
             // Check for duplicate email or username
-            ps = conn.prepareStatement(
-                "SELECT 1 FROM app_user WHERE email=? OR username=?");
-            ps.setString(1, email);
-            ps.setString(2, username);
-            rs = ps.executeQuery();
-
-            if (rs.next()) {
-                // Duplicate found
+            if (userDAO.getUserByEmail(email) != null || userDAO.getUserByUsername(username) != null) {
                 response.sendRedirect(request.getContextPath() +
                     "/customer/registerCustomer.jsp?err=duplicate");
                 return;
             }
 
-            rs.close();
-            ps.close();
+            // Create new User object
+            User user = new User();
+            user.setUsername(username);
+            user.setEmail(email);
+            user.setPassword(password); // UserDAO will hash this
+            user.setName(name);
+            user.setRole("CUSTOMER");
+            user.setPhone(phone);
+            user.setRelationship(relationship);
+            user.setAddress(address);
+            user.setCareNotes(careNotes);
+            
+            // Set verification token
+            String token = UUID.randomUUID().toString();
+            user.setVerificationToken(token);
+            user.setVerified(false);
 
-            // Insert new customer with role='CUSTOMER'
-            ps = conn.prepareStatement(
-                "INSERT INTO app_user (username, email, password, role, name, phone, relationship, address, care_notes) " +
-                "VALUES (?, ?, ?, 'CUSTOMER', ?, ?, ?, ?, ?)");
-            ps.setString(1, username);
-            ps.setString(2, email);
-            ps.setString(3, util.PasswordUtil.hashPassword(password));
-            ps.setString(4, name);
-            ps.setString(5, phone);
-            ps.setString(6, relationship);
-            ps.setString(7, address);
-            ps.setString(8, careNotes);
-
-            int result = ps.executeUpdate();
-
-            if (result > 0) {
-                // Registration successful
-                // Set remember cookie
-                Cookie cookie = new Cookie("remember_id", username);
-                cookie.setMaxAge(30 * 24 * 60 * 60); // 30 days
-                cookie.setPath("/");
-                response.addCookie(cookie);
+            // Save user
+            if (userDAO.createUser(user) != null) {
+                // Send verification email asynchronously
+                String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+                new Thread(() -> {
+                    try {
+                        EmailService.sendVerificationEmail(email, token, baseUrl);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }).start();
 
                 response.sendRedirect(request.getContextPath() +
-                    "/auth/login.jsp?success=registered");
+                    "/auth/login.jsp?success=verify_email");
             } else {
-                // Registration failed
                 response.sendRedirect(request.getContextPath() +
                     "/customer/registerCustomer.jsp?err=failed");
             }
@@ -117,17 +108,6 @@ public class RegisterServlet extends HttpServlet {
             e.printStackTrace();
             response.sendRedirect(request.getContextPath() +
                 "/customer/registerCustomer.jsp?err=" + e.getMessage());
-        } finally {
-            // Clean up resources
-            if (rs != null) {
-				try { rs.close(); } catch (SQLException ignore) {}
-			}
-            if (ps != null) {
-				try { ps.close(); } catch (SQLException ignore) {}
-			}
-            if (conn != null) {
-				try { conn.close(); } catch (SQLException ignore) {}
-			}
         }
     }
 }
