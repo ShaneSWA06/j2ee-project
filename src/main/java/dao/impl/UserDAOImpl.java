@@ -92,7 +92,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User validateLogin(String usernameOrEmail, String password) throws SQLException {
-        String sql = "SELECT user_id, username, email, name, password, role, created_at, phone, address, relationship, care_notes " +
+        String sql = "SELECT user_id, username, email, name, password, role, created_at, phone, address, relationship, care_notes, is_verified, verification_token " +
                      "FROM app_user WHERE (username = ? OR email = ?)";
 
         try (Connection conn = DBUtil.getConnection();
@@ -119,7 +119,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User createUser(User user) throws SQLException {
-        String sql = "INSERT INTO app_user (username, email, name, password, role) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO app_user (username, email, name, password, role, is_verified, verification_token, phone, address, relationship, care_notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -129,6 +129,12 @@ public class UserDAOImpl implements UserDAO {
             ps.setString(3, user.getName());
             ps.setString(4, util.PasswordUtil.hashPassword(user.getPassword()));
             ps.setString(5, user.getRole());
+            ps.setBoolean(6, user.isVerified());
+            ps.setString(7, user.getVerificationToken());
+            ps.setString(8, user.getPhone());
+            ps.setString(9, user.getAddress());
+            ps.setString(10, user.getRelationship());
+            ps.setString(11, user.getCareNotes());
 
             int rowsAffected = ps.executeUpdate();
 

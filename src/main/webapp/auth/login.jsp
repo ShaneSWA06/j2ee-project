@@ -28,6 +28,8 @@ if (cookies != null) {
         Please enter both email/username and password.
       <% } else if ("invalid".equals(errorMsg)) { %>
         Invalid username/email or password. Please try again.
+      <% } else if ("not_verified".equals(errorMsg)) { %>
+        Your email address is not verified. Please check your inbox for the verification link.
       <% } else if ("notloggedin".equals(errorMsg)) { %>
         You must be logged in to access that page.
       <% } else { %>
