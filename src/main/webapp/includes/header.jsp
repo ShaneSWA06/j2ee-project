@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/app.css?v=13" />
-    <script src="${pageContext.request.contextPath}/assets/js/theme.js?v=13"></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/app.css?v=14" />
+    <script src="${pageContext.request.contextPath}/assets/js/theme.js?v=14"></script>
   </head>
   <body>
