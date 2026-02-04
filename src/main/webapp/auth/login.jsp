@@ -18,12 +18,13 @@ if (cookies != null) {
 %>
 <jsp:include page="../includes/header.jsp"><jsp:param name="title" value="Login"/></jsp:include>
 <jsp:include page="../includes/navbar.jsp"/>
-<div class="container">
+<div class="form-container">
   <h1>Login</h1>
+  <p class="form-subtitle">Welcome back! Please login to your account.</p>
 
   <% if (errorMsg != null) { %>
-    <div style="background: #f8d7da; border: 2px solid #f5c6cb; color: #721c24; margin-bottom: 20px; padding: 15px; border-radius: 8px;">
-      <p style="margin: 0; font-size: 16px;"><strong>⚠ Error:</strong>
+    <div class="alert alert-error">
+      <strong>⚠ Error:</strong>
       <% if ("missing".equals(errorMsg)) { %>
         Please enter both email/username and password.
       <% } else if ("invalid".equals(errorMsg)) { %>
@@ -35,13 +36,12 @@ if (cookies != null) {
       <% } else { %>
         <%= errorMsg %>
       <% } %>
-      </p>
     </div>
   <% } %>
 
   <% if (successMsg != null) { %>
-    <div style="background: #d4edda; border: 2px solid #c3e6cb; color: #155724; margin-bottom: 20px; padding: 15px; border-radius: 8px;">
-      <p style="margin: 0; font-size: 16px;"><strong>✓ Success:</strong>
+    <div class="alert alert-success">
+      <strong>✓ Success:</strong>
       <% if ("registered".equals(successMsg)) { %>
         Registration successful! Please login with your credentials.
       <% } else if ("verify_email".equals(successMsg)) { %>
@@ -53,30 +53,29 @@ if (cookies != null) {
       <% } else { %>
         <%= successMsg %>
       <% } %>
-      </p>
     </div>
   <% } %>
 
-  <form method="post" action="${pageContext.request.contextPath}/LoginServlet">
-    <div class="grid">
-      <div class="card">
-        <label>Email or Username</label>
-        <input type="text" name="username" value="<%= rememberedId %>" required style="width:100%"/>
-      </div>
-      <div class="card">
-        <label>Password</label>
-        <input type="password" name="password" required style="width:100%"/>
-      </div>
+  <form method="post" action="${pageContext.request.contextPath}/LoginServlet" class="form">
+    <div class="form-group">
+      <label for="username">Email or Username</label>
+      <input type="text" id="username" name="username" value="<%= rememberedId %>" required placeholder="Enter your email or username"/>
     </div>
-    <p style="margin-top:12px">
-      <button class="btn btn-primary" type="submit">Login</button>
-    </p>
-  </form>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required placeholder="Enter your password"/>
+    </div>
 
-  <p style="text-align: center; margin-top: 16px;">
-    <a href="${pageContext.request.contextPath}/auth/forgotPassword.jsp" style="color: #1f4a7c; text-decoration: underline;">
-      Forgot Password?
-    </a>
-  </p>
+    <button class="btn btn-primary" type="submit">Login</button>
+ 
+    <div class="form-footer">
+      <p>
+        <a href="${pageContext.request.contextPath}/auth/forgotPassword.jsp">Forgot Password?</a>
+      </p>
+      <p style="margin-top: 0.5rem;">
+        Don't have an account? <a href="${pageContext.request.contextPath}/public/registerClient.jsp">Sign up</a>
+      </p>
+    </div>
+  </form>
 </div>
 <jsp:include page="../includes/footer.jsp"/>
