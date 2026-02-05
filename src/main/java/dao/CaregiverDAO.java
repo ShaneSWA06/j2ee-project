@@ -45,4 +45,9 @@ public interface CaregiverDAO {
      * Search caregivers by query string
      */
     List<Caregiver> searchCaregivers(String query) throws SQLException;
+
+    /**
+     * Get caregiver by Email
+     */
+    Caregiver getCaregiverByEmail(String email) throws SQLException;
 }

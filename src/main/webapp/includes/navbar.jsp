@@ -62,7 +62,7 @@
 
         <% } else { %>
           <li><a class="nav-btn nav-btn-signin" href="${pageContext.request.contextPath}/auth/login.jsp">Sign In</a></li>
-          <li><a class="nav-btn nav-btn-signup" href="${pageContext.request.contextPath}/customer/registerCustomer.jsp">Sign Up</a></li>
+          <li><a class="nav-btn nav-btn-signup" href="${pageContext.request.contextPath}/public/registerClient.jsp">Sign Up</a></li>
         <% } %>
       </ul>
     </div>

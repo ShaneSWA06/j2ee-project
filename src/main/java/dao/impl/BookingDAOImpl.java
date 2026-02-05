@@ -218,4 +218,67 @@ public class BookingDAOImpl implements BookingDAO {
 
         return booking;
     }
+    @Override
+    public List<Booking> getUnassignedBookings() throws SQLException {
+        String sql = "SELECT b.booking_id, b.user_id, b.service_id, b.caregiver_id, b.booking_date, b.booking_time, " +
+                     "b.status, b.notes, b.created_at, " +
+                     "u.name as user_name, s.service_name, c.name as caregiver_name " +
+                     "FROM booking b " +
+                     "LEFT JOIN app_user u ON b.user_id = u.user_id " +
+                     "LEFT JOIN service s ON b.service_id = s.service_id " +
+                     "LEFT JOIN caregiver c ON b.caregiver_id = c.caregiver_id " +
+                     "WHERE b.caregiver_id IS NULL AND b.status IN ('Pending', 'Confirmed') " +
+                     "ORDER BY b.booking_date ASC, b.booking_time ASC";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            List<Booking> bookings = new ArrayList<>();
+            while (rs.next()) {
+                bookings.add(extractBookingFromResultSet(rs));
+            }
+            return bookings;
+        }
+    }
+
+    @Override
+    public List<Booking> getBookingsByCaregiver(int caregiverId) throws SQLException {
+        String sql = "SELECT b.booking_id, b.user_id, b.service_id, b.caregiver_id, b.booking_date, b.booking_time, " +
+                     "b.status, b.notes, b.created_at, " +
+                     "u.name as user_name, s.service_name, c.name as caregiver_name " +
+                     "FROM booking b " +
+                     "LEFT JOIN app_user u ON b.user_id = u.user_id " +
+                     "LEFT JOIN service s ON b.service_id = s.service_id " +
+                     "LEFT JOIN caregiver c ON b.caregiver_id = c.caregiver_id " +
+                     "WHERE b.caregiver_id = ? " +
+                     "ORDER BY b.booking_date DESC, b.booking_time DESC";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, caregiverId);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Booking> bookings = new ArrayList<>();
+                while (rs.next()) {
+                    bookings.add(extractBookingFromResultSet(rs));
+                }
+                return bookings;
+            }
+        }
+    }
+
+    @Override
+    public boolean assignCaregiver(int bookingId, int caregiverId) throws SQLException {
+        String sql = "UPDATE booking SET caregiver_id = ?, status = 'Confirmed' WHERE booking_id = ?";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, caregiverId);
+            ps.setInt(2, bookingId);
+
+            return ps.executeUpdate() > 0;
+        }
+    }
 }

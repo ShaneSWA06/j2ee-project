@@ -123,8 +123,8 @@
                 const { error } = await stripe.confirmPayment({
                     elements,
                     confirmParams: {
-                        // Return URL where Stripe redirects after payment
-                        return_url: window.location.origin + "<%= request.getContextPath() %>/PaymentSuccessServlet",
+                        // Redirect to the controller's create action which will retrieve session data
+                        return_url: window.location.origin + "<%= request.getContextPath() %>/customer/medical-escort?action=create",
                     },
                 });
 

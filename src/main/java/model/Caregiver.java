@@ -9,6 +9,7 @@ public class Caregiver implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int caregiverId;
+    private Integer userId; // Link to app_user table
     private String name;
     private String specialization;
     private String phone;
@@ -43,6 +44,14 @@ public class Caregiver implements Serializable {
 
     public void setCaregiverId(int caregiverId) {
         this.caregiverId = caregiverId;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getName() {

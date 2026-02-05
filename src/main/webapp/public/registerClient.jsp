@@ -17,7 +17,7 @@ pageEncoding="UTF-8"%>
   
   <form
     method="post"
-    action="${pageContext.request.contextPath}/client/registerProcess.jsp"
+    action="${pageContext.request.contextPath}/RegisterServlet"
     class="form"
   >
     <div class="form-group">
@@ -66,14 +66,14 @@ pageEncoding="UTF-8"%>
     
     <div class="form-group">
       <label for="careNotes">Care Notes</label>
-      <textarea id="careNotes" name="careNotes" placeholder="Additional care notes"></textarea>
+      <textarea id="careNotes" name="care_notes" placeholder="Additional care notes"></textarea>
     </div>
     
     <button type="submit" class="btn btn-primary">Sign Up</button>
     
     <p class="form-footer">
       Already have an account?
-      <a href="${pageContext.request.contextPath}/client/clientLogin.jsp">Log In</a>
+      <a href="${pageContext.request.contextPath}/auth/login.jsp">Log In</a>
     </p>
   </form>
 </div>

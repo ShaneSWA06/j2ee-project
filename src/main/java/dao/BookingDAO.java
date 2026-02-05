@@ -50,4 +50,19 @@ public interface BookingDAO {
      * Delete booking by ID
      */
     boolean deleteBooking(int bookingId) throws SQLException;
+
+    /**
+     * Get unassigned bookings (available for acceptance)
+     */
+    List<Booking> getUnassignedBookings() throws SQLException;
+
+    /**
+     * Get bookings assigned to a specific caregiver
+     */
+    List<Booking> getBookingsByCaregiver(int caregiverId) throws SQLException;
+
+    /**
+     * Assign a caregiver to a booking
+     */
+    boolean assignCaregiver(int bookingId, int caregiverId) throws SQLException;
 }

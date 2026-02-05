@@ -22,7 +22,7 @@
     <p>Professional, compassionate care services for seniors and their families. Experience quality home care that brings peace of mind and comfort to your loved ones.</p>
     <p style="margin-top: 2rem;">
       <a class="btn btn-primary btn-lg" href="${pageContext.request.contextPath}/public/serviceCategories.jsp">Browse Services</a>
-      <a class="btn btn-secondary btn-lg" href="${pageContext.request.contextPath}/customer/registerCustomer.jsp">Get Started Today</a>
+      <a class="btn btn-secondary btn-lg" href="${pageContext.request.contextPath}/public/registerClient.jsp">Get Started Today</a>
     </p>
   </div>
 </div>

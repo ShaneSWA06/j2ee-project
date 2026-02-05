@@ -28,7 +28,7 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect(request.getContextPath() + "/customer/registerCustomer.jsp");
+        response.sendRedirect(request.getContextPath() + "/public/registerClient.jsp");
     }
 
     /**
@@ -54,7 +54,7 @@ public class RegisterServlet extends HttpServlet {
             email == null || email.trim().isEmpty() ||
             password == null || password.trim().isEmpty()) {
             response.sendRedirect(request.getContextPath() +
-                "/customer/registerCustomer.jsp?err=missing_fields");
+                "/public/registerClient.jsp?err=missing_fields");
             return;
         }
 
@@ -64,7 +64,7 @@ public class RegisterServlet extends HttpServlet {
             // Check for duplicate email or username
             if (userDAO.getUserByEmail(email) != null || userDAO.getUserByUsername(username) != null) {
                 response.sendRedirect(request.getContextPath() +
-                    "/customer/registerCustomer.jsp?err=duplicate");
+                    "/public/registerClient.jsp?err=duplicate");
                 return;
             }
 
@@ -101,13 +101,13 @@ public class RegisterServlet extends HttpServlet {
                     "/auth/login.jsp?success=verify_email");
             } else {
                 response.sendRedirect(request.getContextPath() +
-                    "/customer/registerCustomer.jsp?err=failed");
+                    "/public/registerClient.jsp?err=failed");
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
             response.sendRedirect(request.getContextPath() +
-                "/customer/registerCustomer.jsp?err=" + e.getMessage());
+                "/public/registerClient.jsp?err=" + e.getMessage());
         }
     }
 }

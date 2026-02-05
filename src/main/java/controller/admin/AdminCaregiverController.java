@@ -191,6 +191,31 @@ public class AdminCaregiverController extends HttpServlet {
         caregiver.setEmail(email != null ? email.trim() : "");
         caregiver.setAvailable("true".equals(isAvailableStr) || "on".equals(isAvailableStr));
 
+        // Create associated User account if email is provided
+        if (caregiver.getEmail() != null && !caregiver.getEmail().isEmpty()) {
+            dao.UserDAO userDAO = DAOFactory.getUserDAO();
+            model.User existingUser = userDAO.getUserByEmail(caregiver.getEmail());
+            
+            if (existingUser == null) {
+                model.User newUser = new model.User();
+                newUser.setUsername(caregiver.getEmail()); // Use email as username
+                newUser.setEmail(caregiver.getEmail());
+                newUser.setName(caregiver.getName());
+                newUser.setPassword("password123"); // Default temporary password
+                newUser.setRole("CAREGIVER");
+                newUser.setPhone(caregiver.getPhone());
+                newUser.setVerified(true);
+                // Address, Relationship, CareNotes are optional/empty
+                
+                userDAO.createUser(newUser);
+            } else {
+                // Determine if we should update role? 
+                // For now, if user exists, just ensure they can log in.
+                // Optionally update role to CAREGIVER if they are just a customer?
+                // Let's safe guard and not change existing user roles without explicit instruction.
+            }
+        }
+
         Caregiver created = caregiverDAO.createCaregiver(caregiver);
 
         if (created != null) {

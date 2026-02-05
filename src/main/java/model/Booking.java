@@ -24,6 +24,12 @@ public class Booking implements Serializable {
     private String userName;
     private String serviceName;
     private String caregiverName;
+    
+    // For API compatibility
+    private Double totalPrice;
+    private java.sql.Timestamp updatedAt;
+    private String pickupAddress;
+    private String destinationAddress;
 
     // Constructors
     public Booking() {
@@ -134,6 +140,38 @@ public class Booking implements Serializable {
 
     public void setCaregiverName(String caregiverName) {
         this.caregiverName = caregiverName;
+    }
+
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public java.sql.Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(java.sql.Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getPickupAddress() {
+        return pickupAddress;
+    }
+
+    public void setPickupAddress(String pickupAddress) {
+        this.pickupAddress = pickupAddress;
+    }
+
+    public String getDestinationAddress() {
+        return destinationAddress;
+    }
+
+    public void setDestinationAddress(String destinationAddress) {
+        this.destinationAddress = destinationAddress;
     }
 
     @Override
