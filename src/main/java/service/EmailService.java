@@ -41,7 +41,7 @@ public class EmailService {
             message.setSubject("Email Verification");
 
             String verificationLink = baseUrl + "/verify-email?token=" + token;
-            String htmlContent = "<h3>Welcome!</h3>"
+            String htmlContent = "<h3>Welcome From SilverCare !</h3>"
                     + "<p>Please click the link below to verify your email address:</p>"
                     + "<a href=\"" + verificationLink + "\">Verify Email</a>";
 
