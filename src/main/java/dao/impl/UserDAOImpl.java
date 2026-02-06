@@ -105,10 +105,56 @@ public class UserDAOImpl implements UserDAO {
                 if (rs.next()) {
                     User user = extractUserFromResultSet(rs);
                     String storedPassword = user.getPassword();
+                    boolean needsMigration = false;
 
-                    // Check hashed password (new users) OR plain text (existing users)
-                    if (util.PasswordUtil.checkPassword(password, storedPassword) ||
-                        password.equals(storedPassword)) {
+                    // Try BCrypt verification first (new passwords)
+                    if (util.PasswordUtil.checkPassword(password, storedPassword)) {
+                        return user; // Already BCrypt, no migration needed
+                    }
+                    
+                    // Fallback: Check if it's a plain text password (old data)
+                    if (password.equals(storedPassword)) {
+                        needsMigration = true;
+                    }
+                    
+                    // Fallback: Check if it's an old SHA-256 hash
+                    if (!needsMigration) {
+                        try {
+                            java.security.MessageDigest digest = java.security.MessageDigest.getInstance("SHA-256");
+                            byte[] hash = digest.digest(password.getBytes("UTF-8"));
+                            String sha256Hash = java.util.Base64.getEncoder().encodeToString(hash);
+                            if (sha256Hash.equals(storedPassword)) {
+                                needsMigration = true;
+                            }
+                        } catch (Exception e) {
+                            // Ignore SHA-256 check errors
+                        }
+                    }
+                    
+                    // If old password format matched, migrate to BCrypt
+                    if (needsMigration) {
+                        try {
+                            // Hash the password with BCrypt
+                            String bcryptHash = util.PasswordUtil.hashPassword(password);
+                            
+                            // Update the password in database
+                            String updateSql = "UPDATE app_user SET password = ? WHERE user_id = ?";
+                            try (PreparedStatement updatePs = conn.prepareStatement(updateSql)) {
+                                updatePs.setString(1, bcryptHash);
+                                updatePs.setInt(2, user.getUserId());
+                                updatePs.executeUpdate();
+                                
+                                System.out.println("✓ Auto-migrated password to BCrypt for user: " + user.getUsername());
+                            }
+                            
+                            // Update the user object with new password
+                            user.setPassword(bcryptHash);
+                        } catch (Exception e) {
+                            System.err.println("⚠ Failed to auto-migrate password for user: " + user.getUsername());
+                            e.printStackTrace();
+                            // Still allow login even if migration fails
+                        }
+                        
                         return user;
                     }
                 }

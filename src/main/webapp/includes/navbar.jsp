@@ -9,19 +9,31 @@
     <div class="nav-center">
       <ul class="nav-menu">
         <li><a class="nav-link" href="${pageContext.request.contextPath}/index.jsp">Home</a></li>
-        <li><a class="nav-link" href="${pageContext.request.contextPath}/public/serviceCategories.jsp">Service Categories</a></li>
+        <% 
+          String userRole = (String) session.getAttribute("sessUserRole");
+          // Only show Service Categories for customers (MEMBER) or non-logged-in users
+          if (!"ADMIN".equals(userRole) && !"CAREGIVER".equals(userRole)) { 
+        %>
+          <li><a class="nav-link" href="${pageContext.request.contextPath}/public/serviceCategories.jsp">Service Categories</a></li>
+        <% } %>
         <li><a class="nav-link" href="${pageContext.request.contextPath}/customer/viewFeedback.jsp">Feedback</a></li>
       </ul>
     </div>
     <div class="nav-right">
       <ul class="nav-menu">
         <% 
-          String userRole = (String) session.getAttribute("sessUserRole");
           if ("ADMIN".equals(userRole)) { 
         %>
+          <!-- Admin Navigation -->
           <li><a class="nav-link" href="${pageContext.request.contextPath}/admin/dashboard">Admin Panel</a></li>
+          <li><a class="nav-link" href="${pageContext.request.contextPath}/settings">Settings</a></li>
+          <li><a class="nav-link" href="${pageContext.request.contextPath}/logout">Logout</a></li>
+        <% } else if ("CAREGIVER".equals(userRole)) { %>
+          <!-- Caregiver Navigation -->
+          <li><a class="nav-link" href="${pageContext.request.contextPath}/settings">Settings</a></li>
           <li><a class="nav-link" href="${pageContext.request.contextPath}/logout">Logout</a></li>
         <% } else if (session.getAttribute("sessUserId") != null) {
+             // Customer/Member Navigation
              @SuppressWarnings("unchecked")
              ArrayList<CartItem> cart = (ArrayList<CartItem>) session.getAttribute("shoppingCart");
              int cartCount = (cart != null) ? cart.size() : 0;
