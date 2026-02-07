@@ -30,6 +30,12 @@
           <li><a class="nav-link" href="${pageContext.request.contextPath}/logout">Logout</a></li>
         <% } else if ("CAREGIVER".equals(userRole)) { %>
           <!-- Caregiver Navigation -->
+          <li><a class="nav-link" href="${pageContext.request.contextPath}/caregiver/dashboard">Caregiver Portal</a></li>
+          <li><a class="nav-link" href="${pageContext.request.contextPath}/settings">Settings</a></li>
+          <li><a class="nav-link" href="${pageContext.request.contextPath}/logout">Logout</a></li>
+        <% } else if ("COMPANY_ADMIN".equals(userRole)) { %>
+          <!-- Agency Navigation -->
+          <li><a class="nav-link" href="${pageContext.request.contextPath}/company/dashboard">Agency Panel</a></li>
           <li><a class="nav-link" href="${pageContext.request.contextPath}/settings">Settings</a></li>
           <li><a class="nav-link" href="${pageContext.request.contextPath}/logout">Logout</a></li>
         <% } else if (session.getAttribute("sessUserId") != null) {

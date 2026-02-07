@@ -80,10 +80,13 @@ public class LoginServlet extends HttpServlet {
                 response.addCookie(cookie);
 
                 // Route based on role
+                session.setAttribute("user", user); // Store full user object
                 if ("ADMIN".equals(user.getRole())) {
                     response.sendRedirect(request.getContextPath() + "/admin/dashboard");
                 } else if ("CAREGIVER".equals(user.getRole())) {
                     response.sendRedirect(request.getContextPath() + "/caregiver/dashboard");
+                } else if ("COMPANY_ADMIN".equals(user.getRole())) {
+                    response.sendRedirect(request.getContextPath() + "/company/dashboard");
                 } else {
                     response.sendRedirect(request.getContextPath() + "/customer/customerHome.jsp");
                 }

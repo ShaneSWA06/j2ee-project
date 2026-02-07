@@ -30,6 +30,7 @@ public class Booking implements Serializable {
     private java.sql.Timestamp updatedAt;
     private String pickupAddress;
     private String destinationAddress;
+    private String paymentStatus;
 
     // Constructors
     public Booking() {
@@ -46,6 +47,8 @@ public class Booking implements Serializable {
     }
 
     // Getters and Setters
+    public String getPaymentStatus() { return paymentStatus; }
+    public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
     public int getBookingId() {
         return bookingId;
     }

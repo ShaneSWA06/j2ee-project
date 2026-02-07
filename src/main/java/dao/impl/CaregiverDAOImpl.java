@@ -20,7 +20,7 @@ public class CaregiverDAOImpl implements CaregiverDAO {
 
     @Override
     public Caregiver getCaregiverById(int caregiverId) throws SQLException {
-        String sql = "SELECT caregiver_id, user_id, name, qualifications, specialties, experience, bio, phone, email, available, created_at " +
+        String sql = "SELECT caregiver_id, user_id, name, qualifications, specialties, experience, bio, phone, email, available, created_at, company_id " +
                      "FROM caregiver WHERE caregiver_id = ?";
 
         try (Connection conn = DBUtil.getConnection();
@@ -38,7 +38,7 @@ public class CaregiverDAOImpl implements CaregiverDAO {
 
     @Override
     public List<Caregiver> getAllCaregivers() throws SQLException {
-        String sql = "SELECT caregiver_id, user_id, name, qualifications, specialties, experience, bio, phone, email, available, created_at " +
+        String sql = "SELECT caregiver_id, user_id, name, qualifications, specialties, experience, bio, phone, email, available, created_at, company_id " +
                      "FROM caregiver ORDER BY caregiver_id ASC";
 
         try (Connection conn = DBUtil.getConnection();
@@ -55,7 +55,7 @@ public class CaregiverDAOImpl implements CaregiverDAO {
 
     @Override
     public List<Caregiver> getAvailableCaregivers() throws SQLException {
-        String sql = "SELECT caregiver_id, user_id, name, qualifications, specialties, experience, bio, phone, email, available, created_at " +
+        String sql = "SELECT caregiver_id, user_id, name, qualifications, specialties, experience, bio, phone, email, available, created_at, company_id " +
                      "FROM caregiver WHERE available = TRUE ORDER BY caregiver_id ASC";
 
         try (Connection conn = DBUtil.getConnection();
@@ -73,7 +73,7 @@ public class CaregiverDAOImpl implements CaregiverDAO {
     @Override
     public List<Caregiver> searchCaregivers(String query) throws SQLException {
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT caregiver_id, user_id, name, qualifications, specialties, experience, bio, phone, email, available, created_at ");
+        sql.append("SELECT caregiver_id, user_id, name, qualifications, specialties, experience, bio, phone, email, available, created_at, company_id ");
         sql.append("FROM caregiver ");
         sql.append("WHERE available = TRUE ");
 
@@ -109,8 +109,8 @@ public class CaregiverDAOImpl implements CaregiverDAO {
 
     @Override
     public Caregiver createCaregiver(Caregiver caregiver) throws SQLException {
-        String sql = "INSERT INTO caregiver (name, qualifications, specialties, experience, bio, phone, email, available) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO caregiver (name, qualifications, specialties, experience, bio, phone, email, available, company_id) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -127,6 +127,11 @@ public class CaregiverDAOImpl implements CaregiverDAO {
             ps.setString(6, caregiver.getPhone());
             ps.setString(7, caregiver.getEmail());
             ps.setBoolean(8, caregiver.isAvailable());
+            if (caregiver.getCompanyId() != null) {
+                ps.setInt(9, caregiver.getCompanyId());
+            } else {
+                ps.setNull(9, Types.INTEGER);
+            }
 
             int rowsAffected = ps.executeUpdate();
 
@@ -145,7 +150,7 @@ public class CaregiverDAOImpl implements CaregiverDAO {
     @Override
     public boolean updateCaregiver(Caregiver caregiver) throws SQLException {
         String sql = "UPDATE caregiver SET name = ?, qualifications = ?, specialties = ?, experience = ?, bio = ?, " +
-                     "phone = ?, email = ?, available = ? WHERE caregiver_id = ?";
+                     "phone = ?, email = ?, available = ?, company_id = ? WHERE caregiver_id = ?";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -162,7 +167,12 @@ public class CaregiverDAOImpl implements CaregiverDAO {
             ps.setString(6, caregiver.getPhone());
             ps.setString(7, caregiver.getEmail());
             ps.setBoolean(8, caregiver.isAvailable());
-            ps.setInt(9, caregiver.getCaregiverId());
+            if (caregiver.getCompanyId() != null) {
+                ps.setInt(9, caregiver.getCompanyId());
+            } else {
+                ps.setNull(9, Types.INTEGER);
+            }
+            ps.setInt(10, caregiver.getCaregiverId());
 
             return ps.executeUpdate() > 0;
         }
@@ -197,6 +207,7 @@ public class CaregiverDAOImpl implements CaregiverDAO {
         caregiver.setEmail(rs.getString("email"));
         caregiver.setAvailable(rs.getBoolean("available"));
         caregiver.setCreatedAt(rs.getTimestamp("created_at"));
+        caregiver.setCompanyId(rs.getObject("company_id", Integer.class));
         return caregiver;
     }
     @Override
@@ -215,5 +226,23 @@ public class CaregiverDAOImpl implements CaregiverDAO {
             }
         }
         return null;
+    }
+
+    @Override
+    public List<Caregiver> getCaregiversByCompany(int companyId) throws SQLException {
+        String sql = "SELECT caregiver_id, user_id, name, qualifications, specialties, experience, bio, phone, email, available, created_at, company_id " +
+                     "FROM caregiver WHERE company_id = ? ORDER BY name ASC";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, companyId);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Caregiver> caregivers = new ArrayList<>();
+                while (rs.next()) {
+                    caregivers.add(extractCaregiverFromResultSet(rs));
+                }
+                return caregivers;
+            }
+        }
     }
 }

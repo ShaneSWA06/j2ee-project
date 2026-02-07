@@ -3,6 +3,7 @@ package dao;
 import dao.impl.BookingDAOImpl;
 import dao.impl.CaregiverDAOImpl;
 import dao.impl.CategoryDAOImpl;
+import dao.impl.CompanyDAOImpl;
 import dao.impl.FeedbackDAOImpl;
 import dao.impl.PaymentDAOImpl;
 import dao.impl.ServiceDAOImpl;
@@ -13,6 +14,13 @@ import dao.impl.UserDAOImpl;
  * Centralizes DAO instantiation and makes it easier to swap implementations
  */
 public class DAOFactory {
+
+    /**
+     * Get CompanyDAO instance
+     */
+    public static CompanyDAO getCompanyDAO() {
+        return new CompanyDAOImpl();
+    }
 
     /**
      * Get UserDAO instance

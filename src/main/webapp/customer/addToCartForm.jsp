@@ -21,6 +21,7 @@
     if (caregiverIdParam != null && !caregiverIdParam.trim().isEmpty()) {
       selectedCaregiverId = Integer.parseInt(caregiverIdParam);
     }
+    String companyIdParam = request.getParameter("companyId");
 
     String serviceName = null;
     String description = null;
@@ -28,11 +29,11 @@
     int durationMinutes = 0;
     String categoryName = null;
 
-    try (Connection conn = DBUtil.getConnection();
-         PreparedStatement ps = conn.prepareStatement(
-           "SELECT s.service_name, s.description, s.base_price, s.duration_minutes, c.category_name " +
-           "FROM service s LEFT JOIN service_category c ON s.category_id = c.category_id " +
-           "WHERE s.service_id=? AND s.available=TRUE")) {
+     try (Connection conn = DBUtil.getConnection();
+          PreparedStatement ps = conn.prepareStatement(
+            "SELECT s.service_name, s.description, s.base_price, s.duration_minutes, c.category_name " +
+            "FROM service s LEFT JOIN service_category c ON s.category_id = c.category_id " +
+            "WHERE s.service_id=? AND s.is_active=TRUE")) {
       ps.setInt(1, selectedServiceId);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
@@ -61,6 +62,7 @@
 
   <form method="post" action="<%= request.getContextPath() %>/AddToCartServlet">
     <input type="hidden" name="serviceId" value="<%= selectedServiceId %>"/>
+    <input type="hidden" name="companyId" value="<%= companyIdParam != null ? companyIdParam : "" %>"/>
 
     <div class="card">
       <label><strong>Booking Date</strong></label>

@@ -20,7 +20,7 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public Service getServiceById(int serviceId) throws SQLException {
         String sql = "SELECT s.service_id, s.service_name, s.description, s.base_price, s.duration_minutes, " +
-                     "s.category_id, s.is_active, c.category_name " +
+                     "s.category_id, s.is_active, s.company_id, c.category_name " +
                      "FROM service s " +
                      "LEFT JOIN service_category c ON s.category_id = c.category_id " +
                      "WHERE s.service_id = ?";
@@ -41,7 +41,7 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public List<Service> getAllServices() throws SQLException {
         String sql = "SELECT s.service_id, s.service_name, s.description, s.base_price, s.duration_minutes, " +
-                     "s.category_id, s.is_active, c.category_name " +
+                     "s.category_id, s.is_active, s.company_id, c.category_name " +
                      "FROM service s " +
                      "LEFT JOIN service_category c ON s.category_id = c.category_id " +
                      "ORDER BY s.service_id ASC";
@@ -51,7 +51,7 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public List<Service> getActiveServices() throws SQLException {
         String sql = "SELECT s.service_id, s.service_name, s.description, s.base_price, s.duration_minutes, " +
-                     "s.category_id, s.is_active, c.category_name " +
+                     "s.category_id, s.is_active, s.company_id, c.category_name " +
                      "FROM service s " +
                      "LEFT JOIN service_category c ON s.category_id = c.category_id " +
                      "WHERE s.is_active = TRUE " +
@@ -62,7 +62,7 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public List<Service> getServicesByCategory(int categoryId) throws SQLException {
         String sql = "SELECT s.service_id, s.service_name, s.description, s.base_price, s.duration_minutes, " +
-                     "s.category_id, s.is_active, c.category_name " +
+                     "s.category_id, s.is_active, s.company_id, c.category_name " +
                      "FROM service s " +
                      "LEFT JOIN service_category c ON s.category_id = c.category_id " +
                      "WHERE s.category_id = ? AND s.is_active = TRUE " +
@@ -84,8 +84,8 @@ public class ServiceDAOImpl implements ServiceDAO {
 
     @Override
     public Service createService(Service service) throws SQLException {
-        String sql = "INSERT INTO service (service_name, description, base_price, duration_minutes, category_id, is_active) " +
-                     "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO service (service_name, description, base_price, duration_minutes, category_id, is_active, company_id) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -96,6 +96,11 @@ public class ServiceDAOImpl implements ServiceDAO {
             ps.setInt(4, service.getDurationMinutes());
             ps.setInt(5, service.getCategoryId());
             ps.setBoolean(6, service.isActive());
+            if (service.getCompanyId() != null) {
+                ps.setInt(7, service.getCompanyId());
+            } else {
+                ps.setNull(7, java.sql.Types.INTEGER);
+            }
 
             int rowsAffected = ps.executeUpdate();
 
@@ -114,7 +119,7 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public boolean updateService(Service service) throws SQLException {
         String sql = "UPDATE service SET service_name = ?, description = ?, base_price = ?, " +
-                     "duration_minutes = ?, category_id = ?, is_active = ? WHERE service_id = ?";
+                     "duration_minutes = ?, category_id = ?, is_active = ?, company_id = ? WHERE service_id = ?";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -125,7 +130,12 @@ public class ServiceDAOImpl implements ServiceDAO {
             ps.setInt(4, service.getDurationMinutes());
             ps.setInt(5, service.getCategoryId());
             ps.setBoolean(6, service.isActive());
-            ps.setInt(7, service.getServiceId());
+            if (service.getCompanyId() != null) {
+                ps.setInt(7, service.getCompanyId());
+            } else {
+                ps.setNull(7, java.sql.Types.INTEGER);
+            }
+            ps.setInt(8, service.getServiceId());
 
             return ps.executeUpdate() > 0;
         }
@@ -140,6 +150,28 @@ public class ServiceDAOImpl implements ServiceDAO {
 
             ps.setInt(1, serviceId);
             return ps.executeUpdate() > 0;
+        }
+    }
+
+    @Override
+    public List<Service> getServicesByCompany(int companyId) throws SQLException {
+        String sql = "SELECT s.*, c.category_name " +
+                     "FROM service s " +
+                     "LEFT JOIN service_category c ON s.category_id = c.category_id " +
+                     "WHERE s.company_id = ? AND s.is_active = TRUE " +
+                     "ORDER BY s.service_id ASC";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, companyId);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Service> services = new ArrayList<>();
+                while (rs.next()) {
+                    services.add(extractServiceFromResultSet(rs));
+                }
+                return services;
+            }
         }
     }
 
@@ -173,6 +205,7 @@ public class ServiceDAOImpl implements ServiceDAO {
         service.setCategoryId(rs.getInt("category_id"));
         service.setActive(rs.getBoolean("is_active"));
         service.setCategoryName(rs.getString("category_name"));
+        service.setCompanyId(rs.getObject("company_id", Integer.class));
         return service;
     }
 }

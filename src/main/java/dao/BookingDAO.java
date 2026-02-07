@@ -65,4 +65,14 @@ public interface BookingDAO {
      * Assign a caregiver to a booking
      */
     boolean assignCaregiver(int bookingId, int caregiverId) throws SQLException;
+
+    /**
+     * Get all bookings for a specific company
+     */
+    List<Booking> getBookingsByCompany(int companyId) throws SQLException;
+
+    /**
+     * Get recent bookings for a specific company with limit
+     */
+    List<Booking> getBookingsByCompany(int companyId, int limit) throws SQLException;
 }

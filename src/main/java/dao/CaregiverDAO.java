@@ -50,4 +50,9 @@ public interface CaregiverDAO {
      * Get caregiver by Email
      */
     Caregiver getCaregiverByEmail(String email) throws SQLException;
+
+    /**
+     * Get all caregivers for a specific company
+     */
+    List<Caregiver> getCaregiversByCompany(int companyId) throws SQLException;
 }

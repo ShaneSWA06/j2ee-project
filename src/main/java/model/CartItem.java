@@ -15,6 +15,7 @@ public class CartItem implements Serializable {
     private double basePrice;
     private int durationMinutes;
     private String categoryName;
+    private Integer companyId;
 
     // Booking details
     private String bookingDate;
@@ -136,6 +137,14 @@ public class CartItem implements Serializable {
 
     public void setCartItemId(String cartItemId) {
         this.cartItemId = cartItemId;
+    }
+
+    public Integer getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
     }
 
     @Override

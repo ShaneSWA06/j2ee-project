@@ -25,6 +25,7 @@ public class Caregiver implements Serializable {
     private String availableHours;
     private java.math.BigDecimal rating;
     private String profileImage;
+    private Integer companyId;
 
     // Constructors
     public Caregiver() {
@@ -41,6 +42,8 @@ public class Caregiver implements Serializable {
     }
 
     // Getters and Setters
+    public Integer getCompanyId() { return companyId; }
+    public void setCompanyId(Integer companyId) { this.companyId = companyId; }
     public int getCaregiverId() {
         return caregiverId;
     }

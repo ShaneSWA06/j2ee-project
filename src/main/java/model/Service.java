@@ -16,6 +16,7 @@ public class Service implements Serializable {
     private int categoryId;
     private String categoryName; // For joined queries
     private boolean isActive;
+    private Integer companyId;
     private java.sql.Timestamp createdAt;
 
     // Constructors
@@ -34,6 +35,8 @@ public class Service implements Serializable {
     }
 
     // Getters and Setters
+    public Integer getCompanyId() { return companyId; }
+    public void setCompanyId(Integer companyId) { this.companyId = companyId; }
     public int getServiceId() {
         return serviceId;
     }

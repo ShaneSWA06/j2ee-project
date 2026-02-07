@@ -82,10 +82,11 @@ public class CheckoutServlet extends HttpServlet {
             conn.setAutoCommit(false);
 
             String insertSQL = "INSERT INTO booking (user_id, service_id, caregiver_id, booking_date, " +
-                              "booking_time, status, notes, created_at, payment_status) " +
-                              "VALUES (?, ?, ?, ?, ?, 'Pending', ?, CURRENT_TIMESTAMP, 'Unpaid')";
+                              "booking_time, status, notes, total_price, created_at, updated_at) " +
+                              "VALUES (?, ?, ?, ?, ?, 'Pending', ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
 
             ps = conn.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
+            service.BookingServiceAPI bookingAPI = new service.BookingServiceAPI();
 
             double totalAmount = 0;
 
@@ -102,14 +103,30 @@ public class CheckoutServlet extends HttpServlet {
                 ps.setDate(4, java.sql.Date.valueOf(item.getBookingDate()));
                 ps.setTime(5, java.sql.Time.valueOf(item.getBookingTime() + ":00"));
                 ps.setString(6, item.getNotes());
+                ps.setDouble(7, item.getBasePrice());
 
                 ps.executeUpdate();
 
+                int localBookingId = -1;
                 try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
-                        bookingIds.add(rs.getInt(1));
+                        localBookingId = rs.getInt(1);
+                        bookingIds.add(localBookingId);
                     }
                 }
+
+                // Also call external API as requested
+                model.Booking apiBooking = new model.Booking();
+                apiBooking.setUserId(userId);
+                apiBooking.setServiceId(item.getServiceId());
+                apiBooking.setCaregiverId(item.getCaregiverId());
+                apiBooking.setBookingDate(java.sql.Date.valueOf(item.getBookingDate()));
+                apiBooking.setBookingTime(java.sql.Time.valueOf(item.getBookingTime() + ":00"));
+                apiBooking.setNotes(item.getNotes());
+                apiBooking.setTotalPrice(item.getBasePrice());
+                apiBooking.setStatus("PENDING");
+                
+                bookingAPI.createBooking(apiBooking);
 
                 totalAmount += item.getBasePrice();
             }

@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 /**
  * User represents a user in the app_user table
- * Can be either an ADMIN or CUSTOMER based on role
  */
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -14,7 +13,7 @@ public class User implements Serializable {
     private String email;
     private String name;
     private String password;
-    private String role; // "ADMIN" or "CUSTOMER"
+    private String role; // "ADMIN", "CUSTOMER", "CAREGIVER", "COMPANY_ADMIN"
     private String resetToken;
     private java.sql.Timestamp resetTokenExpiry;
     private java.sql.Timestamp createdAt;
@@ -24,6 +23,7 @@ public class User implements Serializable {
     private String address;
     private String relationship;
     private String careNotes;
+    private Integer companyId;
 
     // Email Verification Fields
     private boolean isVerified;
@@ -42,144 +42,66 @@ public class User implements Serializable {
     }
 
     // Getters and Setters
-    public int getUserId() {
-        return userId;
-    }
+    public int getUserId() { return userId; }
+    public void setUserId(int userId) { this.userId = userId; }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    public String getUsername() {
-        return username;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getEmail() {
-        return email;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 
-    public String getName() {
-        return name;
-    }
+    public String getResetToken() { return resetToken; }
+    public void setResetToken(String resetToken) { this.resetToken = resetToken; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public java.sql.Timestamp getResetTokenExpiry() { return resetTokenExpiry; }
+    public void setResetTokenExpiry(java.sql.Timestamp resetTokenExpiry) { this.resetTokenExpiry = resetTokenExpiry; }
 
-    public String getPassword() {
-        return password;
-    }
+    public java.sql.Timestamp getCreatedAt() { return createdAt; }
+    public void setCreatedAt(java.sql.Timestamp createdAt) { this.createdAt = createdAt; }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public boolean isVerified() { return isVerified; }
+    public void setVerified(boolean isVerified) { this.isVerified = isVerified; }
 
-    public String getRole() {
-        return role;
-    }
+    public String getVerificationToken() { return verificationToken; }
+    public void setVerificationToken(String verificationToken) { this.verificationToken = verificationToken; }
 
-    public void setRole(String role) {
-        this.role = role;
-    }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
 
-    public String getResetToken() {
-        return resetToken;
-    }
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
 
-    public void setResetToken(String resetToken) {
-        this.resetToken = resetToken;
-    }
+    public String getRelationship() { return relationship; }
+    public void setRelationship(String relationship) { this.relationship = relationship; }
 
-    public java.sql.Timestamp getResetTokenExpiry() {
-        return resetTokenExpiry;
-    }
+    public String getCareNotes() { return careNotes; }
+    public void setCareNotes(String careNotes) { this.careNotes = careNotes; }
 
-    public void setResetTokenExpiry(java.sql.Timestamp resetTokenExpiry) {
-        this.resetTokenExpiry = resetTokenExpiry;
-    }
-
-    public java.sql.Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(java.sql.Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public boolean isVerified() {
-        return isVerified;
-    }
-
-    public void setVerified(boolean isVerified) {
-        this.isVerified = isVerified;
-    }
-
-    public String getVerificationToken() {
-        return verificationToken;
-    }
-
-    public void setVerificationToken(String verificationToken) {
-        this.verificationToken = verificationToken;
-    }
-
-    // Additional Profile Getters and Setters
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getRelationship() {
-        return relationship;
-    }
-
-    public void setRelationship(String relationship) {
-        this.relationship = relationship;
-    }
-
-    public String getCareNotes() {
-        return careNotes;
-    }
-
-    public void setCareNotes(String careNotes) {
-        this.careNotes = careNotes;
-    }
+    public Integer getCompanyId() { return companyId; }
+    public void setCompanyId(Integer companyId) { this.companyId = companyId; }
 
     // Helper methods
-    public boolean isAdmin() {
-        return "ADMIN".equals(role);
-    }
-
-    public boolean isCustomer() {
-        return "CUSTOMER".equals(role);
-    }
+    public boolean isAdmin() { return "ADMIN".equals(role); }
+    public boolean isCustomer() { return "CUSTOMER".equals(role); }
+    public boolean isCompanyAdmin() { return "COMPANY_ADMIN".equals(role); }
 
     @Override
     public String toString() {
         return "User{" +
                 "userId=" + userId +
                 ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                ", name='" + name + '\'' +
                 ", role='" + role + '\'' +
+                ", companyId=" + companyId +
                 '}';
     }
 }

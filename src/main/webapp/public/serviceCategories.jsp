@@ -21,13 +21,25 @@
   </div>
 
   <!-- Special Medical Escort Service -->
-  <div class="card" style="margin-bottom: 2rem; border-left: 4px solid var(--coral);">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div>
-              <h3>🚑 Medical Escort Service</h3>
-              <p style="margin-bottom: 0;">Professional accompaniment for medical appointments (Dialysis, Checkups, Therapy)</p>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+      <div class="card" style="border-left: 4px solid var(--coral); margin: 0;">
+          <div style="display: flex; justify-content: space-between; align-items: center; height: 100%;">
+              <div>
+                  <h3 style="margin-top: 0;">🚑 Medical Escort</h3>
+                  <p style="margin-bottom: 0; font-size: 0.875rem;">Professional accompaniment for medical appointments.</p>
+              </div>
+              <a href="${pageContext.request.contextPath}/customer/medical-escort" class="btn btn-primary" style="flex-shrink: 0;">Book Now</a>
           </div>
-          <a href="${pageContext.request.contextPath}/customer/medical-escort" class="btn btn-primary">Book Escort</a>
+      </div>
+
+      <div class="card" style="border-left: 4px solid var(--accent); margin: 0; background: linear-gradient(135deg, var(--surface), rgba(94, 106, 210, 0.05));">
+          <div style="display: flex; justify-content: space-between; align-items: center; height: 100%;">
+              <div>
+                  <h3 style="margin-top: 0; color: var(--accent);">🤝 SilverCare Partners</h3>
+                  <p style="margin-bottom: 0; font-size: 0.875rem;">Premium services provided by our trusted agency partners.</p>
+              </div>
+              <a href="${pageContext.request.contextPath}/customer/company?id=1" class="btn btn-secondary" style="flex-shrink: 0;">Visit Partner</a>
+          </div>
       </div>
   </div>
 

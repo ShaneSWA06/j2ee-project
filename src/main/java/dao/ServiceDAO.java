@@ -45,4 +45,9 @@ public interface ServiceDAO {
      * Delete service by ID
      */
     boolean deleteService(int serviceId) throws SQLException;
+
+    /**
+     * Get services by company ID
+     */
+    List<Service> getServicesByCompany(int companyId) throws SQLException;
 }

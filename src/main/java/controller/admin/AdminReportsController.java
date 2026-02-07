@@ -95,7 +95,7 @@ public class AdminReportsController extends HttpServlet {
         }
 
         // Total caregivers
-        try (PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM caregiver WHERE is_active=TRUE");
+        try (PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM caregiver WHERE available=TRUE");
              ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
 				totalCaregivers = rs.getInt(1);
