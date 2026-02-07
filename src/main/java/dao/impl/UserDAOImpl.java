@@ -18,7 +18,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User getUserById(int userId) throws SQLException {
-        String sql = "SELECT user_id, username, email, name, password, role, created_at, phone, address, relationship, care_notes, is_verified, verification_token " +
+        String sql = "SELECT user_id, username, email, name, password, role, created_at, phone, address, relationship, care_notes, verified, verification_token " +
                      "FROM app_user WHERE user_id = ?";
 
         try (Connection conn = DBUtil.getConnection();
@@ -36,7 +36,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User getUserByUsername(String username) throws SQLException {
-        String sql = "SELECT user_id, username, email, name, password, role, created_at, phone, address, relationship, care_notes, is_verified, verification_token " +
+        String sql = "SELECT user_id, username, email, name, password, role, created_at, phone, address, relationship, care_notes, verified, verification_token " +
                      "FROM app_user WHERE username = ?";
 
         try (Connection conn = DBUtil.getConnection();
@@ -54,7 +54,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User getUserByEmail(String email) throws SQLException {
-        String sql = "SELECT user_id, username, email, name, password, role, created_at, phone, address, relationship, care_notes, is_verified, verification_token " +
+        String sql = "SELECT user_id, username, email, name, password, role, created_at, phone, address, relationship, care_notes, verified, verification_token " +
                      "FROM app_user WHERE email = ?";
 
         try (Connection conn = DBUtil.getConnection();
@@ -72,7 +72,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public java.util.List<User> getUsersByRole(String role) throws SQLException {
-        String sql = "SELECT user_id, username, email, name, password, role, created_at, phone, address, relationship, care_notes, is_verified, verification_token " +
+        String sql = "SELECT user_id, username, email, name, password, role, created_at, phone, address, relationship, care_notes, verified, verification_token " +
                      "FROM app_user WHERE role = ? ORDER BY user_id ASC";
 
         java.util.List<User> users = new java.util.ArrayList<>();
@@ -92,7 +92,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User validateLogin(String usernameOrEmail, String password) throws SQLException {
-        String sql = "SELECT user_id, username, email, name, password, role, created_at, phone, address, relationship, care_notes, is_verified, verification_token " +
+        String sql = "SELECT user_id, username, email, name, password, role, created_at, phone, address, relationship, care_notes, verified, verification_token " +
                      "FROM app_user WHERE (username = ? OR email = ?)";
 
         try (Connection conn = DBUtil.getConnection();
@@ -165,7 +165,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User createUser(User user) throws SQLException {
-        String sql = "INSERT INTO app_user (username, email, name, password, role, is_verified, verification_token, phone, address, relationship, care_notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO app_user (username, email, name, password, role, verified, verification_token, phone, address, relationship, care_notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -263,14 +263,14 @@ public class UserDAOImpl implements UserDAO {
         user.setAddress(rs.getString("address"));
         user.setRelationship(rs.getString("relationship"));
         user.setCareNotes(rs.getString("care_notes"));
-        user.setVerified(rs.getBoolean("is_verified"));
+        user.setVerified(rs.getBoolean("verified"));
         user.setVerificationToken(rs.getString("verification_token"));
         return user;
     }
 
     @Override
     public User getUserByVerificationToken(String token) throws SQLException {
-        String sql = "SELECT user_id, username, email, name, password, role, created_at, phone, address, relationship, care_notes, is_verified, verification_token " +
+        String sql = "SELECT user_id, username, email, name, password, role, created_at, phone, address, relationship, care_notes, verified, verification_token " +
                      "FROM app_user WHERE verification_token = ?";
 
         try (Connection conn = DBUtil.getConnection();
@@ -288,7 +288,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean verifyUser(int userId) throws SQLException {
-        String sql = "UPDATE app_user SET is_verified = TRUE, verification_token = NULL WHERE user_id = ?";
+        String sql = "UPDATE app_user SET verified = TRUE, verification_token = NULL WHERE user_id = ?";
         
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {

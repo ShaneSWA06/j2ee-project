@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import dao.CaregiverDAO;
-import dao.DAOFactory;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,18 +11,22 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.Caregiver;
+import service.CaregiverServiceAPI;
+import dao.DAOFactory;
+import dao.UserDAO;
 
 /**
- * AdminCaregiverController - Handles caregiver management
+ * AdminCaregiverController - Handles caregiver management via Spring Boot REST API
+ * Demonstrates microservices architecture with J2EE frontend and Spring Boot backend
  */
 @WebServlet("/admin/caregiver")
 public class AdminCaregiverController extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private CaregiverDAO caregiverDAO;
+    private CaregiverServiceAPI caregiverAPI;
 
     @Override
     public void init() throws ServletException {
-        caregiverDAO = DAOFactory.getCaregiverDAO();
+        caregiverAPI = new CaregiverServiceAPI();
     }
 
     @Override
@@ -101,7 +103,7 @@ public class AdminCaregiverController extends HttpServlet {
     private void listCaregivers(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
 
-        List<Caregiver> caregivers = caregiverDAO.getAllCaregivers();
+        List<Caregiver> caregivers = caregiverAPI.getAllCaregivers();
         request.setAttribute("caregivers", caregivers);
         request.getRequestDispatcher("/admin/adminCaregiverList.jsp").forward(request, response);
     }
@@ -122,7 +124,7 @@ public class AdminCaregiverController extends HttpServlet {
         }
 
         int caregiverId = Integer.parseInt(caregiverIdParam);
-        Caregiver caregiver = caregiverDAO.getCaregiverById(caregiverId);
+        Caregiver caregiver = caregiverAPI.getCaregiverById(caregiverId);
 
         if (caregiver == null) {
             response.sendRedirect(request.getContextPath() + "/admin/caregiver?err=not_found");
@@ -143,7 +145,7 @@ public class AdminCaregiverController extends HttpServlet {
         }
 
         int caregiverId = Integer.parseInt(caregiverIdParam);
-        Caregiver caregiver = caregiverDAO.getCaregiverById(caregiverId);
+        Caregiver caregiver = caregiverAPI.getCaregiverById(caregiverId);
 
         if (caregiver == null) {
             response.sendRedirect(request.getContextPath() + "/admin/caregiver?err=not_found");
@@ -193,7 +195,7 @@ public class AdminCaregiverController extends HttpServlet {
 
         // Create associated User account if email is provided
         if (caregiver.getEmail() != null && !caregiver.getEmail().isEmpty()) {
-            dao.UserDAO userDAO = DAOFactory.getUserDAO();
+            UserDAO userDAO = DAOFactory.getUserDAO();
             model.User existingUser = userDAO.getUserByEmail(caregiver.getEmail());
             
             if (existingUser == null) {
@@ -208,15 +210,10 @@ public class AdminCaregiverController extends HttpServlet {
                 // Address, Relationship, CareNotes are optional/empty
                 
                 userDAO.createUser(newUser);
-            } else {
-                // Determine if we should update role? 
-                // For now, if user exists, just ensure they can log in.
-                // Optionally update role to CAREGIVER if they are just a customer?
-                // Let's safe guard and not change existing user roles without explicit instruction.
             }
         }
 
-        Caregiver created = caregiverDAO.createCaregiver(caregiver);
+        Caregiver created = caregiverAPI.createCaregiver(caregiver);
 
         if (created != null) {
             response.sendRedirect(request.getContextPath() + "/admin/caregiver?success=created");
@@ -264,9 +261,9 @@ public class AdminCaregiverController extends HttpServlet {
         caregiver.setEmail(email != null ? email.trim() : "");
         caregiver.setAvailable("true".equals(isAvailableStr) || "on".equals(isAvailableStr));
 
-        boolean updated = caregiverDAO.updateCaregiver(caregiver);
+        Caregiver updated = caregiverAPI.updateCaregiver(caregiverId, caregiver);
 
-        if (updated) {
+        if (updated != null) {
             response.sendRedirect(request.getContextPath() + "/admin/caregiver?success=updated");
         } else {
             response.sendRedirect(request.getContextPath() + "/admin/caregiver?action=edit&caregiverId=" + caregiverId + "&err=update_failed");
@@ -284,7 +281,7 @@ public class AdminCaregiverController extends HttpServlet {
         }
 
         int caregiverId = Integer.parseInt(caregiverIdStr);
-        boolean deleted = caregiverDAO.deleteCaregiver(caregiverId);
+        boolean deleted = caregiverAPI.deleteCaregiver(caregiverId);
 
         if (deleted) {
             response.sendRedirect(request.getContextPath() + "/admin/caregiver?success=deleted");

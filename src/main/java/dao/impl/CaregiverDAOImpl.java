@@ -20,7 +20,7 @@ public class CaregiverDAOImpl implements CaregiverDAO {
 
     @Override
     public Caregiver getCaregiverById(int caregiverId) throws SQLException {
-        String sql = "SELECT caregiver_id, user_id, name, qualifications, specialties, experience_years, bio, phone, email, is_active, created_at " +
+        String sql = "SELECT caregiver_id, user_id, name, qualifications, specialties, experience, bio, phone, email, available, created_at " +
                      "FROM caregiver WHERE caregiver_id = ?";
 
         try (Connection conn = DBUtil.getConnection();
@@ -38,7 +38,7 @@ public class CaregiverDAOImpl implements CaregiverDAO {
 
     @Override
     public List<Caregiver> getAllCaregivers() throws SQLException {
-        String sql = "SELECT caregiver_id, user_id, name, qualifications, specialties, experience_years, bio, phone, email, is_active, created_at " +
+        String sql = "SELECT caregiver_id, user_id, name, qualifications, specialties, experience, bio, phone, email, available, created_at " +
                      "FROM caregiver ORDER BY caregiver_id ASC";
 
         try (Connection conn = DBUtil.getConnection();
@@ -55,8 +55,8 @@ public class CaregiverDAOImpl implements CaregiverDAO {
 
     @Override
     public List<Caregiver> getAvailableCaregivers() throws SQLException {
-        String sql = "SELECT caregiver_id, user_id, name, qualifications, specialties, experience_years, bio, phone, email, is_active, created_at " +
-                     "FROM caregiver WHERE is_active = TRUE ORDER BY caregiver_id ASC";
+        String sql = "SELECT caregiver_id, user_id, name, qualifications, specialties, experience, bio, phone, email, available, created_at " +
+                     "FROM caregiver WHERE available = TRUE ORDER BY caregiver_id ASC";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -73,9 +73,9 @@ public class CaregiverDAOImpl implements CaregiverDAO {
     @Override
     public List<Caregiver> searchCaregivers(String query) throws SQLException {
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT caregiver_id, user_id, name, qualifications, specialties, experience_years, bio, phone, email, is_active, created_at ");
+        sql.append("SELECT caregiver_id, user_id, name, qualifications, specialties, experience, bio, phone, email, available, created_at ");
         sql.append("FROM caregiver ");
-        sql.append("WHERE is_active = TRUE ");
+        sql.append("WHERE available = TRUE ");
 
         if (query != null && !query.trim().isEmpty()) {
             sql.append("AND (LOWER(name) LIKE LOWER(?) ");
@@ -109,7 +109,7 @@ public class CaregiverDAOImpl implements CaregiverDAO {
 
     @Override
     public Caregiver createCaregiver(Caregiver caregiver) throws SQLException {
-        String sql = "INSERT INTO caregiver (name, qualifications, specialties, experience_years, bio, phone, email, is_active) " +
+        String sql = "INSERT INTO caregiver (name, qualifications, specialties, experience, bio, phone, email, available) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBUtil.getConnection();
@@ -144,8 +144,8 @@ public class CaregiverDAOImpl implements CaregiverDAO {
 
     @Override
     public boolean updateCaregiver(Caregiver caregiver) throws SQLException {
-        String sql = "UPDATE caregiver SET name = ?, qualifications = ?, specialties = ?, experience_years = ?, bio = ?, " +
-                     "phone = ?, email = ?, is_active = ? WHERE caregiver_id = ?";
+        String sql = "UPDATE caregiver SET name = ?, qualifications = ?, specialties = ?, experience = ?, bio = ?, " +
+                     "phone = ?, email = ?, available = ? WHERE caregiver_id = ?";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -191,17 +191,17 @@ public class CaregiverDAOImpl implements CaregiverDAO {
         caregiver.setQualifications(rs.getString("qualifications"));
         caregiver.setSpecialties(rs.getString("specialties"));
         caregiver.setSpecialization(rs.getString("specialties")); // Map specialties to specialization for backward compatibility
-        caregiver.setExperienceYears(rs.getObject("experience_years", Integer.class));
+        caregiver.setExperienceYears(rs.getObject("experience", Integer.class));
         caregiver.setBio(rs.getString("bio"));
         caregiver.setPhone(rs.getString("phone"));
         caregiver.setEmail(rs.getString("email"));
-        caregiver.setAvailable(rs.getBoolean("is_active"));
+        caregiver.setAvailable(rs.getBoolean("available"));
         caregiver.setCreatedAt(rs.getTimestamp("created_at"));
         return caregiver;
     }
     @Override
     public Caregiver getCaregiverByEmail(String email) throws SQLException {
-        String sql = "SELECT caregiver_id, user_id, name, qualifications, specialties, experience_years, bio, phone, email, is_active, created_at " +
+        String sql = "SELECT caregiver_id, user_id, name, qualifications, specialties, experience, bio, phone, email, available, created_at " +
                      "FROM caregiver WHERE email = ?";
 
         try (Connection conn = DBUtil.getConnection();

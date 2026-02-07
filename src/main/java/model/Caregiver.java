@@ -22,6 +22,9 @@ public class Caregiver implements Serializable {
     private String specialties;
     private Integer experienceYears;
     private String bio;
+    private String availableHours;
+    private java.math.BigDecimal rating;
+    private String profileImage;
 
     // Constructors
     public Caregiver() {
@@ -132,6 +135,39 @@ public class Caregiver implements Serializable {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    // Alias for Spring Boot compatibility
+    public Integer getExperience() {
+        return experienceYears;
+    }
+
+    public void setExperience(Integer experience) {
+        this.experienceYears = experience;
+    }
+
+    public String getAvailableHours() {
+        return availableHours;
+    }
+
+    public void setAvailableHours(String availableHours) {
+        this.availableHours = availableHours;
+    }
+
+    public java.math.BigDecimal getRating() {
+        return rating;
+    }
+
+    public void setRating(java.math.BigDecimal rating) {
+        this.rating = rating;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
     @Override

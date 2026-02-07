@@ -32,7 +32,7 @@
          PreparedStatement ps = conn.prepareStatement(
            "SELECT s.service_name, s.description, s.base_price, s.duration_minutes, c.category_name " +
            "FROM service s LEFT JOIN service_category c ON s.category_id = c.category_id " +
-           "WHERE s.service_id=? AND s.is_active=TRUE")) {
+           "WHERE s.service_id=? AND s.available=TRUE")) {
       ps.setInt(1, selectedServiceId);
       try (ResultSet rs = ps.executeQuery()) {
         if (rs.next()) {
@@ -82,13 +82,13 @@
         <%
           try (Connection connCg = DBUtil.getConnection();
                PreparedStatement psCg = connCg.prepareStatement(
-                 "SELECT caregiver_id, name, specialties, experience_years FROM caregiver WHERE is_active=TRUE ORDER BY name")) {
+                 "SELECT caregiver_id, name, specialties, experience FROM caregiver WHERE available=TRUE ORDER BY name")) {
             try (ResultSet rsCg = psCg.executeQuery()) {
               while (rsCg.next()) {
                 int cgId = rsCg.getInt("caregiver_id");
                 String cgName = rsCg.getString("name");
                 String cgSpecialties = rsCg.getString("specialties");
-                Integer cgExp = rsCg.getObject("experience_years", Integer.class);
+                Integer cgExp = rsCg.getObject("experience", Integer.class);
                 String displayText = cgName;
                 if (cgExp != null && cgExp > 0) {
                   displayText += " (" + cgExp + " years exp)";

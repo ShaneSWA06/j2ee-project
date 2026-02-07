@@ -98,7 +98,7 @@ public class RegisterServlet extends HttpServlet {
                 }).start();
 
                 response.sendRedirect(request.getContextPath() +
-                    "/auth/login.jsp?success=verify_email");
+                    "/auth/verificationSent.jsp?email=" + email);
             } else {
                 response.sendRedirect(request.getContextPath() +
                     "/public/registerClient.jsp?err=failed");
