@@ -11,6 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.stripe.Stripe;
 import com.stripe.model.PaymentIntent;
 
 import dao.DAOFactory;
@@ -140,6 +141,45 @@ public class CheckoutServlet extends HttpServlet {
             double grandTotal = totalAmount + gstAmount;
             long amountCents = Math.round(grandTotal * 100);
 
+            // Load Stripe Keys from properties (Reload on every request to ensure consistency)
+            String stripePublicKey = null;
+            String stripeSecretKey = null;
+            try {
+                java.util.Properties props = new java.util.Properties();
+                java.io.InputStream input = getClass().getClassLoader().getResourceAsStream("stripe.properties");
+                if (input == null) {
+                    input = Thread.currentThread().getContextClassLoader().getResourceAsStream("stripe.properties");
+                }
+
+                if (input != null) {
+                    try (java.io.InputStream is = input) {
+                        props.load(is);
+                        stripePublicKey = props.getProperty("stripe.publishable.key");
+                        stripeSecretKey = props.getProperty("stripe.secret.key");
+                        
+                        if (stripePublicKey != null) {
+                            stripePublicKey = stripePublicKey.trim().replaceAll("[^a-zA-Z0-9_]", "");
+                        }
+                        if (stripeSecretKey != null) {
+                            stripeSecretKey = stripeSecretKey.trim().replaceAll("[^a-zA-Z0-9_]", "");
+                        }
+                        
+                        System.out.println("DEBUG: Loaded Stripe Keys from properties");
+                        System.out.println("DEBUG: Public Key: " + (stripePublicKey != null ? stripePublicKey.substring(0, 10) + "..." + stripePublicKey.substring(stripePublicKey.length()-5) : "null"));
+                        System.out.println("DEBUG: Public Key Length: " + (stripePublicKey != null ? stripePublicKey.length() : 0));
+                    }
+                } else {
+                    System.err.println("CheckoutServlet: stripe.properties not found in classpath");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+            // Update global Stripe Secret Key if found
+            if (stripeSecretKey != null && !stripeSecretKey.isEmpty()) {
+                Stripe.apiKey = stripeSecretKey;
+            }
+
             // Create Stripe PaymentIntent
             try {
                 String bookingIdsStr = bookingIds.toString();
@@ -167,30 +207,6 @@ public class CheckoutServlet extends HttpServlet {
                 request.setAttribute("amount", grandTotal);
             request.setAttribute("subtotal", totalAmount);
             request.setAttribute("gst", gstAmount);
-
-            // Load Stripe Public Key from properties
-            String stripePublicKey = null;
-            try {
-                java.util.Properties props = new java.util.Properties();
-                java.io.InputStream input = getClass().getClassLoader().getResourceAsStream("stripe.properties");
-                if (input == null) {
-                    input = Thread.currentThread().getContextClassLoader().getResourceAsStream("stripe.properties");
-                }
-
-                if (input != null) {
-                    try (java.io.InputStream is = input) {
-                        props.load(is);
-                        stripePublicKey = props.getProperty("stripe.publishable.key");
-                        if (stripePublicKey != null) {
-                            stripePublicKey = stripePublicKey.trim();
-                        }
-                    }
-                } else {
-                    System.err.println("CheckoutServlet: stripe.properties not found in classpath");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
             if (stripePublicKey == null || stripePublicKey.trim().isEmpty()) {
                 stripePublicKey = "pk_test_PLACEHOLDER_ERROR";

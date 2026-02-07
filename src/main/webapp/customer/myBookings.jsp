@@ -16,8 +16,11 @@
 <p><strong>Date:</strong> <fmt:formatDate value="${booking.bookingDate}" pattern="yyyy-MM-dd"/></p>
 <p><strong>Time:</strong> <fmt:formatDate value="${booking.bookingTime}" pattern="HH:mm"/></p>
 <p><strong>Status:</strong> <span style="color: ${booking.status == 'Confirmed' ? 'green' : booking.status == 'Cancelled' ? 'red' : 'orange'}">${booking.status}</span></p>
-<c:if test="${not empty booking.caregiverName}"><p><strong>Caregiver:</strong> ${booking.caregiverName}</p></c:if>
-<c:if test="${not empty booking.notes}"><p><strong>Notes:</strong> ${booking.notes}</p></c:if>
+                        <c:if test="${not empty booking.caregiverName}">
+                            <p><strong>Caregiver:</strong> ${booking.caregiverName}</p>
+                            <p><strong>Caregiver Status:</strong> <span class="badge ${booking.caregiverStatus == 'Accepted' ? 'bg-success' : 'bg-warning'}">${booking.caregiverStatus}</span></p>
+                        </c:if>
+                        <c:if test="${not empty booking.notes}"><p><strong>Notes:</strong> ${booking.notes}</p></c:if>
 </div>
 </c:forEach>
 </c:when>

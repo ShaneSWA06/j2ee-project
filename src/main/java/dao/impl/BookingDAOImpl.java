@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+import service.BookingServiceAPI;
 import dao.BookingDAO;
 import db.DBUtil;
 import model.Booking;
@@ -23,6 +23,7 @@ public class BookingDAOImpl implements BookingDAO {
 
     @Override
     public Booking getBookingById(int bookingId) throws SQLException {
+    
         String sql = "SELECT b.*, " +
                      "u.name as user_name, s.service_name, c.name as caregiver_name " +
                      "FROM booking b " +
@@ -93,8 +94,8 @@ public class BookingDAOImpl implements BookingDAO {
 
     @Override
     public Booking createBooking(Booking booking) throws SQLException {
-        String sql = "INSERT INTO booking (user_id, service_id, caregiver_id, booking_date, booking_time, status, notes, pickup_address, destination_address, total_price, payment_status) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO booking (user_id, service_id, caregiver_id, booking_date, booking_time, status, notes, pickup_address, destination_address, total_price, caregiver_status, payment_status) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -115,7 +116,8 @@ public class BookingDAOImpl implements BookingDAO {
             ps.setString(8, booking.getPickupAddress());
             ps.setString(9, booking.getDestinationAddress());
             ps.setDouble(10, booking.getTotalPrice() != null ? booking.getTotalPrice() : 0.0);
-            ps.setString(11, booking.getPaymentStatus() != null ? booking.getPaymentStatus() : "Unpaid");
+            ps.setString(11, booking.getCaregiverStatus() != null ? booking.getCaregiverStatus() : "Pending");
+            ps.setString(12, booking.getPaymentStatus() != null ? booking.getPaymentStatus() : "Unpaid");
 
             int rowsAffected = ps.executeUpdate();
 
@@ -134,7 +136,7 @@ public class BookingDAOImpl implements BookingDAO {
     @Override
     public boolean updateBooking(Booking booking) throws SQLException {
         String sql = "UPDATE booking SET service_id = ?, caregiver_id = ?, booking_date = ?, " +
-                     "booking_time = ?, status = ?, notes = ?, pickup_address = ?, destination_address = ?, total_price = ?, payment_status = ? WHERE booking_id = ?";
+                     "booking_time = ?, status = ?, notes = ?, pickup_address = ?, destination_address = ?, total_price = ?, caregiver_status = ?, payment_status = ? WHERE booking_id = ?";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -154,8 +156,9 @@ public class BookingDAOImpl implements BookingDAO {
             ps.setString(7, booking.getPickupAddress());
             ps.setString(8, booking.getDestinationAddress());
             ps.setDouble(9, booking.getTotalPrice() != null ? booking.getTotalPrice() : 0.0);
-            ps.setString(10, booking.getPaymentStatus() != null ? booking.getPaymentStatus() : "Unpaid");
-            ps.setInt(11, booking.getBookingId());
+            ps.setString(10, booking.getCaregiverStatus());
+            ps.setString(11, booking.getPaymentStatus());
+            ps.setInt(12, booking.getBookingId());
 
             return ps.executeUpdate() > 0;
         }
@@ -220,6 +223,20 @@ public class BookingDAOImpl implements BookingDAO {
         booking.setStatus(rs.getString("status"));
         booking.setNotes(rs.getString("notes"));
         booking.setCreatedAt(rs.getTimestamp("created_at"));
+        
+        try {
+            booking.setCaregiverStatus(rs.getString("caregiver_status"));
+        } catch (SQLException e) {
+            // Column might not exist in old queries if not updated properly, but we updated all
+            // Ignore or log
+        }
+        
+        try {
+            booking.setPaymentStatus(rs.getString("payment_status"));
+        } catch (SQLException e) {
+            // Ignore
+        }
+        
         booking.setUserName(rs.getString("user_name"));
         booking.setServiceName(rs.getString("service_name"));
         booking.setCaregiverName(rs.getString("caregiver_name"));
@@ -297,12 +314,33 @@ public class BookingDAOImpl implements BookingDAO {
 
     @Override
     public boolean assignCaregiver(int bookingId, int caregiverId) throws SQLException {
-        String sql = "UPDATE booking SET caregiver_id = ?, status = 'Confirmed' WHERE booking_id = ?";
+        // Default to 'Accepted' for backward compatibility or direct assignment
+        return assignCaregiver(bookingId, caregiverId, "Accepted");
+    }
+
+    @Override
+    public boolean assignCaregiver(int bookingId, int caregiverId, String status) throws SQLException {
+        String sql = "UPDATE booking SET caregiver_id = ?, status = 'Confirmed', caregiver_status = ? WHERE booking_id = ?";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, caregiverId);
+            ps.setString(2, status);
+            ps.setInt(3, bookingId);
+
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    @Override
+    public boolean updateCaregiverStatus(int bookingId, String status) throws SQLException {
+        String sql = "UPDATE booking SET caregiver_status = ? WHERE booking_id = ?";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, status);
             ps.setInt(2, bookingId);
 
             return ps.executeUpdate() > 0;

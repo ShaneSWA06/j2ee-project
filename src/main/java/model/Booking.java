@@ -17,6 +17,8 @@ public class Booking implements Serializable {
     private Date bookingDate;
     private Time bookingTime;
     private String status; // "Pending", "Confirmed", "Completed", "Cancelled"
+    private String caregiverStatus; // "Pending", "Accepted", "Rejected"
+    private String paymentStatus; // "Unpaid", "Paid"
     private String notes;
     private java.sql.Timestamp createdAt;
 
@@ -30,7 +32,6 @@ public class Booking implements Serializable {
     private java.sql.Timestamp updatedAt;
     private String pickupAddress;
     private String destinationAddress;
-    private String paymentStatus;
 
     // Constructors
     public Booking() {
@@ -47,8 +48,6 @@ public class Booking implements Serializable {
     }
 
     // Getters and Setters
-    public String getPaymentStatus() { return paymentStatus; }
-    public void setPaymentStatus(String paymentStatus) { this.paymentStatus = paymentStatus; }
     public int getBookingId() {
         return bookingId;
     }
@@ -103,6 +102,22 @@ public class Booking implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getCaregiverStatus() {
+        return caregiverStatus;
+    }
+
+    public void setCaregiverStatus(String caregiverStatus) {
+        this.caregiverStatus = caregiverStatus;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 
     public String getNotes() {

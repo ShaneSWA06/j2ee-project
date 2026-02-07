@@ -22,12 +22,12 @@ import model.Caregiver;
 public class CaregiverController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private CaregiverDAO caregiverDAO;
-    private service.BookingServiceAPI bookingService;
+    private dao.BookingDAO bookingDAO;
 
     @Override
     public void init() throws ServletException {
         caregiverDAO = DAOFactory.getCaregiverDAO();
-        bookingService = new service.BookingServiceAPI();
+        bookingDAO = DAOFactory.getBookingDAO();
     }
 
     @Override
@@ -79,7 +79,7 @@ public class CaregiverController extends HttpServlet {
     private void showAvailableJobs(HttpServletRequest request, HttpServletResponse response, Caregiver caregiver) 
             throws SQLException, ServletException, IOException {
         
-        List<Booking> availableBookings = bookingService.getUnassignedBookings();
+        List<Booking> availableBookings = bookingDAO.getUnassignedBookings();
         request.setAttribute("bookings", availableBookings);
         request.setAttribute("caregiver", caregiver);
         request.setAttribute("viewType", "available");
@@ -89,7 +89,7 @@ public class CaregiverController extends HttpServlet {
     private void showMyJobs(HttpServletRequest request, HttpServletResponse response, Caregiver caregiver) 
             throws SQLException, ServletException, IOException {
         
-        List<Booking> myBookings = bookingService.getBookingsByCaregiver(caregiver.getCaregiverId());
+        List<Booking> myBookings = bookingDAO.getBookingsByCaregiver(caregiver.getCaregiverId());
         request.setAttribute("bookings", myBookings);
         request.setAttribute("caregiver", caregiver);
         request.setAttribute("viewType", "my");
@@ -106,7 +106,7 @@ public class CaregiverController extends HttpServlet {
         }
 
         int bookingId = Integer.parseInt(bookingIdStr);
-        boolean success = bookingService.assignCaregiver(bookingId, caregiver.getCaregiverId());
+        boolean success = bookingDAO.assignCaregiver(bookingId, caregiver.getCaregiverId(), "Accepted");
 
         if (success) {
             response.sendRedirect(request.getContextPath() + "/caregiver/jobs?action=my&success=accepted");

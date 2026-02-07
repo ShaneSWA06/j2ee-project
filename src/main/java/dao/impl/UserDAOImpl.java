@@ -276,7 +276,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public User getUserByVerificationToken(String token) throws SQLException {
-        String sql = "SELECT user_id, username, email, name, password, role, created_at, phone, address, relationship, care_notes, verified, verification_token " +
+        String sql = "SELECT user_id, username, email, name, password, role, created_at, phone, address, relationship, care_notes, verified, verification_token, company_id " +
                      "FROM app_user WHERE verification_token = ?";
 
         try (Connection conn = DBUtil.getConnection();

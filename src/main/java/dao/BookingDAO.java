@@ -67,6 +67,16 @@ public interface BookingDAO {
     boolean assignCaregiver(int bookingId, int caregiverId) throws SQLException;
 
     /**
+     * Assign a caregiver to a booking with specific status
+     */
+    boolean assignCaregiver(int bookingId, int caregiverId, String status) throws SQLException;
+
+    /**
+     * Update caregiver status for a booking
+     */
+    boolean updateCaregiverStatus(int bookingId, String status) throws SQLException;
+
+    /**
      * Get all bookings for a specific company
      */
     List<Booking> getBookingsByCompany(int companyId) throws SQLException;

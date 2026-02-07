@@ -59,6 +59,15 @@
   </div>
   
   <div class="form-group">
+  <label for="caregiver_status">Caregiver Status</label>
+  <select id="caregiver_status" name="caregiver_status">
+    <option value="Pending" ${booking.caregiverStatus == 'Pending' ? 'selected' : ''}>Pending</option>
+    <option value="Accepted" ${booking.caregiverStatus == 'Accepted' ? 'selected' : ''}>Accepted</option>
+    <option value="Rejected" ${booking.caregiverStatus == 'Rejected' ? 'selected' : ''}>Rejected</option>
+  </select>
+  </div>
+  
+  <div class="form-group">
   <label for="notes">Notes</label>
   <textarea id="notes" name="notes" rows="3">${booking.notes}</textarea>
   </div>

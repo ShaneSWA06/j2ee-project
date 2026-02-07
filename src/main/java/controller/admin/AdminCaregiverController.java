@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.Caregiver;
-import service.CaregiverServiceAPI;
+import dao.CaregiverDAO;
 import dao.DAOFactory;
 import dao.UserDAO;
 
@@ -22,11 +22,13 @@ import dao.UserDAO;
 @WebServlet("/admin/caregiver")
 public class AdminCaregiverController extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private CaregiverServiceAPI caregiverAPI;
+    private CaregiverDAO caregiverDAO;
+    private dao.BookingDAO bookingDAO;
 
     @Override
     public void init() throws ServletException {
-        caregiverAPI = new CaregiverServiceAPI();
+        caregiverDAO = DAOFactory.getCaregiverDAO();
+        bookingDAO = DAOFactory.getBookingDAO();
     }
 
     @Override
@@ -56,6 +58,9 @@ public class AdminCaregiverController extends HttpServlet {
                     break;
                 case "delete":
                     showDeleteConfirmation(request, response);
+                    break;
+                case "bookings":
+                    listCaregiverBookings(request, response);
                     break;
                 default:
                     listCaregivers(request, response);
@@ -103,9 +108,33 @@ public class AdminCaregiverController extends HttpServlet {
     private void listCaregivers(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
 
-        List<Caregiver> caregivers = caregiverAPI.getAllCaregivers();
+        List<Caregiver> caregivers = caregiverDAO.getAllCaregivers();
         request.setAttribute("caregivers", caregivers);
         request.getRequestDispatcher("/admin/adminCaregiverList.jsp").forward(request, response);
+    }
+
+    private void listCaregiverBookings(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
+
+        String caregiverIdParam = request.getParameter("caregiverId");
+        if (caregiverIdParam == null || caregiverIdParam.trim().isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/admin/caregiver?err=missing_id");
+            return;
+        }
+
+        int caregiverId = Integer.parseInt(caregiverIdParam);
+        Caregiver caregiver = caregiverDAO.getCaregiverById(caregiverId);
+
+        if (caregiver == null) {
+            response.sendRedirect(request.getContextPath() + "/admin/caregiver?err=not_found");
+            return;
+        }
+
+        List<model.Booking> bookings = bookingDAO.getBookingsByCaregiver(caregiverId);
+
+        request.setAttribute("caregiver", caregiver);
+        request.setAttribute("bookings", bookings);
+        request.getRequestDispatcher("/admin/adminCaregiverBookings.jsp").forward(request, response);
     }
 
     private void showCreateForm(HttpServletRequest request, HttpServletResponse response)
@@ -124,7 +153,7 @@ public class AdminCaregiverController extends HttpServlet {
         }
 
         int caregiverId = Integer.parseInt(caregiverIdParam);
-        Caregiver caregiver = caregiverAPI.getCaregiverById(caregiverId);
+        Caregiver caregiver = caregiverDAO.getCaregiverById(caregiverId);
 
         if (caregiver == null) {
             response.sendRedirect(request.getContextPath() + "/admin/caregiver?err=not_found");
@@ -145,7 +174,7 @@ public class AdminCaregiverController extends HttpServlet {
         }
 
         int caregiverId = Integer.parseInt(caregiverIdParam);
-        Caregiver caregiver = caregiverAPI.getCaregiverById(caregiverId);
+        Caregiver caregiver = caregiverDAO.getCaregiverById(caregiverId);
 
         if (caregiver == null) {
             response.sendRedirect(request.getContextPath() + "/admin/caregiver?err=not_found");
@@ -213,7 +242,7 @@ public class AdminCaregiverController extends HttpServlet {
             }
         }
 
-        Caregiver created = caregiverAPI.createCaregiver(caregiver);
+        Caregiver created = caregiverDAO.createCaregiver(caregiver);
 
         if (created != null) {
             response.sendRedirect(request.getContextPath() + "/admin/caregiver?success=created");
@@ -261,9 +290,9 @@ public class AdminCaregiverController extends HttpServlet {
         caregiver.setEmail(email != null ? email.trim() : "");
         caregiver.setAvailable("true".equals(isAvailableStr) || "on".equals(isAvailableStr));
 
-        Caregiver updated = caregiverAPI.updateCaregiver(caregiverId, caregiver);
+        boolean updated = caregiverDAO.updateCaregiver(caregiver);
 
-        if (updated != null) {
+        if (updated) {
             response.sendRedirect(request.getContextPath() + "/admin/caregiver?success=updated");
         } else {
             response.sendRedirect(request.getContextPath() + "/admin/caregiver?action=edit&caregiverId=" + caregiverId + "&err=update_failed");
@@ -281,7 +310,7 @@ public class AdminCaregiverController extends HttpServlet {
         }
 
         int caregiverId = Integer.parseInt(caregiverIdStr);
-        boolean deleted = caregiverAPI.deleteCaregiver(caregiverId);
+        boolean deleted = caregiverDAO.deleteCaregiver(caregiverId);
 
         if (deleted) {
             response.sendRedirect(request.getContextPath() + "/admin/caregiver?success=deleted");

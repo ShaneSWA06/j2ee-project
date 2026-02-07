@@ -166,6 +166,7 @@ public class AdminBookingController extends HttpServlet {
         String bookingDateStr = request.getParameter("booking_date");
         String bookingTimeStr = request.getParameter("booking_time");
         String status = request.getParameter("status");
+        String caregiverStatus = request.getParameter("caregiver_status");
         String notes = request.getParameter("notes");
 
         if (bookingIdStr == null || serviceIdStr == null || bookingDateStr == null || bookingTimeStr == null) {
@@ -185,6 +186,7 @@ public class AdminBookingController extends HttpServlet {
         booking.setBookingDate(Date.valueOf(bookingDateStr));
         booking.setBookingTime(Time.valueOf(bookingTimeStr + ":00"));
         booking.setStatus(status != null ? status : "Pending");
+        booking.setCaregiverStatus(caregiverStatus != null ? caregiverStatus : "Pending");
         booking.setNotes(notes);
 
         boolean updated = bookingDAO.updateBooking(booking);

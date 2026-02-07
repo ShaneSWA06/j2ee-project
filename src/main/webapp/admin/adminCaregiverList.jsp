@@ -43,6 +43,7 @@
             <td style="vertical-align: middle; padding: 12px;">${caregiver.email}</td>
             <td style="vertical-align: middle; padding: 12px;">${caregiver.available ? '✓ Yes' : '✗ No'}</td>
             <td style="vertical-align: middle; padding: 12px; white-space: nowrap;">
+              <a class="btn" href="${pageContext.request.contextPath}/admin/caregiver?action=bookings&caregiverId=${caregiver.caregiverId}" style="margin-right: 8px;">View Bookings</a>
               <a class="btn" href="${pageContext.request.contextPath}/admin/caregiver?action=edit&caregiverId=${caregiver.caregiverId}" style="margin-right: 8px;">Edit</a>
               <a class="btn" href="${pageContext.request.contextPath}/admin/caregiver?action=delete&caregiverId=${caregiver.caregiverId}">Delete</a>
             </td>
