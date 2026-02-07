@@ -113,17 +113,10 @@ public class BookingController extends HttpServlet {
         String serviceIdParam = request.getParameter("serviceId");
 
         if (serviceIdParam != null && !serviceIdParam.trim().isEmpty()) {
-            int serviceId = Integer.parseInt(serviceIdParam);
-            Service service = serviceDAO.getServiceById(serviceId);
-            request.setAttribute("service", service);
+            response.sendRedirect(request.getContextPath() + "/customer/addToCartForm.jsp?serviceId=" + serviceIdParam);
+            return;
         }
-
-        List<Service> services = serviceDAO.getActiveServices();
-        List<Caregiver> caregivers = caregiverDAO.getAvailableCaregivers();
-
-        request.setAttribute("services", services);
-        request.setAttribute("caregivers", caregivers);
-        request.getRequestDispatcher("/customer/createBooking.jsp").forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/public/serviceDetails.jsp");
     }
 
     private void createBooking(HttpServletRequest request, HttpServletResponse response)
@@ -140,7 +133,7 @@ public class BookingController extends HttpServlet {
 
         // Validation
         if (serviceIdStr == null || bookingDateStr == null || bookingTimeStr == null) {
-            response.sendRedirect(request.getContextPath() + "/customer/booking?action=create&err=missing_fields");
+            response.sendRedirect(request.getContextPath() + "/public/serviceDetails.jsp?err=missing_fields");
             return;
         }
 
@@ -152,7 +145,7 @@ public class BookingController extends HttpServlet {
             // Validate date is not in the past
             if (bookingDate.before(today)) {
                 response.sendRedirect(request.getContextPath() +
-                    "/customer/booking?action=create&serviceId=" + serviceId +
+                    "/customer/addToCartForm.jsp?serviceId=" + serviceId +
                     "&err=" + java.net.URLEncoder.encode("Booking date cannot be in the past", "UTF-8"));
                 return;
             }
@@ -161,7 +154,7 @@ public class BookingController extends HttpServlet {
             Service service = serviceDAO.getServiceById(serviceId);
             if (service == null || !service.isActive()) {
                 response.sendRedirect(request.getContextPath() +
-                    "/customer/booking?action=create&err=" +
+                    "/public/serviceDetails.jsp?err=" +
                     java.net.URLEncoder.encode("Service is not available", "UTF-8"));
                 return;
             }
@@ -185,11 +178,11 @@ public class BookingController extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/customer/booking?success=created");
             } else {
                 response.sendRedirect(request.getContextPath() +
-                    "/customer/booking?action=create&serviceId=" + serviceId + "&err=create_failed");
+                    "/customer/addToCartForm.jsp?serviceId=" + serviceId + "&err=create_failed");
             }
         } catch (Exception e) {
             response.sendRedirect(request.getContextPath() +
-                "/customer/booking?action=create&err=" +
+                "/public/serviceDetails.jsp?err=" +
                 java.net.URLEncoder.encode(e.getMessage(), "UTF-8"));
         }
     }

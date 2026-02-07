@@ -10,6 +10,9 @@
 </div>
 
 <div class="container" style="padding-bottom: 4rem;">
+    <c:if test="${not empty error}">
+        <div class="alert alert-danger">${error}</div>
+    </c:if>
     <div class="grid grid-cols-3">
         <c:forEach var="escort" items="${escorts}">
             <div class="card">
@@ -18,7 +21,7 @@
                 <p>${escort.description}</p>
                 <h4 class="text-coral">$<fmt:formatNumber value="${escort.basePrice}" maxFractionDigits="2"/></h4>
                 <div class="mt-4">
-                    <a href="${pageContext.request.contextPath}/customer/medical-escort?action=book&id=${escort.serviceId}&name=${escort.serviceName}&price=${escort.basePrice}" class="btn btn-primary" style="width: 100%;">Book Now</a>
+                    <a href="${pageContext.request.contextPath}/customer/addToCartForm.jsp?serviceId=${escort.serviceId}" class="btn btn-primary" style="width: 100%;">Book Now</a>
                 </div>
             </div>
         </c:forEach>

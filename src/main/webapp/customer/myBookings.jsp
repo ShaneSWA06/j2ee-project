@@ -7,7 +7,7 @@
 <h1>My Bookings</h1>
 <c:if test="${not empty param.success}"><div class="alert alert-success">Booking ${param.success}!</div></c:if>
 <c:if test="${not empty param.err}"><div class="alert alert-danger">Error: ${param.err}</div></c:if>
-<p><a href="${pageContext.request.contextPath}/customer/booking?action=create" class="btn btn-primary">Create New Booking</a></p>
+<p><a href="${pageContext.request.contextPath}/public/serviceDetails.jsp" class="btn btn-primary">Create New Booking</a></p>
 <c:choose>
 <c:when test="${not empty bookings}">
 <c:forEach var="booking" items="${bookings}">
@@ -24,7 +24,7 @@
 </div>
 </c:forEach>
 </c:when>
-<c:otherwise><p>No bookings yet. <a href="${pageContext.request.contextPath}/customer/booking?action=create">Create one now!</a></p></c:otherwise>
+<c:otherwise><p>No bookings yet. <a href="${pageContext.request.contextPath}/public/serviceDetails.jsp">Create one now!</a></p></c:otherwise>
 </c:choose>
 </div>
 <jsp:include page="../includes/footer.jsp"/>

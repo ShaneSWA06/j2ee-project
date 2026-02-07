@@ -189,13 +189,13 @@ CREATE INDEX idx_feedback_caregiver_id ON feedback(caregiver_id);
 -- =====================================================
 -- Password: admin123 (BCrypt hashed)
 INSERT INTO app_user (username, email, password, name, role, verified) VALUES
-('admin', 'admin@silvercaregivers.com', 'admin123', 'System Admin', 'ADMIN', TRUE);
+('admin', 'system@shalommedcare.sg', 'admin123', 'System Admin', 'ADMIN', TRUE);
 
 -- =====================================================
 -- SAMPLE DATA - Companies (Agencies)
 -- =====================================================
 INSERT INTO company (name, description, address, phone, email, website, rating) VALUES
-('Premier Medical Escort', 'Specialized team providing professional accompaniment for hospital and clinic visits.', '101 Medical Lane, Singapore', '6555-1234', 'contact@premierescort.sg', 'http://www.premierescort.sg', 4.9),
+('Shalom Medcare', 'Professional and compassionate medical escort service providing accompaniment for hospital and clinic visits.', '101 Medical Lane, Singapore', '6555-1234', 'contact@shalommedcare.sg', 'http://www.shalommedcare.sg', 4.9),
 ('Rapid Clinic Support', 'Focusing on efficient and safe transport for dialysis and outpatient treatments.', '202 Hospital Way, Singapore', '6555-5678', 'info@rapidsupport.sg', 'http://www.rapidsupport.sg', 4.7);
 
 -- =====================================================
@@ -203,7 +203,7 @@ INSERT INTO company (name, description, address, phone, email, website, rating) 
 -- =====================================================
 -- Password: admin123 (BCrypt hashed)
 INSERT INTO app_user (username, email, password, name, role, verified, company_id) VALUES
-('silvercare.admin', 'admin@silvercarepartners.com', 'admin123', 'Agency Manager', 'COMPANY_ADMIN', TRUE, 1);
+('shalom.admin', 'admin@shalommedcare.sg', 'admin123', 'Agency Manager', 'COMPANY_ADMIN', TRUE, 1);
 
 -- =====================================================
 -- SAMPLE DATA - Service Categories
@@ -238,10 +238,10 @@ INSERT INTO medical_escort_service (service_name, description, base_price, durat
 -- SAMPLE DATA - Caregivers
 -- =====================================================
 INSERT INTO caregiver (name, email, phone, qualifications, specialties, experience, bio, available, available_hours, rating, company_id) VALUES
-('Jane Smith', 'jane.smith@silvercaregivers.com', '555-0101', 'Registered Nurse, CPR Certified', 'Elderly Care, Dementia Care, Medical Escort', 8, 'Experienced caregiver specializing in elderly and dementia care with over 8 years of professional experience.', TRUE, 'Mon-Fri 8AM-6PM', 4.8, 1),
-('Michael Chen', 'michael.chen@silvercaregivers.com', '555-0102', 'Certified Nursing Assistant, First Aid', 'Personal Care, Mobility Assistance, Companionship', 5, 'Compassionate caregiver focused on personal care and mobility assistance.', TRUE, 'Mon-Sun 9AM-5PM', 4.9, 1),
-('Emily Rodriguez', 'emily.rodriguez@silvercaregivers.com', '555-0103', 'Licensed Practical Nurse', 'Post-Surgery Care, Medication Management, Wound Care', 10, 'Highly experienced in post-operative care and medical procedures.', TRUE, 'Mon-Fri 7AM-7PM', 5.0, 2),
-('David Williams', 'david.williams@silvercaregivers.com', '555-0104', 'Dementia Care Specialist', 'Dementia Care, Alzheimer''s Care, Memory Care', 6, 'Specialized in dementia and Alzheimer''s care with patience and understanding.', TRUE, 'Tue-Sat 10AM-6PM', 4.7, 2);
+('Jane Smith', 'jane.smith@shalommedcare.sg', '555-0101', 'Registered Nurse, CPR Certified', 'Elderly Care, Dementia Care, Medical Escort', 8, 'Experienced caregiver specializing in elderly and dementia care with over 8 years of professional experience.', TRUE, 'Mon-Fri 8AM-6PM', 4.8, 1),
+('Michael Chen', 'michael.chen@shalommedcare.sg', '555-0102', 'Certified Nursing Assistant, First Aid', 'Personal Care, Mobility Assistance, Companionship', 5, 'Compassionate caregiver focused on personal care and mobility assistance.', TRUE, 'Mon-Sun 9AM-5PM', 4.9, 1),
+('Emily Rodriguez', 'emily.rodriguez@shalommedcare.sg', '555-0103', 'Licensed Practical Nurse', 'Post-Surgery Care, Medication Management, Wound Care', 10, 'Highly experienced in post-operative care and medical procedures.', TRUE, 'Mon-Fri 7AM-7PM', 5.0, 2),
+('David Williams', 'david.williams@shalommedcare.sg', '555-0104', 'Dementia Care Specialist', 'Dementia Care, Alzheimer''s Care, Memory Care', 6, 'Specialized in dementia and Alzheimer''s care with patience and understanding.', TRUE, 'Tue-Sat 10AM-6PM', 4.7, 2);
 
 -- =====================================================
 -- SAMPLE DATA - Customer Users
@@ -256,16 +256,16 @@ INSERT INTO app_user (username, email, password, name, phone, address, role, ver
 -- =====================================================
 -- Password: admin123 (BCrypt hashed)
 INSERT INTO app_user (username, email, password, name, phone, role, verified) VALUES
-('jane.smith', 'jane.smith@silvercaregivers.com', 'admin123', 'Jane Smith', '555-0101', 'CAREGIVER', TRUE),
-('michael.chen', 'michael.chen@silvercaregivers.com', 'admin123', 'Michael Chen', '555-0102', 'CAREGIVER', TRUE),
-('emily.rodriguez', 'emily.rodriguez@silvercaregivers.com', 'admin123', 'Emily Rodriguez', '555-0103', 'CAREGIVER', TRUE),
-('david.williams', 'david.williams@silvercaregivers.com', 'admin123', 'David Williams', '555-0104', 'CAREGIVER', TRUE);
+('jane.smith', 'jane.smith@shalommedcare.sg', 'admin123', 'Jane Smith', '555-0101', 'CAREGIVER', TRUE),
+('michael.chen', 'michael.chen@shalommedcare.sg', 'admin123', 'Michael Chen', '555-0102', 'CAREGIVER', TRUE),
+('emily.rodriguez', 'emily.rodriguez@shalommedcare.sg', 'admin123', 'Emily Rodriguez', '555-0103', 'CAREGIVER', TRUE),
+('david.williams', 'david.williams@shalommedcare.sg', 'admin123', 'David Williams', '555-0104', 'CAREGIVER', TRUE);
 
 -- Link caregivers to users
-UPDATE caregiver SET user_id = (SELECT user_id FROM app_user WHERE email = 'jane.smith@silvercaregivers.com') WHERE email = 'jane.smith@silvercaregivers.com';
-UPDATE caregiver SET user_id = (SELECT user_id FROM app_user WHERE email = 'michael.chen@silvercaregivers.com') WHERE email = 'michael.chen@silvercaregivers.com';
-UPDATE caregiver SET user_id = (SELECT user_id FROM app_user WHERE email = 'emily.rodriguez@silvercaregivers.com') WHERE email = 'emily.rodriguez@silvercaregivers.com';
-UPDATE caregiver SET user_id = (SELECT user_id FROM app_user WHERE email = 'david.williams@silvercaregivers.com') WHERE email = 'david.williams@silvercaregivers.com';
+UPDATE caregiver SET user_id = (SELECT user_id FROM app_user WHERE email = 'jane.smith@shalommedcare.sg') WHERE email = 'jane.smith@shalommedcare.sg';
+UPDATE caregiver SET user_id = (SELECT user_id FROM app_user WHERE email = 'michael.chen@shalommedcare.sg') WHERE email = 'michael.chen@shalommedcare.sg';
+UPDATE caregiver SET user_id = (SELECT user_id FROM app_user WHERE email = 'emily.rodriguez@shalommedcare.sg') WHERE email = 'emily.rodriguez@shalommedcare.sg';
+UPDATE caregiver SET user_id = (SELECT user_id FROM app_user WHERE email = 'david.williams@shalommedcare.sg') WHERE email = 'david.williams@shalommedcare.sg';
 
 -- =====================================================
 -- SAMPLE DATA - Bookings

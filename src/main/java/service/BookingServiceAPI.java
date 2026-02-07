@@ -9,9 +9,14 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import db.DBUtil;
 import model.Booking;
 
 /**
@@ -192,11 +197,7 @@ public class BookingServiceAPI {
                     break;
                 case "service_id":
                     booking.setServiceId(Integer.parseInt(value));
-                    // Mock service name based on ID for display
-                    if (booking.getServiceId() == 101) booking.setServiceName("Medical Escort");
-                    else if (booking.getServiceId() == 102) booking.setServiceName("Nurse Escort");
-                    else if (booking.getServiceId() == 103) booking.setServiceName("Wheelchair Transport");
-                    else booking.setServiceName("Service #" + value);
+                    booking.setServiceName(resolveServiceName(booking.getServiceId()));
                     break;
                 case "user_id":
                     try {
@@ -240,5 +241,36 @@ public class BookingServiceAPI {
             }
         }
         return booking;
+    }
+
+    private String resolveServiceName(int serviceId) {
+        String serviceName = null;
+        String serviceSql = "SELECT service_name FROM service WHERE service_id = ?";
+        String escortSql = "SELECT service_name FROM medical_escort_service WHERE service_id = ?";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement serviceStmt = conn.prepareStatement(serviceSql)) {
+            serviceStmt.setInt(1, serviceId);
+            try (ResultSet rs = serviceStmt.executeQuery()) {
+                if (rs.next()) {
+                    serviceName = rs.getString("service_name");
+                }
+            }
+
+            if (serviceName == null) {
+                try (PreparedStatement escortStmt = conn.prepareStatement(escortSql)) {
+                    escortStmt.setInt(1, serviceId);
+                    try (ResultSet rs = escortStmt.executeQuery()) {
+                        if (rs.next()) {
+                            serviceName = rs.getString("service_name");
+                        }
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            serviceName = null;
+        }
+
+        return serviceName != null ? serviceName : "Service #" + serviceId;
     }
 }

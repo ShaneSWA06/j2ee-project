@@ -31,7 +31,7 @@
   <p style="margin-top:12px">
     <a class="btn btn-primary" href="${pageContext.request.contextPath}/customer/viewCart.jsp">View Shopping Cart<% if (cartCount > 0) { %> (<%= cartCount %>)<% } %></a>
     <a class="btn btn-secondary" href="${pageContext.request.contextPath}/customer/booking?action=list">My Bookings</a>
-    <a class="btn btn-secondary" href="${pageContext.request.contextPath}/customer/booking?action=create">Create New Booking</a>
+    <a class="btn btn-secondary" href="${pageContext.request.contextPath}/public/serviceDetails.jsp">Create New Booking</a>
   </p>
   <p style="margin-top:12px">
     <a class="btn btn-secondary" href="${pageContext.request.contextPath}/customer/myFeedback.jsp">My Feedback</a>

@@ -2,6 +2,7 @@ package controller.customer;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -71,7 +72,12 @@ public class MedicalEscortController extends HttpServlet {
 
     private void listEscorts(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        List<Service> escorts = escortService.getMedicalEscorts();
+        List<Service> escorts = new ArrayList<>();
+        try {
+            escorts = escortService.getMedicalEscorts();
+        } catch (Exception e) {
+            request.setAttribute("error", "Unable to load medical escort services. Please try again later.");
+        }
         request.setAttribute("escorts", escorts);
         request.getRequestDispatcher("/customer/escort/list.jsp").forward(request, response);
     }
@@ -79,19 +85,11 @@ public class MedicalEscortController extends HttpServlet {
     private void showBookingForm(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         String serviceId = request.getParameter("id");
-        request.setAttribute("selectedServiceId", serviceId);
-        
-        // Fetch available caregivers for selection
-        try {
-            dao.CaregiverDAO caregiverDAO = dao.DAOFactory.getCaregiverDAO();
-            java.util.List<model.Caregiver> caregivers = caregiverDAO.getAllCaregivers();
-            request.setAttribute("caregivers", caregivers);
-        } catch (Exception e) {
-            System.out.println("Error fetching caregivers: " + e.getMessage());
-            // Continue even if caregiver fetch fails - caregiver selection will be optional
+        if (serviceId == null || serviceId.trim().isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/customer/medical-escort?action=list");
+            return;
         }
-        
-        request.getRequestDispatcher("/customer/escort/book.jsp").forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/customer/addToCartForm.jsp?serviceId=" + serviceId);
     }
     
     private void showConfirmation(HttpServletRequest request, HttpServletResponse response) 

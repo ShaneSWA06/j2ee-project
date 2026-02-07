@@ -4,8 +4,11 @@
 <%@ page import="db.DBUtil" %>
 <jsp:include page="../includes/header.jsp"><jsp:param name="title" value="Add to Cart"/></jsp:include>
 <jsp:include page="../includes/navbar.jsp"/>
-<div class="container">
-  <h1>Add Service to Cart</h1>
+<div class="container add-to-cart">
+  <div class="page-header">
+    <h1>Add Service to Cart</h1>
+    <p class="page-subtitle">Confirm the service details and schedule your booking.</p>
+  </div>
 
   <%
     String serviceIdParam = request.getParameter("serviceId");
@@ -29,8 +32,8 @@
     int durationMinutes = 0;
     String categoryName = null;
 
-     try (Connection conn = DBUtil.getConnection();
-          PreparedStatement ps = conn.prepareStatement(
+    try (Connection conn = DBUtil.getConnection();
+         PreparedStatement ps = conn.prepareStatement(
             "SELECT s.service_name, s.description, s.base_price, s.duration_minutes, c.category_name " +
             "FROM service s LEFT JOIN service_category c ON s.category_id = c.category_id " +
             "WHERE s.service_id=? AND s.is_active=TRUE")) {
@@ -47,39 +50,63 @@
     }
 
     if (serviceName == null) {
+      try (Connection conn = DBUtil.getConnection();
+           PreparedStatement ps = conn.prepareStatement(
+             "SELECT service_name, description, base_price, duration_minutes " +
+             "FROM medical_escort_service WHERE service_id=? AND is_active=TRUE")) {
+        ps.setInt(1, selectedServiceId);
+        try (ResultSet rs = ps.executeQuery()) {
+          if (rs.next()) {
+            serviceName = rs.getString("service_name");
+            description = rs.getString("description");
+            basePrice = rs.getDouble("base_price");
+            durationMinutes = rs.getInt("duration_minutes");
+            categoryName = "Medical Escort";
+          }
+        }
+      }
+    }
+
+    if (serviceName == null) {
       response.sendRedirect(request.getContextPath() + "/public/serviceDetails.jsp?err=service_not_found");
       return;
     }
   %>
 
-  <div class="card" style="margin-bottom: 16px; background: #f0f7ff;">
-    <h3><%= serviceName %></h3>
-    <p><strong>Category:</strong> <%= categoryName %></p>
-    <p><%= description %></p>
-    <p><strong>Price:</strong> $<%= String.format("%.2f", basePrice) %></p>
-    <p><strong>Duration:</strong> <%= durationMinutes %> minutes</p>
+  <div class="card service-summary">
+    <div class="service-summary-header">
+      <div>
+        <h3><%= serviceName %></h3>
+        <p class="summary-category">Category: <%= categoryName %></p>
+      </div>
+      <div class="summary-meta">
+        <span class="summary-price">$<%= String.format("%.2f", basePrice) %></span>
+        <span class="summary-duration"><%= durationMinutes %> minutes</span>
+      </div>
+    </div>
+    <p class="summary-description"><%= description %></p>
   </div>
 
-  <form method="post" action="<%= request.getContextPath() %>/AddToCartServlet">
+  <form method="post" action="<%= request.getContextPath() %>/AddToCartServlet" class="form-grid">
     <input type="hidden" name="serviceId" value="<%= selectedServiceId %>"/>
     <input type="hidden" name="companyId" value="<%= companyIdParam != null ? companyIdParam : "" %>"/>
 
-    <div class="card">
-      <label><strong>Booking Date</strong></label>
+    <div class="card form-card">
+      <label class="form-label">Booking Date</label>
       <input type="date" name="bookingDate" required
              min="<%= new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()) %>"
-             style="width:100%; padding: 8px; font-size: 16px; margin-top: 8px;"/>
+             class="form-control"/>
     </div>
 
-    <div class="card">
-      <label><strong>Booking Time</strong></label>
+    <div class="card form-card">
+      <label class="form-label">Booking Time</label>
       <input type="time" name="bookingTime" required
-             style="width:100%; padding: 8px; font-size: 16px; margin-top: 8px;"/>
+             class="form-control"/>
     </div>
 
-    <div class="card">
-      <label><strong>Preferred Caregiver (Optional)</strong></label>
-      <select name="caregiverId" style="width:100%; padding: 8px; font-size: 16px; margin-top: 8px;">
+    <div class="card form-card">
+      <label class="form-label">Preferred Caregiver (Optional)</label>
+      <select name="caregiverId" class="form-control">
         <option value="">No Preference</option>
         <%
           try (Connection connCg = DBUtil.getConnection();
@@ -107,7 +134,7 @@
           } catch (Exception ignore) {}
         %>
       </select>
-      <small style="color: #666; display: block; margin-top: 4px;">
+      <small class="form-hint">
         <% if (selectedCaregiverId > 0) { %>
           Caregiver pre-selected. You can change if needed.
         <% } else { %>
@@ -116,17 +143,133 @@
       </small>
     </div>
 
-    <div class="card">
-      <label><strong>Additional Notes (Optional)</strong></label>
+    <div class="card form-card">
+      <label class="form-label">Additional Notes (Optional)</label>
       <textarea name="notes" rows="4"
                 placeholder="Any special requests or information we should know..."
-                style="width:100%; padding: 8px; font-size: 16px; margin-top: 8px;"></textarea>
+                class="form-control"></textarea>
     </div>
 
-    <p style="margin-top:12px">
+    <div class="form-actions">
       <button class="btn btn-primary" type="submit">Add to Cart</button>
       <a class="btn btn-secondary" href="<%= request.getContextPath() %>/public/serviceDetails.jsp">Cancel</a>
-    </p>
+    </div>
   </form>
 </div>
+<style>
+  .add-to-cart {
+    margin-top: 3rem;
+    margin-bottom: 4rem;
+  }
+
+  .page-header {
+    margin-bottom: 2rem;
+  }
+
+  .page-subtitle {
+    color: var(--foreground-muted);
+    margin-top: 0.5rem;
+  }
+
+  .service-summary {
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, rgba(94, 106, 210, 0.14), rgba(255, 255, 255, 0.03));
+    border-color: var(--border-accent);
+  }
+
+  .service-summary-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .summary-category {
+    color: var(--foreground-muted);
+    margin-top: 0.5rem;
+  }
+
+  .summary-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-end;
+  }
+
+  .summary-price {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .summary-duration {
+    color: var(--foreground-muted);
+    font-size: 0.875rem;
+  }
+
+  .summary-description {
+    margin-top: 1.25rem;
+    color: var(--foreground-muted);
+  }
+
+  .form-grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .form-card {
+    padding: 1.5rem;
+  }
+
+  .form-label {
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .form-control {
+    width: 100%;
+    margin-top: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-default);
+    background: rgba(5, 5, 6, 0.7);
+    color: var(--foreground);
+    outline: none;
+  }
+
+  .form-control:focus {
+    border-color: var(--border-accent);
+    box-shadow: 0 0 0 1px rgba(94, 106, 210, 0.4);
+  }
+
+  .form-control::placeholder {
+    color: var(--foreground-muted);
+  }
+
+  .form-hint {
+    display: block;
+    margin-top: 0.5rem;
+    color: var(--foreground-muted);
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .service-summary {
+      padding: 1.5rem;
+    }
+
+    .summary-meta {
+      align-items: flex-start;
+    }
+  }
+</style>
 <jsp:include page="../includes/footer.jsp"/>
