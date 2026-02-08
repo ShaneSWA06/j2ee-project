@@ -212,7 +212,7 @@ public class CaregiverDAOImpl implements CaregiverDAO {
     }
     @Override
     public Caregiver getCaregiverByEmail(String email) throws SQLException {
-        String sql = "SELECT caregiver_id, user_id, name, qualifications, specialties, experience, bio, phone, email, available, created_at " +
+        String sql = "SELECT caregiver_id, user_id, name, qualifications, specialties, experience, bio, phone, email, available, created_at, company_id " +
                      "FROM caregiver WHERE email = ?";
 
         try (Connection conn = DBUtil.getConnection();

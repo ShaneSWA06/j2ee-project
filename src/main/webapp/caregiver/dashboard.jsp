@@ -76,11 +76,11 @@
         %>
         <div class="border-b border-gray-700 mb-8">
             <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                <a href="${pageContext.request.contextPath}/caregiver/dashboard?action=list" 
+                <a href="${pageContext.request.contextPath}/mvc/caregiver/dashboard?action=list" 
                    class="<%= "available".equals(viewType) ? "border-indigo-500 text-indigo-400" : "border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-300" %> whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200">
                    Available Jobs
                 </a>
-                <a href="${pageContext.request.contextPath}/caregiver/dashboard?action=my" 
+                <a href="${pageContext.request.contextPath}/mvc/caregiver/dashboard?action=my" 
                    class="<%= "my".equals(viewType) ? "border-indigo-500 text-indigo-400" : "border-transparent text-gray-400 hover:text-gray-300 hover:border-gray-300" %> whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200">
                    My Schedule
                 </a>
@@ -150,7 +150,7 @@
                         <!-- Card Footer -->
                         <div>
                             <% if ("available".equals(viewType)) { %>
-                                <form action="${pageContext.request.contextPath}/caregiver/accept" method="post">
+                                <form action="${pageContext.request.contextPath}/mvc/caregiver/accept" method="post">
                                     <input type="hidden" name="bookingId" value="<%= booking.getBookingId() %>">
                                     <button type="submit" class="w-full flex justify-center items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200">
                                         Accept Job

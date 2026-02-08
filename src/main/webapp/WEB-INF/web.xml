@@ -32,6 +32,16 @@
         <servlet-name>ServiceDetailsServlet</servlet-name>
         <url-pattern>/mvc/public/serviceDetails</url-pattern>
     </servlet-mapping>
+
+    <!-- Caregivers Servlet -->
+    <servlet>
+        <servlet-name>CaregiversServlet</servlet-name>
+        <servlet-class>servlet.pub.CaregiversServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CaregiversServlet</servlet-name>
+        <url-pattern>/mvc/public/caregivers</url-pattern>
+    </servlet-mapping>
     
     <!-- Search Caregivers Servlet -->
     <servlet>
@@ -47,18 +57,23 @@
     <servlet>
         <servlet-name>CaregiverController</servlet-name>
         <servlet-class>controller.caregiver.CaregiverController</servlet-class>
+        <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
         <servlet-name>CaregiverController</servlet-name>
-        <url-pattern>/caregiver/dashboard</url-pattern>
+        <url-pattern>/mvc/caregiver/dashboard</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CaregiverController</servlet-name>
-        <url-pattern>/caregiver/jobs</url-pattern>
+        <url-pattern>/mvc/caregiver/jobs</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>CaregiverController</servlet-name>
-        <url-pattern>/caregiver/accept</url-pattern>
+        <url-pattern>/mvc/caregiver/accept</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CaregiverController</servlet-name>
+        <url-pattern>/mvc/caregiver/*</url-pattern>
     </servlet-mapping>
     
     <!-- Error Pages -->

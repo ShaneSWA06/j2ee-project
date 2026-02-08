@@ -18,7 +18,7 @@ import model.Caregiver;
 /**
  * CaregiverController - Handles caregiver operational logic
  */
-@WebServlet({"/caregiver/dashboard", "/caregiver/jobs", "/caregiver/accept"})
+@WebServlet({"/mvc/caregiver/dashboard", "/mvc/caregiver/jobs", "/mvc/caregiver/accept"})
 public class CaregiverController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private CaregiverDAO caregiverDAO;
@@ -69,7 +69,7 @@ public class CaregiverController extends HttpServlet {
             if (path.contains("accept")) {
                 acceptJob(request, response, currentCaregiver);
             } else {
-                response.sendRedirect(request.getContextPath() + "/caregiver/dashboard");
+            response.sendRedirect(request.getContextPath() + "/mvc/caregiver/dashboard");
             }
         } catch (SQLException e) {
             throw new ServletException("Database error", e);
@@ -101,7 +101,7 @@ public class CaregiverController extends HttpServlet {
         
         String bookingIdStr = request.getParameter("bookingId");
         if (bookingIdStr == null || bookingIdStr.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/caregiver/dashboard?err=missing_id");
+            response.sendRedirect(request.getContextPath() + "/mvc/caregiver/dashboard?err=missing_id");
             return;
         }
 
@@ -109,9 +109,9 @@ public class CaregiverController extends HttpServlet {
         boolean success = bookingDAO.assignCaregiver(bookingId, caregiver.getCaregiverId(), "Accepted");
 
         if (success) {
-            response.sendRedirect(request.getContextPath() + "/caregiver/jobs?action=my&success=accepted");
+            response.sendRedirect(request.getContextPath() + "/mvc/caregiver/jobs?action=my&success=accepted");
         } else {
-            response.sendRedirect(request.getContextPath() + "/caregiver/dashboard?err=accept_failed");
+            response.sendRedirect(request.getContextPath() + "/mvc/caregiver/dashboard?err=accept_failed");
         }
     }
 
