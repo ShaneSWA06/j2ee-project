@@ -31,8 +31,8 @@
             <td style="vertical-align: middle; padding: 12px;">${booking.bookingId}</td>
             <td style="vertical-align: middle; padding: 12px;">${booking.userName}</td>
             <td style="vertical-align: middle; padding: 12px;">${booking.serviceName}</td>
-            <td style="vertical-align: middle; padding: 12px;"><fmt:formatDate value="${booking.bookingDate}" pattern="yyyy-MM-dd"/></td>
-            <td style="vertical-align: middle; padding: 12px;"><fmt:formatDate value="${booking.bookingTime}" pattern="HH:mm"/></td>
+            <td style="vertical-align: middle; padding: 12px;"><fmt:formatDate value="${booking.bookingDate}" pattern="yyyy-MM-dd" timeZone="GMT+8"/></td>
+            <td style="vertical-align: middle; padding: 12px;"><fmt:formatDate value="${booking.bookingTime}" pattern="HH:mm" timeZone="GMT+8"/></td>
             <td style="vertical-align: middle; padding: 12px;">
                 <span class="status-badge ${booking.status.toLowerCase()}">${booking.status}</span>
             </td>

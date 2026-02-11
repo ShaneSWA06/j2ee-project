@@ -36,7 +36,7 @@
             <td style="vertical-align: middle; padding: 12px;">${payment.paymentMethod}</td>
             <td style="vertical-align: middle; padding: 12px; font-family: monospace;">${payment.transactionId}</td>
             <td style="vertical-align: middle; padding: 12px;">
-                <fmt:formatDate value="${payment.createdAt}" pattern="yyyy-MM-dd HH:mm"/>
+                <fmt:formatDate value="${payment.createdAt}" pattern="yyyy-MM-dd HH:mm" timeZone="GMT+8"/>
             </td>
           </tr>
         </c:forEach>

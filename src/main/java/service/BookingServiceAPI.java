@@ -17,6 +17,10 @@ import java.util.List;
 
 import db.DBUtil;
 import model.Booking;
+import dao.UserDAO;
+import dao.DAOFactory;
+import model.User;
+import java.time.LocalDateTime;
 
 /**
  * BookingServiceAPI - Client for Spring Boot Booking REST API
@@ -24,6 +28,11 @@ import model.Booking;
 public class BookingServiceAPI {
 
     private static final String API_BASE_URL = "https://assignmenttwo-fljm.onrender.com/user-ws/api/bookings";
+    private UserDAO userDAO;
+
+    public BookingServiceAPI() {
+        this.userDAO = DAOFactory.getUserDAO();
+    }
 
     public List<Booking> getUnassignedBookings() {
         try {
@@ -196,9 +205,21 @@ public class BookingServiceAPI {
 
     public Booking createBooking(Booking booking) {
         try {
-            // Convert Date and Time to String format (ISO format)
-            String bookingDateStr = booking.getBookingDate() != null ? booking.getBookingDate().toString() : "";
-            String bookingTimeStr = booking.getBookingTime() != null ? booking.getBookingTime().toString() : "";
+            // Convert SGT to UTC before sending to API
+            String bookingDateStr = "";
+            String bookingTimeStr = "";
+            
+            if (booking.getBookingDate() != null && booking.getBookingTime() != null) {
+                LocalDateTime sgt = LocalDateTime.of(booking.getBookingDate().toLocalDate(), booking.getBookingTime().toLocalTime());
+                LocalDateTime utc = sgt.minusHours(8);
+                bookingDateStr = utc.toLocalDate().toString();
+                bookingTimeStr = utc.toLocalTime().toString();
+                // Ensure time has seconds
+                if (bookingTimeStr.length() == 5) bookingTimeStr += ":00";
+            } else {
+                 bookingDateStr = booking.getBookingDate() != null ? booking.getBookingDate().toString() : "";
+                 bookingTimeStr = booking.getBookingTime() != null ? booking.getBookingTime().toString() : "";
+            }
             
             // Escape special characters in string fields
             String pickupAddr = escapeJson(booking.getPickupAddress());
@@ -355,15 +376,32 @@ public class BookingServiceAPI {
                 case "user_id":
                 case "userId":
                     try {
-                        booking.setUserId(Integer.parseInt(value));
+                        int uId = Integer.parseInt(value);
+                        booking.setUserId(uId);
+                        
+                        try {
+                            User user = userDAO.getUserById(uId);
+                            if (user != null) {
+                                booking.setUserName(user.getName());
+                            } else {
+                                booking.setUserName("Unknown User");
+                            }
+                        } catch (Exception e) {
+                            booking.setUserName("Client #" + uId);
+                        }
                     } catch (NumberFormatException e) {
                         booking.setUserId(0); 
+                        booking.setUserName("Invalid User");
                     }
-                    booking.setUserName("Client #" + value); // Placeholder
                     break;
                 case "caregiver_id":
                 case "caregiverId":
-                    booking.setCaregiverId(Integer.parseInt(value));
+                    try {
+                         String val = value.equals("null") ? "0" : value;
+                         booking.setCaregiverId(Integer.parseInt(val));
+                    } catch (NumberFormatException e) {
+                        booking.setCaregiverId(0); 
+                    }
                     break;
                 case "booking_date":
                 case "bookingDate":
@@ -427,6 +465,20 @@ public class BookingServiceAPI {
                     break;
             }
         }
+        
+        // Convert UTC to SGT for display
+        if (booking.getBookingDate() != null && booking.getBookingTime() != null) {
+            try {
+                LocalDateTime utc = LocalDateTime.of(booking.getBookingDate().toLocalDate(), booking.getBookingTime().toLocalTime());
+                LocalDateTime sgt = utc.plusHours(8);
+                booking.setBookingDate(java.sql.Date.valueOf(sgt.toLocalDate()));
+                booking.setBookingTime(java.sql.Time.valueOf(sgt.toLocalTime()));
+            } catch (Exception e) {
+                // Keep original if conversion fails
+                e.printStackTrace();
+            }
+        }
+        
         return booking;
     }
 

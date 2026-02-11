@@ -16,8 +16,8 @@ public class PaymentDAOImpl implements PaymentDAO {
 
     @Override
     public Payment createPayment(Payment payment) throws SQLException {
-        String sql = "INSERT INTO payment (booking_id, amount, tax_amount, currency, payment_method, transaction_id, status) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO payment (booking_id, amount, tax_amount, currency, payment_method, transaction_id, status, created_at) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -29,6 +29,12 @@ public class PaymentDAOImpl implements PaymentDAO {
             ps.setString(5, payment.getPaymentMethod());
             ps.setString(6, payment.getTransactionId());
             ps.setString(7, payment.getStatus());
+            
+            if (payment.getCreatedAt() != null) {
+                ps.setTimestamp(8, payment.getCreatedAt());
+            } else {
+                ps.setTimestamp(8, new java.sql.Timestamp(System.currentTimeMillis()));
+            }
 
             int affectedRows = ps.executeUpdate();
 

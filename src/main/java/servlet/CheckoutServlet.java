@@ -3,6 +3,9 @@ package servlet;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,6 +103,12 @@ public class CheckoutServlet extends HttpServlet {
                 totalAmount += item.getBasePrice();
             }
 
+            if (bookingIds.isEmpty()) {
+                System.err.println("CheckoutServlet: Failed to create any bookings via API");
+                response.sendRedirect(request.getContextPath() + "/customer/viewCart.jsp?error=booking_failed");
+                return;
+            }
+
             // Calculate Total with GST (9%)
             double gstRate = 0.09;
             double gstAmount = totalAmount * gstRate;
@@ -165,6 +174,10 @@ public class CheckoutServlet extends HttpServlet {
                 payment.setPaymentMethod("stripe");
                 payment.setTransactionId(intent.getId());
                 payment.setStatus("Pending");
+                
+                // Set CreatedAt to Singapore Time
+                ZonedDateTime nowSGT = ZonedDateTime.now(ZoneId.of("Asia/Singapore"));
+                payment.setCreatedAt(Timestamp.valueOf(nowSGT.toLocalDateTime()));
 
                 paymentDAO.createPayment(payment);
 

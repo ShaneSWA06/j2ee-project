@@ -44,8 +44,8 @@
             <td style="vertical-align: middle; padding: 12px;">${booking.userName}</td>
             <td style="vertical-align: middle; padding: 12px;">${booking.serviceName}</td>
             <td style="vertical-align: middle; padding: 12px;">${not empty booking.caregiverName ? booking.caregiverName : 'Not assigned'}</td>
-            <td style="vertical-align: middle; padding: 12px;"><fmt:formatDate value="${booking.bookingDate}" pattern="yyyy-MM-dd"/></td>
-            <td style="vertical-align: middle; padding: 12px;"><fmt:formatDate value="${booking.bookingTime}" pattern="HH:mm"/></td>
+            <td style="vertical-align: middle; padding: 12px;"><fmt:formatDate value="${booking.bookingDate}" pattern="yyyy-MM-dd" timeZone="GMT+8"/></td>
+            <td style="vertical-align: middle; padding: 12px;"><fmt:formatDate value="${booking.bookingTime}" pattern="HH:mm" timeZone="GMT+8"/></td>
             <td style="vertical-align: middle; padding: 12px;">${booking.status}</td>
             <td style="vertical-align: middle; padding: 12px; white-space: nowrap;">
               <a class="btn" href="${pageContext.request.contextPath}/admin/booking?action=edit&bookingId=${booking.bookingId}" style="margin-right: 8px;">Edit</a>

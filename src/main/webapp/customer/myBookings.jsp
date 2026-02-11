@@ -13,8 +13,8 @@
 <c:forEach var="booking" items="${bookings}">
 <div class="card" style="margin-bottom: 20px;">
 <h3>${booking.serviceName}</h3>
-<p><strong>Date:</strong> <fmt:formatDate value="${booking.bookingDate}" pattern="yyyy-MM-dd"/></p>
-<p><strong>Time:</strong> <fmt:formatDate value="${booking.bookingTime}" pattern="HH:mm"/></p>
+<p><strong>Date:</strong> <fmt:formatDate value="${booking.bookingDate}" pattern="yyyy-MM-dd" timeZone="GMT+8"/></p>
+<p><strong>Time:</strong> <fmt:formatDate value="${booking.bookingTime}" pattern="HH:mm" timeZone="GMT+8"/></p>
 <p><strong>Status:</strong> <span style="color: ${booking.status == 'Confirmed' ? 'green' : booking.status == 'Cancelled' ? 'red' : 'orange'}">${booking.status}</span></p>
                         <c:if test="${not empty booking.caregiverName}">
                             <p><strong>Caregiver:</strong> ${booking.caregiverName}</p>

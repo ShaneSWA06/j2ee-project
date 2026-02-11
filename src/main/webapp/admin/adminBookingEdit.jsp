@@ -42,12 +42,12 @@
   
   <div class="form-group">
   <label for="booking_date">Booking Date</label>
-  <input type="date" id="booking_date" name="booking_date" value="<fmt:formatDate value='${booking.bookingDate}' pattern='yyyy-MM-dd'/>" required>
+  <input type="date" id="booking_date" name="booking_date" value="<fmt:formatDate value='${booking.bookingDate}' pattern='yyyy-MM-dd' timeZone='GMT+8'/>" required>
   </div>
   
   <div class="form-group">
   <label for="booking_time">Booking Time</label>
-  <input type="time" id="booking_time" name="booking_time" value="<fmt:formatDate value='${booking.bookingTime}' pattern='HH:mm'/>" required>
+  <input type="time" id="booking_time" name="booking_time" value="<fmt:formatDate value='${booking.bookingTime}' pattern='HH:mm' timeZone='GMT+8'/>" required>
   </div>
   
   <div class="form-group">

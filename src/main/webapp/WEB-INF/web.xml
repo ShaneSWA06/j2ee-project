@@ -7,6 +7,11 @@
     
     <display-name>Service Booking Application</display-name>
     
+    <context-param>
+        <param-name>jakarta.servlet.jsp.jstl.fmt.timeZone</param-name>
+        <param-value>GMT+8</param-value>
+    </context-param>
+    
     <welcome-file-list>
         <welcome-file>public/index.jsp</welcome-file>
         <welcome-file>index.jsp</welcome-file>
