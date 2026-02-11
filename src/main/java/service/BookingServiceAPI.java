@@ -211,7 +211,7 @@ public class BookingServiceAPI {
             
             if (booking.getBookingDate() != null && booking.getBookingTime() != null) {
                 LocalDateTime sgt = LocalDateTime.of(booking.getBookingDate().toLocalDate(), booking.getBookingTime().toLocalTime());
-                LocalDateTime utc = sgt.minusHours(8);
+                LocalDateTime utc = sgt.minusMinutes(450); // Use 7.5 hours to align 1970 epoch with UTC for Singapore labels
                 bookingDateStr = utc.toLocalDate().toString();
                 bookingTimeStr = utc.toLocalTime().toString();
                 // Ensure time has seconds
@@ -470,7 +470,7 @@ public class BookingServiceAPI {
         if (booking.getBookingDate() != null && booking.getBookingTime() != null) {
             try {
                 LocalDateTime utc = LocalDateTime.of(booking.getBookingDate().toLocalDate(), booking.getBookingTime().toLocalTime());
-                LocalDateTime sgt = utc.plusHours(8);
+                LocalDateTime sgt = utc.plusMinutes(450); // Align 1970 epoch with modern GMT+8 via 7.5h shift
                 booking.setBookingDate(java.sql.Date.valueOf(sgt.toLocalDate()));
                 booking.setBookingTime(java.sql.Time.valueOf(sgt.toLocalTime()));
             } catch (Exception e) {
