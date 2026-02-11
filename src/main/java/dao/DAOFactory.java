@@ -1,6 +1,5 @@
 package dao;
 
-import dao.impl.BookingDAOImpl;
 import dao.impl.CaregiverDAOImpl;
 import dao.impl.CategoryDAOImpl;
 import dao.impl.FeedbackDAOImpl;
@@ -33,13 +32,6 @@ public class DAOFactory {
      */
     public static ServiceDAO getServiceDAO() {
         return new ServiceDAOImpl();
-    }
-
-    /**
-     * Get BookingDAO instance
-     */
-    public static BookingDAO getBookingDAO() {
-        return new BookingDAOImpl();
     }
 
     /**

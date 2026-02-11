@@ -153,6 +153,20 @@
     </div>
 
     <div class="card form-card">
+      <label class="form-label">Pickup Address</label>
+      <input type="text" name="pickupAddress" 
+             placeholder="Where should we pick you up?"
+             class="form-control"/>
+    </div>
+
+    <div class="card form-card">
+      <label class="form-label">Destination Address</label>
+      <input type="text" name="destinationAddress" 
+             placeholder="Where are you going?"
+             class="form-control"/>
+    </div>
+
+    <div class="card form-card">
       <label class="form-label">Additional Notes (Optional)</label>
       <textarea name="notes" rows="4"
                 placeholder="Any special requests or information we should know..."

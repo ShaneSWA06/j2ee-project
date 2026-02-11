@@ -32,6 +32,10 @@ public class Booking implements Serializable {
     private java.sql.Timestamp updatedAt;
     private String pickupAddress;
     private String destinationAddress;
+    private java.sql.Timestamp clockInTime;
+    private java.sql.Timestamp clockOutTime;
+    private String clockInLocation;
+    private String clockOutLocation;
 
     // Constructors
     public Booking() {
@@ -190,6 +194,38 @@ public class Booking implements Serializable {
 
     public void setDestinationAddress(String destinationAddress) {
         this.destinationAddress = destinationAddress;
+    }
+
+    public java.sql.Timestamp getClockInTime() {
+        return clockInTime;
+    }
+
+    public void setClockInTime(java.sql.Timestamp clockInTime) {
+        this.clockInTime = clockInTime;
+    }
+
+    public java.sql.Timestamp getClockOutTime() {
+        return clockOutTime;
+    }
+
+    public void setClockOutTime(java.sql.Timestamp clockOutTime) {
+        this.clockOutTime = clockOutTime;
+    }
+
+    public String getClockInLocation() {
+        return clockInLocation;
+    }
+
+    public void setClockInLocation(String clockInLocation) {
+        this.clockInLocation = clockInLocation;
+    }
+
+    public String getClockOutLocation() {
+        return clockOutLocation;
+    }
+
+    public void setClockOutLocation(String clockOutLocation) {
+        this.clockOutLocation = clockOutLocation;
     }
 
     @Override

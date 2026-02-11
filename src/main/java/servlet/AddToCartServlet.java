@@ -54,6 +54,8 @@ public class AddToCartServlet extends HttpServlet {
         String bookingTime = request.getParameter("bookingTime");
         String caregiverIdParam = request.getParameter("caregiverId");
         String notes = request.getParameter("notes");
+        String pickupAddress = request.getParameter("pickupAddress");
+        String destinationAddress = request.getParameter("destinationAddress");
 
         // Validate required fields
         if (serviceIdParam == null || bookingDate == null || bookingTime == null) {
@@ -108,6 +110,8 @@ public class AddToCartServlet extends HttpServlet {
                 item.setBookingDate(bookingDate);
                 item.setBookingTime(bookingTime);
                 item.setNotes(notes);
+                item.setPickupAddress(pickupAddress);
+                item.setDestinationAddress(destinationAddress);
 
                 // Handle caregiver selection
                 if (caregiverIdParam != null && !caregiverIdParam.trim().isEmpty()) {

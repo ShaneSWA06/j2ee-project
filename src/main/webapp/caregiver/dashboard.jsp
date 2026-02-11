@@ -38,7 +38,64 @@
         backdrop-filter: blur(12px);
         border: 1px solid rgba(255, 255, 255, 0.08);
     }
+    .status-badge {
+        font-size: 0.7rem;
+        padding: 0.1rem 0.5rem;
+        border-radius: 9999px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+    }
+    .status-pending { background: rgba(234, 179, 8, 0.2); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.3); }
+    .status-in-progress { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+    .status-completed { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
 </style>
+
+<script>
+function handleClockAction(formId) {
+    console.log("Clock action triggered for form:", formId);
+    const form = document.getElementById(formId);
+    if (!form) {
+        console.error("Form not found:", formId);
+        return;
+    }
+
+    const button = form.querySelector('button');
+    if (button) {
+        button.disabled = true;
+        button.innerHTML = `<svg class="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Please wait...`;
+    }
+
+    // Attempt to get location, but don't let it block the app
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const loc = position.coords.latitude + "," + position.coords.longitude;
+                const locInput = document.getElementById(formId + "_location");
+                if (locInput) locInput.value = loc;
+                console.log("Location captured:", loc);
+                form.submit();
+            },
+            (error) => {
+                console.warn("Geolocation error:", error.message);
+                form.submit(); // Submit without location if denied/failed
+            },
+            { timeout: 5000, enableHighAccuracy: true }
+        );
+        
+        // Safety timeout: If geolocation doesn't respond in 6 seconds, just submit
+        setTimeout(() => {
+            if (form && !form.submitted) {
+                console.log("Geolocation safety timeout reached, submitting...");
+                form.submit();
+            }
+        }, 6000);
+    } else {
+        console.warn("Geolocation not supported");
+        form.submit();
+    }
+}
+</script>
 
 <div class="min-h-screen py-10 px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl mx-auto">
@@ -66,6 +123,18 @@
         <% if ("accepted".equals(success)) { %>
             <div class="mb-4 bg-green-900/30 border border-green-500/50 text-green-200 px-4 py-3 rounded relative" role="alert">
                 <span class="block sm:inline">Job accepted successfully! It has been added to your schedule.</span>
+            </div>
+        <% } %>
+
+        <% if ("clocked_in".equals(success) || "clockin_success".equals(success)) { %>
+            <div class="mb-4 bg-blue-900/30 border border-blue-500/50 text-blue-200 px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">✓ Session started! Your clock-in time and location have been recorded.</span>
+            </div>
+        <% } %>
+
+        <% if ("clocked_out".equals(success) || "clockout_success".equals(success)) { %>
+            <div class="mb-4 bg-green-900/30 border border-green-500/50 text-green-200 px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">✓ Session ended! Your clock-out time has been recorded and the job is marked as completed.</span>
             </div>
         <% } %>
 
@@ -120,8 +189,19 @@
                                     <%= booking.getUserName() != null ? booking.getUserName() : ("Client #" + booking.getUserId()) %>
                                 </h3>
                             </div>
-                            <div class="text-right">
-                                <p class="text-indigo-400 font-bold text-lg">$<%= String.format("%.2f", booking.getTotalPrice() != null ? booking.getTotalPrice() : 0.0) %></p>
+                            <div class="text-right flex flex-col items-end">
+                                <p class="text-indigo-400 font-bold text-lg mb-1">$<%= String.format("%.2f", booking.getTotalPrice() != null ? booking.getTotalPrice() : 0.0) %></p>
+                                <%
+                                    String status = booking.getStatus() != null ? booking.getStatus() : "Pending";
+                                    String statusClass = "status-pending";
+                                    if ("Confirmed".equalsIgnoreCase(status)) statusClass = "status-in-progress";
+                                    if ("In-Progress".equalsIgnoreCase(status)) statusClass = "status-in-progress";
+                                    if ("Completed".equalsIgnoreCase(status)) statusClass = "status-completed";
+                                    if ("Cancelled".equalsIgnoreCase(status)) statusClass = "status-pending";
+                                %>
+                                <span class="status-badge <%= statusClass %>">
+                                    <%= status %>
+                                </span>
                             </div>
                         </div>
 
@@ -138,8 +218,32 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
-                                <span class="truncate"><%= booking.getPickupAddress() %></span>
+                                <span class="truncate">
+                                    <%= booking.getPickupAddress() != null && !booking.getPickupAddress().isEmpty() ? booking.getPickupAddress() : "No location provided" %>
+                                    <% if (booking.getDestinationAddress() != null && !booking.getDestinationAddress().isEmpty()) { %>
+                                        → <%= booking.getDestinationAddress() %>
+                                    <% } %>
+                                </span>
                             </div>
+                            
+                            <% if (booking.getClockInTime() != null) { %>
+                                <div class="flex items-center text-xs text-blue-400">
+                                    <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Started: <fmt:formatDate value="${booking.clockInTime}" pattern="HH:mm (dd MMM)"/>
+                                </div>
+                            <% } %>
+
+                            <% if (booking.getClockOutTime() != null) { %>
+                                <div class="flex items-center text-xs text-green-400">
+                                    <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Ended: <fmt:formatDate value="${booking.clockOutTime}" pattern="HH:mm (dd MMM)"/>
+                                </div>
+                            <% } %>
+
                             <% if (booking.getNotes() != null && !booking.getNotes().isEmpty()) { %>
                                 <div class="mt-2 text-xs text-gray-500 bg-black/20 p-2 rounded">
                                     Note: <%= booking.getNotes() %>
@@ -157,12 +261,41 @@
                                     </button>
                                 </form>
                             <% } else { %>
-                                <button disabled class="w-full flex justify-center items-center px-4 py-2 border border-gray-700 rounded-lg shadow-sm text-sm font-medium text-gray-400 bg-gray-800 cursor-not-allowed">
-                                    <svg class="h-4 w-4 mr-1.5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                    Assigned to You
-                                </button>
+                                <div class="space-y-2">
+                                    <% 
+                                        String bStatus = booking.getStatus() != null ? booking.getStatus() : "Pending";
+                                        if ("Confirmed".equalsIgnoreCase(bStatus) || "Pending".equalsIgnoreCase(bStatus)) { 
+                                    %>
+                                        <form id="clockin_<%= booking.getBookingId() %>" action="${pageContext.request.contextPath}/mvc/caregiver/clockin" method="post">
+                                            <input type="hidden" name="bookingId" value="<%= booking.getBookingId() %>">
+                                            <input type="hidden" name="location" id="clockin_<%= booking.getBookingId() %>_location">
+                                            <button type="button" onclick="handleClockAction('clockin_<%= booking.getBookingId() %>')" class="w-full flex justify-center items-center px-4 py-3 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:scale-[1.02]">
+                                                <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                Start Session (Clock In)
+                                            </button>
+                                        </form>
+                                    <% } else if ("In-Progress".equalsIgnoreCase(bStatus)) { %>
+                                        <form id="clockout_<%= booking.getBookingId() %>" action="${pageContext.request.contextPath}/mvc/caregiver/clockout" method="post">
+                                            <input type="hidden" name="bookingId" value="<%= booking.getBookingId() %>">
+                                            <input type="hidden" name="location" id="clockout_<%= booking.getBookingId() %>_location">
+                                            <button type="button" onclick="handleClockAction('clockout_<%= booking.getBookingId() %>')" class="w-full flex justify-center items-center px-4 py-3 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 transform hover:scale-[1.02]">
+                                                <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                End Session (Clock Out)
+                                            </button>
+                                        </form>
+                                    <% } else if ("Completed".equalsIgnoreCase(bStatus)) { %>
+                                        <div class="w-full flex justify-center items-center px-4 py-3 border border-gray-700 rounded-lg shadow-sm text-sm font-medium text-green-400 bg-green-900/20 cursor-default">
+                                            <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                            Job Completed
+                                        </div>
+                                    <% } %>
+                                </div>
                             <% } %>
                         </div>
                     </div>

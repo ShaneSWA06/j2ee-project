@@ -7,7 +7,7 @@ import java.sql.Time;
 import java.util.Comparator;
 import java.util.List;
 
-import dao.BookingDAO;
+import service.BookingServiceAPI;
 import dao.CaregiverDAO;
 import dao.DAOFactory;
 import dao.ServiceDAO;
@@ -22,18 +22,18 @@ import model.Caregiver;
 import model.Service;
 
 /**
- * AdminBookingController - Handles booking management for admins
+ * AdminBookingController - Handles booking management for admins via Spring Boot API
  */
 @WebServlet("/admin/booking")
 public class AdminBookingController extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private BookingDAO bookingDAO;
+    private BookingServiceAPI bookingAPI;
     private ServiceDAO serviceDAO;
     private CaregiverDAO caregiverDAO;
 
     @Override
     public void init() throws ServletException {
-        bookingDAO = DAOFactory.getBookingDAO();
+        bookingAPI = new BookingServiceAPI();
         serviceDAO = DAOFactory.getServiceDAO();
         caregiverDAO = DAOFactory.getCaregiverDAO();
     }
@@ -110,10 +110,10 @@ public class AdminBookingController extends HttpServlet {
         List<Booking> bookings;
 
         if ("unassigned".equals(view)) {
-            bookings = bookingDAO.getUnassignedBookings();
+            bookings = bookingAPI.getUnassignedBookings();
             request.setAttribute("viewType", "unassigned");
         } else {
-            bookings = bookingDAO.getAllBookings();
+            bookings = bookingAPI.getAllBookings();
             request.setAttribute("viewType", "all");
         }
 
@@ -131,7 +131,7 @@ public class AdminBookingController extends HttpServlet {
         }
 
         int bookingId = Integer.parseInt(bookingIdParam);
-        Booking booking = bookingDAO.getBookingById(bookingId);
+        Booking booking = bookingAPI.getBookingById(bookingId);
 
         if (booking == null) {
             response.sendRedirect(request.getContextPath() + "/admin/booking?err=not_found");
@@ -161,7 +161,7 @@ public class AdminBookingController extends HttpServlet {
         }
 
         int bookingId = Integer.parseInt(bookingIdParam);
-        Booking booking = bookingDAO.getBookingById(bookingId);
+        Booking booking = bookingAPI.getBookingById(bookingId);
 
         if (booking == null) {
             response.sendRedirect(request.getContextPath() + "/admin/booking?err=not_found");
@@ -204,7 +204,7 @@ public class AdminBookingController extends HttpServlet {
         booking.setCaregiverStatus(caregiverStatus != null ? caregiverStatus : "Pending");
         booking.setNotes(notes);
 
-        boolean updated = bookingDAO.updateBooking(booking);
+        boolean updated = bookingAPI.updateBooking(bookingId, booking);
 
         if (updated) {
             response.sendRedirect(request.getContextPath() + "/admin/booking?success=updated");
@@ -224,7 +224,7 @@ public class AdminBookingController extends HttpServlet {
         }
 
         int bookingId = Integer.parseInt(bookingIdStr);
-        boolean deleted = bookingDAO.deleteBooking(bookingId);
+        boolean deleted = bookingAPI.deleteBooking(bookingId);
 
         if (deleted) {
             response.sendRedirect(request.getContextPath() + "/admin/booking?success=deleted");

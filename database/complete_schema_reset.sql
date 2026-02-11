@@ -45,6 +45,8 @@ CREATE TABLE app_user (
     address TEXT,
     relationship VARCHAR(100),
     care_notes TEXT,
+    medical_history TEXT,
+    allergies TEXT,
     role VARCHAR(20) NOT NULL DEFAULT 'CUSTOMER', -- ADMIN, CUSTOMER, CAREGIVER, COMPANY_ADMIN
     verified BOOLEAN DEFAULT FALSE,
     verification_token VARCHAR(255),
@@ -131,9 +133,14 @@ CREATE TABLE booking (
     pickup_address TEXT,
     destination_address TEXT,
     total_price DECIMAL(10,2) NOT NULL,
-    status VARCHAR(20) DEFAULT 'PENDING', -- PENDING, CONFIRMED, COMPLETED, CANCELLED
-    notes TEXT,
+    status VARCHAR(50) DEFAULT 'Pending', -- Pending, Confirmed, In-Progress, Completed, Cancelled
+    caregiver_status VARCHAR(50) DEFAULT 'Pending', -- Pending, Accepted, Rejected
     payment_status VARCHAR(50) DEFAULT 'Unpaid',
+    notes TEXT,
+    clock_in_time TIMESTAMP,
+    clock_out_time TIMESTAMP,
+    clock_in_location TEXT,
+    clock_out_location TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -272,10 +279,13 @@ UPDATE caregiver SET user_id = (SELECT user_id FROM app_user WHERE email = 'davi
 -- =====================================================
 -- Note: user_id 2 = john.doe, user_id 3 = mary.tan
 -- caregiver_id 1 = Jane Smith, 2 = Michael Chen, 3 = Emily Rodriguez, 4 = David Williams
-INSERT INTO booking (user_id, service_id, caregiver_id, booking_date, booking_time, total_price, status, notes) VALUES
-(2, 1, 1, CURRENT_DATE + INTERVAL '2 days', '10:00:00', 120.00, 'CONFIRMED', 'Assistance for full-day surgery accompaniment'),
-(2, 3, 2, CURRENT_DATE + INTERVAL '3 days', '14:00:00', 40.00, 'PENDING', 'Routine polyclinic checkup escort'),
-(3, 5, 4, CURRENT_DATE + INTERVAL '5 days', '09:00:00', 60.00, 'CONFIRMED', 'Weekly dialysis session support');
+INSERT INTO booking (user_id, service_id, caregiver_id, booking_date, booking_time, total_price, status, notes, caregiver_status) VALUES
+(2, 1, 1, CURRENT_DATE + INTERVAL '2 days', '10:00:00', 120.00, 'Confirmed', 'Assistance for full-day surgery accompaniment', 'Accepted'),
+(2, 3, 2, CURRENT_DATE + INTERVAL '3 days', '14:00:00', 40.00, 'Pending', 'Routine polyclinic checkup escort', 'Pending'),
+(3, 5, 4, CURRENT_DATE + INTERVAL '1 days', '09:00:00', 60.00, 'In-Progress', 'Weekly dialysis session support', 'Accepted');
+
+-- Add sample clock-in timing for the in-progress job
+UPDATE booking SET clock_in_time = CURRENT_TIMESTAMP - INTERVAL '1 hour', clock_in_location = '1.3521,103.8198' WHERE status = 'In-Progress';
 
 -- =====================================================
 -- VERIFICATION QUERIES

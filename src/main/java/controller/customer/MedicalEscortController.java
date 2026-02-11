@@ -240,9 +240,9 @@ public class MedicalEscortController extends HttpServlet {
                  booking.setTotalPrice(Double.parseDouble(amountParam));
             }
             
-            boolean success = bookingService.createBooking(booking);
+            model.Booking createdBooking = bookingService.createBooking(booking);
             
-            if (success) {
+            if (createdBooking != null) {
                 response.sendRedirect(request.getContextPath() + "/customer/medical-escort?action=list&success=booked");
             } else {
                 response.sendRedirect(request.getContextPath() + "/customer/medical-escort?action=book&err=failed");

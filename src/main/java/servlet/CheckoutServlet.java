@@ -3,11 +3,6 @@ package servlet;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +11,6 @@ import com.stripe.model.PaymentIntent;
 
 import dao.DAOFactory;
 import dao.PaymentDAO;
-import db.DBUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -74,49 +68,15 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
 
-        Connection conn = null;
-        PreparedStatement ps = null;
         List<Integer> bookingIds = new ArrayList<>();
 
         try {
-            conn = DBUtil.getConnection();
-            conn.setAutoCommit(false);
-
-            String insertSQL = "INSERT INTO booking (user_id, service_id, caregiver_id, booking_date, " +
-                              "booking_time, status, notes, total_price, created_at, updated_at) " +
-                              "VALUES (?, ?, ?, ?, ?, 'Pending', ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
-
-            ps = conn.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
             service.BookingServiceAPI bookingAPI = new service.BookingServiceAPI();
 
             double totalAmount = 0;
 
             for (CartItem item : cart) {
-                ps.setInt(1, userId);
-                ps.setInt(2, item.getServiceId());
-
-                if (item.getCaregiverId() != null) {
-                    ps.setInt(3, item.getCaregiverId());
-                } else {
-                    ps.setNull(3, java.sql.Types.INTEGER);
-                }
-
-                ps.setDate(4, java.sql.Date.valueOf(item.getBookingDate()));
-                ps.setTime(5, java.sql.Time.valueOf(item.getBookingTime() + ":00"));
-                ps.setString(6, item.getNotes());
-                ps.setDouble(7, item.getBasePrice());
-
-                ps.executeUpdate();
-
-                int localBookingId = -1;
-                try (ResultSet rs = ps.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        localBookingId = rs.getInt(1);
-                        bookingIds.add(localBookingId);
-                    }
-                }
-
-                // Also call external API as requested
+                // Call external API ONLY (Removes duplicate database insert)
                 model.Booking apiBooking = new model.Booking();
                 apiBooking.setUserId(userId);
                 apiBooking.setServiceId(item.getServiceId());
@@ -124,16 +84,21 @@ public class CheckoutServlet extends HttpServlet {
                 apiBooking.setBookingDate(java.sql.Date.valueOf(item.getBookingDate()));
                 apiBooking.setBookingTime(java.sql.Time.valueOf(item.getBookingTime() + ":00"));
                 apiBooking.setNotes(item.getNotes());
+                apiBooking.setPickupAddress(item.getPickupAddress());
+                apiBooking.setDestinationAddress(item.getDestinationAddress());
                 apiBooking.setTotalPrice(item.getBasePrice());
-                apiBooking.setStatus("PENDING");
+                apiBooking.setPaymentStatus("Unpaid");
+                apiBooking.setStatus("Pending");
                 
-                bookingAPI.createBooking(apiBooking);
+                model.Booking created = bookingAPI.createBooking(apiBooking);
+                
+                if (created != null && created.getBookingId() > 0) {
+                    bookingIds.add(created.getBookingId());
+                    System.out.println("DEBUG - Created booking via API with ID: " + created.getBookingId());
+                }
 
                 totalAmount += item.getBasePrice();
             }
-
-            // Commit bookings first
-            conn.commit();
 
             // Calculate Total with GST (9%)
             double gstRate = 0.09;
@@ -141,7 +106,7 @@ public class CheckoutServlet extends HttpServlet {
             double grandTotal = totalAmount + gstAmount;
             long amountCents = Math.round(grandTotal * 100);
 
-            // Load Stripe Keys from properties (Reload on every request to ensure consistency)
+            // 3. Load Stripe Keys from properties (Reload on every request to ensure consistency)
             String stripePublicKey = null;
             String stripeSecretKey = null;
             try {
@@ -180,7 +145,7 @@ public class CheckoutServlet extends HttpServlet {
                 Stripe.apiKey = stripeSecretKey;
             }
 
-            // Create Stripe PaymentIntent
+            // 4. Create Stripe PaymentIntent
             try {
                 String bookingIdsStr = bookingIds.toString();
                 if (bookingIdsStr.length() > 500) {
@@ -189,10 +154,10 @@ public class CheckoutServlet extends HttpServlet {
 
                 PaymentIntent intent = stripeService.createPaymentIntent(amountCents, "sgd", bookingIdsStr);
 
-                // Create local Payment record
+                // Create local Payment record (Linked to first booking ID from API)
                 Payment payment = new Payment();
                 if (!bookingIds.isEmpty()) {
-                    payment.setBookingId(bookingIds.get(0)); // Link to first booking
+                    payment.setBookingId(bookingIds.get(0)); 
                 }
                 payment.setAmount(grandTotal);
                 payment.setTaxAmount(gstAmount);
@@ -229,26 +194,15 @@ public class CheckoutServlet extends HttpServlet {
                 } catch (Exception ignore) {}
                 response.sendRedirect(request.getContextPath() + "/customer/viewCart.jsp?error=payment_init_failed&msg=" + errorMsg);
             }
-
-        } catch (SQLException e) {
-            if (conn != null) {
-                try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
-            }
+        } catch (Exception e) {
             e.printStackTrace();
-            String errorMsg = "Database error";
+            String errorMsg = "System error";
             try {
                 if (e.getMessage() != null) {
                     errorMsg = URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8);
                 }
             } catch (Exception ignore) {}
             response.sendRedirect(request.getContextPath() + "/customer/viewCart.jsp?error=" + errorMsg);
-        } finally {
-            if (ps != null) {
-				try { ps.close(); } catch (SQLException ignore) {}
-			}
-            if (conn != null) {
-                try { conn.setAutoCommit(true); conn.close(); } catch (SQLException ignore) {}
-            }
         }
     }
 }

@@ -22,6 +22,8 @@ public class CartItem implements Serializable {
     private Integer caregiverId;
     private String caregiverName;
     private String notes;
+    private String pickupAddress;
+    private String destinationAddress;
 
     // Unique identifier for this cart item (to handle duplicates)
     private String cartItemId;
@@ -128,6 +130,22 @@ public class CartItem implements Serializable {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getPickupAddress() {
+        return pickupAddress;
+    }
+
+    public void setPickupAddress(String pickupAddress) {
+        this.pickupAddress = pickupAddress;
+    }
+
+    public String getDestinationAddress() {
+        return destinationAddress;
+    }
+
+    public void setDestinationAddress(String destinationAddress) {
+        this.destinationAddress = destinationAddress;
     }
 
     public String getCartItemId() {

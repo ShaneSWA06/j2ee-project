@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 import java.nio.file.Paths;
 
+import service.BookingServiceAPI;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -32,12 +33,12 @@ import dao.UserDAO;
 public class AdminCaregiverController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private CaregiverDAO caregiverDAO;
-    private dao.BookingDAO bookingDAO;
+    private BookingServiceAPI bookingAPI;
 
     @Override
     public void init() throws ServletException {
         caregiverDAO = DAOFactory.getCaregiverDAO();
-        bookingDAO = DAOFactory.getBookingDAO();
+        bookingAPI = new BookingServiceAPI();
     }
 
     @Override
@@ -139,7 +140,7 @@ public class AdminCaregiverController extends HttpServlet {
             return;
         }
 
-        List<model.Booking> bookings = bookingDAO.getBookingsByCaregiver(caregiverId);
+        List<model.Booking> bookings = bookingAPI.getBookingsByCaregiver(caregiverId);
 
         request.setAttribute("caregiver", caregiver);
         request.setAttribute("bookings", bookings);

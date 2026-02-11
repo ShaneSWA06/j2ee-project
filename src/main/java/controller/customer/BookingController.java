@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.util.List;
 
-import dao.BookingDAO;
+import service.BookingServiceAPI;
 import dao.CaregiverDAO;
 import dao.DAOFactory;
 import dao.ServiceDAO;
@@ -17,22 +17,21 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.Booking;
-import model.Caregiver;
 import model.Service;
 
 /**
- * BookingController - Handles customer booking operations
+ * BookingController - Handles customer booking operations via Spring Boot API
  */
 @WebServlet("/customer/booking")
 public class BookingController extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private BookingDAO bookingDAO;
+    private BookingServiceAPI bookingAPI;
     private ServiceDAO serviceDAO;
     private CaregiverDAO caregiverDAO;
 
     @Override
     public void init() throws ServletException {
-        bookingDAO = DAOFactory.getBookingDAO();
+        bookingAPI = new BookingServiceAPI();
         serviceDAO = DAOFactory.getServiceDAO();
         caregiverDAO = DAOFactory.getCaregiverDAO();
     }
@@ -102,7 +101,7 @@ public class BookingController extends HttpServlet {
         HttpSession session = request.getSession();
         int userId = (Integer) session.getAttribute("sessUserId");
 
-        List<Booking> bookings = bookingDAO.getBookingsByUser(userId);
+        List<Booking> bookings = bookingAPI.getBookingsByUser(userId);
         request.setAttribute("bookings", bookings);
         request.getRequestDispatcher("/customer/myBookings.jsp").forward(request, response);
     }
@@ -172,7 +171,7 @@ public class BookingController extends HttpServlet {
             booking.setStatus("Pending");
             booking.setNotes(notes != null ? notes.trim() : "");
 
-            Booking created = bookingDAO.createBooking(booking);
+            Booking created = bookingAPI.createBooking(booking);
 
             if (created != null) {
                 response.sendRedirect(request.getContextPath() + "/customer/booking?success=created");

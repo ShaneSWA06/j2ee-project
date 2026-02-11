@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.stripe.model.PaymentIntent;
 
-import dao.BookingDAO;
+import service.BookingServiceAPI;
 import dao.DAOFactory;
 import dao.PaymentDAO;
 import jakarta.servlet.ServletException;
@@ -18,13 +18,13 @@ import service.StripeService;
 public class PaymentSuccessServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private PaymentDAO paymentDAO;
-    private BookingDAO bookingDAO;
+    private BookingServiceAPI bookingAPI;
     private StripeService stripeService;
 
     @Override
     public void init() throws ServletException {
         paymentDAO = DAOFactory.getPaymentDAO();
-        bookingDAO = DAOFactory.getBookingDAO();
+        bookingAPI = new BookingServiceAPI();
         stripeService = new StripeService();
     }
 
@@ -33,6 +33,7 @@ public class PaymentSuccessServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String paymentIntentId = request.getParameter("payment_intent");
+        System.out.println("DEBUG - PaymentSuccessServlet reached with payment_intent: " + paymentIntentId);
 
         if (paymentIntentId == null) {
             response.sendRedirect(request.getContextPath() + "/customer/viewCart.jsp?error=invalid_payment");
@@ -44,11 +45,14 @@ public class PaymentSuccessServlet extends HttpServlet {
             PaymentIntent intent = stripeService.retrievePaymentIntent(paymentIntentId);
 
             if ("succeeded".equals(intent.getStatus())) {
+                System.out.println("DEBUG - Stripe Payment Succeeded for ID: " + paymentIntentId);
                 // Update Payment Status
-                paymentDAO.updatePaymentStatus(paymentIntentId, "Paid");
+                boolean updated = paymentDAO.updatePaymentStatus(paymentIntentId, "Paid");
+                System.out.println("DEBUG - Local payment table update status: " + updated);
 
                 // Update Bookings Status using Metadata
                 String bookingIdsStr = intent.getMetadata().get("Bookings"); // e.g., "[1, 2, 3]"
+                System.out.println("DEBUG - Booking IDs from Stripe Metadata: " + bookingIdsStr);
 
                 if (bookingIdsStr != null) {
                     bookingIdsStr = bookingIdsStr.replace("[", "").replace("]", "");
@@ -57,8 +61,10 @@ public class PaymentSuccessServlet extends HttpServlet {
                         for (String id : ids) {
                             try {
                                 int bookingId = Integer.parseInt(id);
-                                bookingDAO.updateBookingStatus(bookingId, "Confirmed");
-                                bookingDAO.updatePaymentStatus(bookingId, "Paid");
+                                System.out.println("DEBUG - Attempting to update status for Booking ID: " + bookingId);
+                                boolean s1 = bookingAPI.updateBookingStatus(bookingId, "Confirmed");
+                                boolean s2 = bookingAPI.updatePaymentStatus(bookingId, "Paid");
+                                System.out.println("DEBUG - Booking updates for " + bookingId + ": status=" + s1 + ", payment=" + s2);
                             } catch (NumberFormatException e) {
                                 e.printStackTrace();
                             }
