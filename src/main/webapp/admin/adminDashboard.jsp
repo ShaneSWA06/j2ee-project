@@ -12,6 +12,10 @@
     <div class="card"><h3>Manage Clients</h3><p><a class="btn btn-primary" href="${pageContext.request.contextPath}/admin/client">Manage</a></p></div>
     <div class="card"><h3>Feedback</h3><p><a class="btn btn-primary" href="${pageContext.request.contextPath}/admin/feedback">Manage</a></p></div>
     <div class="card"><h3>Reports & Analytics</h3><p><a class="btn btn-primary" href="${pageContext.request.contextPath}/admin/reports">View</a></p></div>
+    <div class="card" style="border: 2px solid #0e90e9; background: rgba(14, 144, 233, 0.05);">
+        <h3 style="color: #0e90e9;">MedCare Corporate Analytics</h3>
+        <p><a class="btn" style="background: #0e90e9; color: white;" href="https://assignmenttwo-fljm.onrender.com/user-ws/analytics.html" target="_blank">Launch Intelligence</a></p>
+    </div>
   </div>
 </div>
 <jsp:include page="../includes/footer.jsp"/>

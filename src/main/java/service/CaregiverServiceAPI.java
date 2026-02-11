@@ -22,7 +22,7 @@ import model.Caregiver;
  */
 public class CaregiverServiceAPI {
     
-    private static final String API_BASE_URL = "http://localhost:8081/user-ws/api/caregivers";
+    private static final String API_BASE_URL = "https://assignmenttwo-fljm.onrender.com/user-ws/api/caregivers";
     private Gson gson = new Gson();
     
     /**

@@ -23,7 +23,7 @@ import model.Booking;
  */
 public class BookingServiceAPI {
 
-    private static final String API_BASE_URL = "http://localhost:8081/user-ws/api/bookings";
+    private static final String API_BASE_URL = "https://assignmenttwo-fljm.onrender.com/user-ws/api/bookings";
 
     public List<Booking> getUnassignedBookings() {
         try {

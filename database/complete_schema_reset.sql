@@ -153,6 +153,7 @@ CREATE TABLE payment (
     booking_id INTEGER REFERENCES booking(booking_id) ON DELETE CASCADE,
     user_id INTEGER REFERENCES app_user(user_id) ON DELETE CASCADE,
     amount DECIMAL(10,2) NOT NULL,
+    tax_amount DECIMAL(10,2) DEFAULT 0.00,
     currency VARCHAR(10) DEFAULT 'SGD',
     payment_method VARCHAR(50), -- STRIPE, CASH, BANK_TRANSFER
     transaction_id VARCHAR(255), -- Global transaction reference (e.g. Stripe PaymentIntent ID)
@@ -277,13 +278,6 @@ UPDATE caregiver SET user_id = (SELECT user_id FROM app_user WHERE email = 'davi
 -- =====================================================
 -- SAMPLE DATA - Bookings
 -- =====================================================
--- Note: user_id 2 = john.doe, user_id 3 = mary.tan
--- caregiver_id 1 = Jane Smith, 2 = Michael Chen, 3 = Emily Rodriguez, 4 = David Williams
-INSERT INTO booking (user_id, service_id, caregiver_id, booking_date, booking_time, total_price, status, notes, caregiver_status) VALUES
-(2, 1, 1, CURRENT_DATE + INTERVAL '2 days', '10:00:00', 120.00, 'Confirmed', 'Assistance for full-day surgery accompaniment', 'Accepted'),
-(2, 3, 2, CURRENT_DATE + INTERVAL '3 days', '14:00:00', 40.00, 'Pending', 'Routine polyclinic checkup escort', 'Pending'),
-(3, 5, 4, CURRENT_DATE + INTERVAL '1 days', '09:00:00', 60.00, 'In-Progress', 'Weekly dialysis session support', 'Accepted');
-
 -- Add sample clock-in timing for the in-progress job
 UPDATE booking SET clock_in_time = CURRENT_TIMESTAMP - INTERVAL '1 hour', clock_in_location = '1.3521,103.8198' WHERE status = 'In-Progress';
 
