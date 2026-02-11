@@ -6,6 +6,7 @@ public class Payment {
     private int paymentId;
     private int bookingId;
     private double amount;
+    private double taxAmount;
     private String currency;
     private String paymentMethod;
     private String transactionId;
@@ -31,6 +32,9 @@ public class Payment {
 
     public double getAmount() { return amount; }
     public void setAmount(double amount) { this.amount = amount; }
+
+    public double getTaxAmount() { return taxAmount; }
+    public void setTaxAmount(double taxAmount) { this.taxAmount = taxAmount; }
 
     public String getCurrency() { return currency; }
     public void setCurrency(String currency) { this.currency = currency; }

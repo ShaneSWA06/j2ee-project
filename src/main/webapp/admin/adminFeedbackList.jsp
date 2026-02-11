@@ -7,7 +7,7 @@
 <c:if test="${not empty param.success}"><div class="alert alert-success"><c:choose><c:when test="${param.success == 'updated'}">Updated!</c:when><c:when test="${param.success == 'deleted'}">Deleted!</c:when></c:choose></div></c:if>
 <c:if test="${not empty param.err}"><div class="alert alert-danger">Error: ${param.err}</div></c:if>
 <table style="width:100%; border-collapse:collapse; margin-top:20px;">
-<tr><th style="text-align: left; padding: 12px; background: #f5f5f5;">ID</th><th style="text-align: left; padding: 12px; background: #f5f5f5;">Customer</th><th style="text-align: left; padding: 12px; background: #f5f5f5;">Rating</th><th style="text-align: left; padding: 12px; background: #f5f5f5;">Caregiver</th><th style="text-align: left; padding: 12px; background: #f5f5f5;">Comment</th><th style="text-align: left; padding: 12px; background: #f5f5f5;">Actions</th></tr>
+<tr><th style="text-align: left; padding: 12px; background: var(--background-alt);">ID</th><th style="text-align: left; padding: 12px; background: var(--background-alt);">Customer</th><th style="text-align: left; padding: 12px; background: var(--background-alt);">Rating</th><th style="text-align: left; padding: 12px; background: var(--background-alt);">Caregiver</th><th style="text-align: left; padding: 12px; background: var(--background-alt);">Comment</th><th style="text-align: left; padding: 12px; background: var(--background-alt);">Actions</th></tr>
 <c:choose>
 <c:when test="${not empty feedbackList}">
 <c:forEach var="feedback" items="${feedbackList}">

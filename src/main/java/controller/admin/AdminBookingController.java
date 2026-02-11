@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.util.Comparator;
 import java.util.List;
 
 import dao.BookingDAO;
@@ -105,7 +106,17 @@ public class AdminBookingController extends HttpServlet {
     private void listBookings(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
 
-        List<Booking> bookings = bookingDAO.getAllBookings();
+        String view = request.getParameter("view");
+        List<Booking> bookings;
+
+        if ("unassigned".equals(view)) {
+            bookings = bookingDAO.getUnassignedBookings();
+            request.setAttribute("viewType", "unassigned");
+        } else {
+            bookings = bookingDAO.getAllBookings();
+            request.setAttribute("viewType", "all");
+        }
+
         request.setAttribute("bookings", bookings);
         request.getRequestDispatcher("/admin/adminBookingList.jsp").forward(request, response);
     }
@@ -129,6 +140,10 @@ public class AdminBookingController extends HttpServlet {
 
         List<Service> services = serviceDAO.getAllServices();
         List<Caregiver> caregivers = caregiverDAO.getAllCaregivers();
+        
+        // Sort caregivers: Available first, then by name
+        caregivers.sort(Comparator.comparing(Caregiver::isAvailable).reversed()
+                .thenComparing(Caregiver::getName));
 
         request.setAttribute("booking", booking);
         request.setAttribute("services", services);

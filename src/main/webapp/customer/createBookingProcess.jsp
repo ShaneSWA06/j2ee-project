@@ -63,7 +63,7 @@ try {
     int rowsInserted = ps.executeUpdate();
 
     if (rowsInserted > 0) {
-      response.sendRedirect(request.getContextPath()+"/customer/myBookings.jsp?success=created");
+      response.sendRedirect(request.getContextPath()+"/customer/booking?success=created");
     } else {
       response.sendRedirect(request.getContextPath()+"/customer/createBooking.jsp?serviceId="+serviceId+"&err="+java.net.URLEncoder.encode("Failed to create booking", "UTF-8"));
     }

@@ -16,18 +16,19 @@ public class PaymentDAOImpl implements PaymentDAO {
 
     @Override
     public Payment createPayment(Payment payment) throws SQLException {
-        String sql = "INSERT INTO payment (booking_id, amount, currency, payment_method, transaction_id, status) " +
-                     "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO payment (booking_id, amount, tax_amount, currency, payment_method, transaction_id, status) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setInt(1, payment.getBookingId());
             ps.setDouble(2, payment.getAmount());
-            ps.setString(3, payment.getCurrency());
-            ps.setString(4, payment.getPaymentMethod());
-            ps.setString(5, payment.getTransactionId());
-            ps.setString(6, payment.getStatus());
+            ps.setDouble(3, payment.getTaxAmount());
+            ps.setString(4, payment.getCurrency());
+            ps.setString(5, payment.getPaymentMethod());
+            ps.setString(6, payment.getTransactionId());
+            ps.setString(7, payment.getStatus());
 
             int affectedRows = ps.executeUpdate();
 
@@ -106,6 +107,11 @@ public class PaymentDAOImpl implements PaymentDAO {
         p.setPaymentId(rs.getInt("payment_id"));
         p.setBookingId(rs.getInt("booking_id"));
         p.setAmount(rs.getDouble("amount"));
+        try {
+            p.setTaxAmount(rs.getDouble("tax_amount"));
+        } catch (SQLException e) {
+            // Ignore if column doesn't exist yet
+        }
         p.setCurrency(rs.getString("currency"));
         p.setPaymentMethod(rs.getString("payment_method"));
         p.setTransactionId(rs.getString("transaction_id"));

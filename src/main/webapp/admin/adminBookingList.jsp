@@ -6,6 +6,11 @@
 <div class="container">
   <h1>Bookings</h1>
   
+  <div style="margin-bottom: 20px;">
+    <a href="${pageContext.request.contextPath}/admin/booking" class="btn ${viewType == 'all' || empty viewType ? 'btn-primary' : 'btn-secondary'}" style="margin-right: 10px;">All Bookings</a>
+    <a href="${pageContext.request.contextPath}/admin/booking?view=unassigned" class="btn ${viewType == 'unassigned' ? 'btn-primary' : 'btn-secondary'}">Unassigned Bookings</a>
+  </div>
+
   <c:if test="${not empty param.success}">
     <div class="alert alert-success">
       <c:choose>
@@ -21,14 +26,14 @@
   
   <table style="width:100%; border-collapse:collapse; margin-top:20px;">
     <tr>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">ID</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Customer</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Service</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Caregiver</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Date</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Time</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Status</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Actions</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">ID</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Customer</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Service</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Caregiver</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Date</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Time</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Status</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Actions</th>
     </tr>
     
     <c:choose>

@@ -130,6 +130,7 @@
       <div style="margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap;">
         <a href="<%= request.getContextPath() %>/CheckoutServlet"
            class="btn btn-primary"
+           onclick="if(this.classList.contains('disabled')) return false; this.classList.add('disabled'); this.innerText='Processing...';"
            style="flex: 1; min-width: 200px; text-align: center;">
           Proceed to Checkout
         </a>

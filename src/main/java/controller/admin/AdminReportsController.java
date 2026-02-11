@@ -44,6 +44,12 @@ public class AdminReportsController extends HttpServlet {
             // 3. fetch popular services
             fetchPopularServices(conn, request);
 
+            // 4. fetch caregiver ratings
+            fetchCaregiverRatings(conn, request);
+
+            // 5. fetch top clients
+            fetchTopClients(conn, request);
+
             // Forward to JSP
             request.getRequestDispatcher("/admin/adminReports.jsp").forward(request, response);
 
@@ -111,7 +117,7 @@ public class AdminReportsController extends HttpServlet {
         }
 
         // Average rating
-        try (PreparedStatement ps = conn.prepareStatement("SELECT AVG(star_rating) FROM feedback");
+        try (PreparedStatement ps = conn.prepareStatement("SELECT AVG(rating) FROM feedback");
              ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
 				avgRating = rs.getDouble(1);
@@ -185,6 +191,56 @@ public class AdminReportsController extends HttpServlet {
             }
         }
         request.setAttribute("popularServices", popularServices);
+    }
+
+    private void fetchCaregiverRatings(Connection conn, HttpServletRequest request) throws SQLException {
+        String sql = "SELECT c.name, AVG(f.rating) as avg_rating, COUNT(f.feedback_id) as review_count " +
+                     "FROM caregiver c " +
+                     "JOIN booking b ON c.caregiver_id = b.caregiver_id " +
+                     "JOIN feedback f ON b.booking_id = f.booking_id " +
+                     "GROUP BY c.caregiver_id, c.name " +
+                     "ORDER BY avg_rating DESC " +
+                     "LIMIT 5";
+
+        List<Map<String, Object>> caregiverRatings = new ArrayList<>();
+
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Map<String, Object> item = new HashMap<>();
+                item.put("name", rs.getString("name"));
+                item.put("avg_rating", rs.getDouble("avg_rating"));
+                item.put("review_count", rs.getInt("review_count"));
+                caregiverRatings.add(item);
+            }
+        }
+        request.setAttribute("caregiverRatings", caregiverRatings);
+    }
+
+    private void fetchTopClients(Connection conn, HttpServletRequest request) throws SQLException {
+        String sql = "SELECT u.name, u.email, COUNT(b.booking_id) as booking_count " +
+                     "FROM app_user u " +
+                     "JOIN booking b ON u.user_id = b.user_id " +
+                     "WHERE u.role='CUSTOMER' " +
+                     "GROUP BY u.user_id, u.name, u.email " +
+                     "ORDER BY booking_count DESC " +
+                     "LIMIT 5";
+
+        List<Map<String, Object>> topClients = new ArrayList<>();
+
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Map<String, Object> item = new HashMap<>();
+                item.put("name", rs.getString("name"));
+                item.put("email", rs.getString("email"));
+                item.put("booking_count", rs.getInt("booking_count"));
+                topClients.add(item);
+            }
+        }
+        request.setAttribute("topClients", topClients);
     }
 
     private boolean isAdminLoggedIn(HttpServletRequest request) {

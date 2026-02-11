@@ -195,6 +195,7 @@ public class CheckoutServlet extends HttpServlet {
                     payment.setBookingId(bookingIds.get(0)); // Link to first booking
                 }
                 payment.setAmount(grandTotal);
+                payment.setTaxAmount(gstAmount);
                 payment.setCurrency("SGD");
                 payment.setPaymentMethod("stripe");
                 payment.setTransactionId(intent.getId());
@@ -202,21 +203,21 @@ public class CheckoutServlet extends HttpServlet {
 
                 paymentDAO.createPayment(payment);
 
-                // Set attributes for Payment Page
-                request.setAttribute("clientSecret", intent.getClientSecret());
-                request.setAttribute("amount", grandTotal);
-            request.setAttribute("subtotal", totalAmount);
-            request.setAttribute("gst", gstAmount);
+                // Set attributes in Session for Payment Page (Post-Redirect-Get pattern)
+                session.setAttribute("payment_clientSecret", intent.getClientSecret());
+                session.setAttribute("payment_amount", grandTotal);
+                session.setAttribute("payment_subtotal", totalAmount);
+                session.setAttribute("payment_gst", gstAmount);
 
-            if (stripePublicKey == null || stripePublicKey.trim().isEmpty()) {
-                stripePublicKey = "pk_test_PLACEHOLDER_ERROR";
-                System.err.println("CheckoutServlet: Failed to load stripe.publishable.key");
-            }
+                if (stripePublicKey == null || stripePublicKey.trim().isEmpty()) {
+                    stripePublicKey = "pk_test_PLACEHOLDER_ERROR";
+                    System.err.println("CheckoutServlet: Failed to load stripe.publishable.key");
+                }
 
-            request.setAttribute("stripePublicKey", stripePublicKey);
+                session.setAttribute("payment_stripePublicKey", stripePublicKey);
 
-            // Forward to payment page
-                request.getRequestDispatcher("/customer/payment.jsp").forward(request, response);
+                // Redirect to payment page
+                response.sendRedirect(request.getContextPath() + "/customer/payment.jsp");
 
             } catch (Exception e) {
                 e.printStackTrace();

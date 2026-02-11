@@ -3,13 +3,17 @@ package controller.admin;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
+import java.nio.file.Paths;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 import model.Caregiver;
 import dao.CaregiverDAO;
 import dao.DAOFactory;
@@ -20,6 +24,11 @@ import dao.UserDAO;
  * Demonstrates microservices architecture with J2EE frontend and Spring Boot backend
  */
 @WebServlet("/admin/caregiver")
+@MultipartConfig(
+    fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
+    maxFileSize = 1024 * 1024 * 10,      // 10 MB
+    maxRequestSize = 1024 * 1024 * 15    // 15 MB
+)
 public class AdminCaregiverController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private CaregiverDAO caregiverDAO;
@@ -186,7 +195,7 @@ public class AdminCaregiverController extends HttpServlet {
     }
 
     private void createCaregiver(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException {
+            throws SQLException, IOException, ServletException {
 
         String name = request.getParameter("name");
         String qualifications = request.getParameter("qualifications");
@@ -222,6 +231,11 @@ public class AdminCaregiverController extends HttpServlet {
         caregiver.setEmail(email != null ? email.trim() : "");
         caregiver.setAvailable("true".equals(isAvailableStr) || "on".equals(isAvailableStr));
 
+        // Handle image upload
+        Part filePart = request.getPart("image");
+        String imageUrl = saveImage(filePart, "caregivers");
+        caregiver.setProfileImage(imageUrl);
+
         // Create associated User account if email is provided
         if (caregiver.getEmail() != null && !caregiver.getEmail().isEmpty()) {
             UserDAO userDAO = DAOFactory.getUserDAO();
@@ -252,7 +266,7 @@ public class AdminCaregiverController extends HttpServlet {
     }
 
     private void updateCaregiver(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException {
+            throws SQLException, IOException, ServletException {
 
         String caregiverIdStr = request.getParameter("caregiverId");
         String name = request.getParameter("name");
@@ -270,6 +284,8 @@ public class AdminCaregiverController extends HttpServlet {
         }
 
         int caregiverId = Integer.parseInt(caregiverIdStr);
+        Caregiver existingCaregiver = caregiverDAO.getCaregiverById(caregiverId);
+
         Caregiver caregiver = new Caregiver();
         caregiver.setCaregiverId(caregiverId);
         caregiver.setName(name.trim());
@@ -290,6 +306,16 @@ public class AdminCaregiverController extends HttpServlet {
         caregiver.setEmail(email != null ? email.trim() : "");
         caregiver.setAvailable("true".equals(isAvailableStr) || "on".equals(isAvailableStr));
 
+        // Handle image upload
+        Part filePart = request.getPart("image");
+        String imageUrl = saveImage(filePart, "caregivers");
+        
+        if (imageUrl != null) {
+            caregiver.setProfileImage(imageUrl);
+        } else if (existingCaregiver != null) {
+            caregiver.setProfileImage(existingCaregiver.getProfileImage());
+        }
+
         boolean updated = caregiverDAO.updateCaregiver(caregiver);
 
         if (updated) {
@@ -297,6 +323,32 @@ public class AdminCaregiverController extends HttpServlet {
         } else {
             response.sendRedirect(request.getContextPath() + "/admin/caregiver?action=edit&caregiverId=" + caregiverId + "&err=update_failed");
         }
+    }
+    
+    private String saveImage(Part filePart, String subDir) throws IOException {
+        if (filePart == null || filePart.getSize() == 0) {
+            return null;
+        }
+        
+        String submittedFileName = filePart.getSubmittedFileName();
+        if (submittedFileName == null || submittedFileName.isEmpty()) {
+            return null;
+        }
+        
+        String fileName = Paths.get(submittedFileName).getFileName().toString();
+        String uniqueFileName = UUID.randomUUID().toString() + "_" + fileName;
+        
+        // Get upload directory path
+        String uploadDir = getServletContext().getRealPath("") + java.io.File.separator + "uploads" + java.io.File.separator + subDir;
+        java.io.File uploadDirFile = new java.io.File(uploadDir);
+        if (!uploadDirFile.exists()) {
+            uploadDirFile.mkdirs();
+        }
+        
+        String filePath = uploadDir + java.io.File.separator + uniqueFileName;
+        filePart.write(filePath);
+        
+        return "uploads/" + subDir + "/" + uniqueFileName;
     }
 
     private void deleteCaregiver(HttpServletRequest request, HttpServletResponse response)

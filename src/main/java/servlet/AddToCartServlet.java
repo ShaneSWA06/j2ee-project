@@ -109,14 +109,6 @@ public class AddToCartServlet extends HttpServlet {
                 item.setBookingTime(bookingTime);
                 item.setNotes(notes);
 
-                // Handle company ID
-                String companyIdStr = request.getParameter("companyId");
-                if (companyIdStr != null && !companyIdStr.trim().isEmpty()) {
-                    try {
-                        item.setCompanyId(Integer.parseInt(companyIdStr));
-                    } catch (NumberFormatException ignore) {}
-                }
-
                 // Handle caregiver selection
                 if (caregiverIdParam != null && !caregiverIdParam.trim().isEmpty()) {
                     try {

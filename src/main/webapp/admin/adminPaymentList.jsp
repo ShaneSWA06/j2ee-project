@@ -8,12 +8,12 @@
   
   <table style="width:100%; border-collapse:collapse; margin-top:20px;">
     <tr>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">ID</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Amount</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Status</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Method</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Transaction ID</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Date</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">ID</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Amount</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Status</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Method</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Transaction ID</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Date</th>
     </tr>
     
     <c:choose>

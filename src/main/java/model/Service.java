@@ -17,6 +17,7 @@ public class Service implements Serializable {
     private String categoryName; // For joined queries
     private boolean isActive;
     private Integer companyId;
+    private String imageUrl;
     private java.sql.Timestamp createdAt;
 
     // Constructors
@@ -37,6 +38,10 @@ public class Service implements Serializable {
     // Getters and Setters
     public Integer getCompanyId() { return companyId; }
     public void setCompanyId(Integer companyId) { this.companyId = companyId; }
+    
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    
     public int getServiceId() {
         return serviceId;
     }
@@ -98,7 +103,7 @@ public class Service implements Serializable {
     }
 
     public void setActive(boolean active) {
-        isActive = active;
+        this.isActive = active;
     }
 
     public java.sql.Timestamp getCreatedAt() {
@@ -115,9 +120,6 @@ public class Service implements Serializable {
                 "serviceId=" + serviceId +
                 ", serviceName='" + serviceName + '\'' +
                 ", basePrice=" + basePrice +
-                ", durationMinutes=" + durationMinutes +
-                ", categoryId=" + categoryId +
-                ", isActive=" + isActive +
                 '}';
     }
 }

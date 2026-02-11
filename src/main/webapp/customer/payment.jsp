@@ -10,16 +10,16 @@
         <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                 <span>Subtotal:</span>
-                <span>$<%= String.format("%.2f", request.getAttribute("subtotal")) %></span>
+                <span>$<%= String.format("%.2f", session.getAttribute("payment_subtotal")) %></span>
             </div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                 <span>GST (9%):</span>
-                <span>$<%= String.format("%.2f", request.getAttribute("gst")) %></span>
+                <span>$<%= String.format("%.2f", session.getAttribute("payment_gst")) %></span>
             </div>
             <hr>
             <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2em;">
                 <span>Total to Pay:</span>
-                <span>$<%= String.format("%.2f", request.getAttribute("amount")) %></span>
+                <span>$<%= String.format("%.2f", session.getAttribute("payment_amount")) %></span>
             </div>
         </div>
 
@@ -41,8 +41,8 @@
 <script src="https://js.stripe.com/v3/"></script>
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
-        const publicKey = '<%= request.getAttribute("stripePublicKey") %>';
-        const clientSecret = '<%= request.getAttribute("clientSecret") %>';
+        const publicKey = '<%= session.getAttribute("payment_stripePublicKey") %>';
+        const clientSecret = '<%= session.getAttribute("payment_clientSecret") %>';
         
         console.log("Initializing Stripe...");
         console.log("Public Key present:", !!publicKey && publicKey !== 'null');

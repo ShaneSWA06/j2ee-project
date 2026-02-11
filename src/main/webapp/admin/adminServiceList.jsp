@@ -24,13 +24,13 @@
   
   <table style="width:100%; border-collapse:collapse; margin-top:20px;">
     <tr>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">ID</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Name</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Category</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Price</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Duration</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Active</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Actions</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">ID</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Name</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Category</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Price</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Duration</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Active</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Actions</th>
     </tr>
     
     <c:choose>

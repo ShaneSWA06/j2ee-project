@@ -6,7 +6,7 @@
 <div class="form-container">
 <h1>Create New Caregiver</h1>
 <c:if test="${not empty param.err}"><div class="alert alert-danger">Error: ${param.err}</div></c:if>
-<form method="post" action="${pageContext.request.contextPath}/admin/caregiver?action=create" class="form">
+<form method="post" action="${pageContext.request.contextPath}/admin/caregiver?action=create" class="form" enctype="multipart/form-data">
 <div class="form-group">
 <label for="name">Name</label>
 <input type="text" id="name" name="name" required>
@@ -26,6 +26,10 @@
 <div class="form-group">
 <label for="bio">Bio</label>
 <textarea id="bio" name="bio" rows="4"></textarea>
+</div>
+<div class="form-group">
+<label for="image">Profile Image</label>
+<input type="file" id="image" name="image" accept="image/*" class="form-control">
 </div>
 <div class="form-group">
 <label for="phone">Phone</label>

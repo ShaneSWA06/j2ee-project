@@ -68,9 +68,16 @@ public class PaymentSuccessServlet extends HttpServlet {
 
                 // Clear cart
                 request.getSession().removeAttribute("shoppingCart");
+                
+                // Clear payment session attributes
+                request.getSession().removeAttribute("payment_clientSecret");
+                request.getSession().removeAttribute("payment_amount");
+                request.getSession().removeAttribute("payment_subtotal");
+                request.getSession().removeAttribute("payment_gst");
+                request.getSession().removeAttribute("payment_stripePublicKey");
 
                 // Redirect to bookings
-                response.sendRedirect(request.getContextPath() + "/customer/myBookings.jsp?success=payment_complete");
+                response.sendRedirect(request.getContextPath() + "/customer/booking?success=payment_complete");
 
             } else {
                  response.sendRedirect(request.getContextPath() + "/customer/viewCart.jsp?error=payment_not_succeeded&status=" + intent.getStatus());

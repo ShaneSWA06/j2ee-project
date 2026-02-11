@@ -10,6 +10,7 @@
   --background-deep: #020203;
   --background-base: #050506;
   --background-elevated: #0a0a0c;
+  --background-alt: rgba(255, 255, 255, 0.02);
   --surface: rgba(255, 255, 255, 0.05);
   --surface-hover: rgba(255, 255, 255, 0.08);
 

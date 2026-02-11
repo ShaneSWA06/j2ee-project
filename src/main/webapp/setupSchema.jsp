@@ -68,6 +68,24 @@ try {
                "comment TEXT, "+
                "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
 
+  // Add image columns if not exist
+  try {
+      stmt.execute("ALTER TABLE service ADD COLUMN IF NOT EXISTS image_url VARCHAR(255)");
+  } catch(Exception e) { /* ignore if exists */ }
+  
+  try {
+      stmt.execute("ALTER TABLE caregiver ADD COLUMN IF NOT EXISTS profile_image VARCHAR(255)");
+  } catch(Exception e) { /* ignore if exists */ }
+
+  try {
+      stmt.execute("ALTER TABLE app_user ADD COLUMN IF NOT EXISTS medical_history TEXT");
+  } catch(Exception e) { /* ignore if exists */ }
+  
+  try {
+      stmt.execute("ALTER TABLE app_user ADD COLUMN IF NOT EXISTS allergies TEXT");
+  } catch(Exception e) { /* ignore if exists */ }
+
+
   stmt.executeUpdate("INSERT INTO app_user(username, email, password, role, name) "+
                      "SELECT 'admin', 'admin@silvercare.com', 'admin123', 'ADMIN', 'Administrator' "+
                      "WHERE NOT EXISTS(SELECT 1 FROM app_user WHERE username='admin')");

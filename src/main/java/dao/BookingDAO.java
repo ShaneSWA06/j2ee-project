@@ -75,14 +75,4 @@ public interface BookingDAO {
      * Update caregiver status for a booking
      */
     boolean updateCaregiverStatus(int bookingId, String status) throws SQLException;
-
-    /**
-     * Get all bookings for a specific company
-     */
-    List<Booking> getBookingsByCompany(int companyId) throws SQLException;
-
-    /**
-     * Get recent bookings for a specific company with limit
-     */
-    List<Booking> getBookingsByCompany(int companyId, int limit) throws SQLException;
 }

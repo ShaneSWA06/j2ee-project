@@ -23,6 +23,8 @@ public class User implements Serializable {
     private String address;
     private String relationship;
     private String careNotes;
+    private String medicalHistory;
+    private String allergies;
     private Integer companyId;
 
     // Email Verification Fields
@@ -86,6 +88,12 @@ public class User implements Serializable {
 
     public String getCareNotes() { return careNotes; }
     public void setCareNotes(String careNotes) { this.careNotes = careNotes; }
+
+    public String getMedicalHistory() { return medicalHistory; }
+    public void setMedicalHistory(String medicalHistory) { this.medicalHistory = medicalHistory; }
+
+    public String getAllergies() { return allergies; }
+    public void setAllergies(String allergies) { this.allergies = allergies; }
 
     public Integer getCompanyId() { return companyId; }
     public void setCompanyId(Integer companyId) { this.companyId = companyId; }

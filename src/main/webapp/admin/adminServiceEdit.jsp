@@ -39,6 +39,16 @@
   <input type="number" id="duration_minutes" name="duration_minutes" min="1" value="${service.durationMinutes}" required>
   </div>
   <div class="form-group">
+  <label for="image">Service Image</label>
+  <c:if test="${not empty service.imageUrl}">
+      <div class="mb-2">
+          <img src="${pageContext.request.contextPath}/${service.imageUrl}" alt="Current Image" style="max-width: 200px; max-height: 200px; border: 1px solid #ccc; padding: 5px;">
+      </div>
+  </c:if>
+  <input type="file" id="image" name="image" accept="image/*" class="form-control">
+  <small class="text-muted">Leave empty to keep current image</small>
+  </div>
+  <div class="form-group">
   <label>
     <input type="checkbox" name="is_active" value="true" ${service.active ? 'checked' : ''}> Active
   </label>

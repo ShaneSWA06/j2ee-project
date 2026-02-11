@@ -3,16 +3,20 @@ package controller.admin;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
+import java.nio.file.Paths;
 
 import dao.CategoryDAO;
 import dao.DAOFactory;
 import dao.ServiceDAO;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 import model.Category;
 import model.Service;
 
@@ -20,6 +24,11 @@ import model.Service;
  * AdminServiceController - Handles all service management operations
  */
 @WebServlet("/admin/service")
+@MultipartConfig(
+    fileSizeThreshold = 1024 * 1024 * 1, // 1 MB
+    maxFileSize = 1024 * 1024 * 10,      // 10 MB
+    maxRequestSize = 1024 * 1024 * 15    // 15 MB
+)
 public class AdminServiceController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private ServiceDAO serviceDAO;
@@ -163,7 +172,7 @@ public class AdminServiceController extends HttpServlet {
     }
 
     private void createService(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException {
+            throws SQLException, IOException, ServletException {
 
         String serviceName = request.getParameter("service_name");
         String description = request.getParameter("description");
@@ -186,6 +195,11 @@ public class AdminServiceController extends HttpServlet {
         service.setCategoryId(Integer.parseInt(categoryIdStr));
         service.setActive("true".equals(isActiveStr) || "on".equals(isActiveStr));
 
+        // Handle image upload
+        Part filePart = request.getPart("image");
+        String imageUrl = saveImage(filePart, "services");
+        service.setImageUrl(imageUrl);
+
         Service created = serviceDAO.createService(service);
 
         if (created != null) {
@@ -196,7 +210,7 @@ public class AdminServiceController extends HttpServlet {
     }
 
     private void updateService(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException {
+            throws SQLException, IOException, ServletException {
 
         String serviceIdStr = request.getParameter("serviceId");
         String serviceName = request.getParameter("service_name");
@@ -212,6 +226,8 @@ public class AdminServiceController extends HttpServlet {
         }
 
         int serviceId = Integer.parseInt(serviceIdStr);
+        Service existingService = serviceDAO.getServiceById(serviceId);
+        
         Service service = new Service();
         service.setServiceId(serviceId);
         service.setServiceName(serviceName.trim());
@@ -221,6 +237,16 @@ public class AdminServiceController extends HttpServlet {
         service.setCategoryId(Integer.parseInt(categoryIdStr));
         service.setActive("true".equals(isActiveStr) || "on".equals(isActiveStr));
 
+        // Handle image upload
+        Part filePart = request.getPart("image");
+        String imageUrl = saveImage(filePart, "services");
+        
+        if (imageUrl != null) {
+            service.setImageUrl(imageUrl);
+        } else if (existingService != null) {
+            service.setImageUrl(existingService.getImageUrl());
+        }
+
         boolean updated = serviceDAO.updateService(service);
 
         if (updated) {
@@ -228,6 +254,32 @@ public class AdminServiceController extends HttpServlet {
         } else {
             response.sendRedirect(request.getContextPath() + "/admin/service?action=edit&serviceId=" + serviceId + "&err=update_failed");
         }
+    }
+    
+    private String saveImage(Part filePart, String subDir) throws IOException {
+        if (filePart == null || filePart.getSize() == 0) {
+            return null;
+        }
+        
+        String submittedFileName = filePart.getSubmittedFileName();
+        if (submittedFileName == null || submittedFileName.isEmpty()) {
+            return null;
+        }
+        
+        String fileName = Paths.get(submittedFileName).getFileName().toString();
+        String uniqueFileName = UUID.randomUUID().toString() + "_" + fileName;
+        
+        // Get upload directory path
+        String uploadDir = getServletContext().getRealPath("") + java.io.File.separator + "uploads" + java.io.File.separator + subDir;
+        java.io.File uploadDirFile = new java.io.File(uploadDir);
+        if (!uploadDirFile.exists()) {
+            uploadDirFile.mkdirs();
+        }
+        
+        String filePath = uploadDir + java.io.File.separator + uniqueFileName;
+        filePart.write(filePath);
+        
+        return "uploads/" + subDir + "/" + uniqueFileName;
     }
 
     private void deleteService(HttpServletRequest request, HttpServletResponse response)

@@ -71,6 +71,8 @@ public class SettingsServlet extends HttpServlet {
         String address = request.getParameter("address");
         String relationship = request.getParameter("relationship");
         String careNotes = request.getParameter("care_notes");
+        String medicalHistory = request.getParameter("medical_history");
+        String allergies = request.getParameter("allergies");
         String password = request.getParameter("password"); // Optional
 
         try {
@@ -87,6 +89,8 @@ public class SettingsServlet extends HttpServlet {
             user.setAddress(address);
             user.setRelationship(relationship);
             user.setCareNotes(careNotes);
+            user.setMedicalHistory(medicalHistory);
+            user.setAllergies(allergies);
             
             // Only update password if provided and not empty
             if (password != null && !password.trim().isEmpty()) {

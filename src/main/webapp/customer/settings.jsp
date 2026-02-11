@@ -60,6 +60,16 @@
                         <textarea class="form-control" id="care_notes" name="care_notes" rows="3" placeholder="Any special needs or instructions...">${user.careNotes}</textarea>
                     </div>
 
+                    <div class="form-group mb-3">
+                        <label for="medical_history">Medical History</label>
+                        <textarea class="form-control" id="medical_history" name="medical_history" rows="3" placeholder="Past surgeries, conditions, etc...">${user.medicalHistory}</textarea>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="allergies">Allergies</label>
+                        <textarea class="form-control" id="allergies" name="allergies" rows="2" placeholder="Food, medication, environmental...">${user.allergies}</textarea>
+                    </div>
+
                     <hr>
                     
                     <div class="form-group mb-3">

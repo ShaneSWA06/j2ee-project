@@ -27,20 +27,10 @@
     <div class="card feature-card feature-escort">
       <div class="feature-body">
         <div>
-          <h3>🚑 Medical Escort</h3>
+          <h3>✨ Medical Escort</h3>
           <p>Professional accompaniment for medical appointments.</p>
         </div>
         <a href="${pageContext.request.contextPath}/customer/medical-escort" class="btn btn-primary">Book Now</a>
-      </div>
-    </div>
-
-    <div class="card feature-card feature-partner">
-      <div class="feature-body">
-        <div>
-          <h3>🤝 SilverCare Partners</h3>
-          <p>Premium services provided by our trusted agency partners.</p>
-        </div>
-        <a href="${pageContext.request.contextPath}/customer/company?id=1" class="btn btn-secondary">Visit Partner</a>
       </div>
     </div>
   </div>

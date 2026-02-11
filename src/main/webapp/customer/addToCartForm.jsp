@@ -80,7 +80,16 @@
         <p class="summary-category">Category: <%= categoryName %></p>
       </div>
       <div class="summary-meta">
-        <span class="summary-price">$<%= String.format("%.2f", basePrice) %></span>
+        <% 
+           double gstRate = 0.09;
+           double gstAmount = basePrice * gstRate;
+           double totalPrice = basePrice + gstAmount;
+        %>
+        <div style="text-align: right;">
+            <div style="color: var(--foreground-muted); font-size: 0.9em;">Base: $<%= String.format("%.2f", basePrice) %></div>
+            <div style="color: var(--foreground-muted); font-size: 0.9em;">GST (9%): $<%= String.format("%.2f", gstAmount) %></div>
+            <div class="summary-price" style="color: var(--primary); font-size: 1.5em; font-weight: bold;">Total: $<%= String.format("%.2f", totalPrice) %></div>
+        </div>
         <span class="summary-duration"><%= durationMinutes %> minutes</span>
       </div>
     </div>

@@ -14,14 +14,14 @@
 
   <table style="width:100%; border-collapse:collapse; margin-top:20px;">
     <tr>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">ID</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Customer</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Service</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Date</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Time</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Booking Status</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Caregiver Status</th>
-      <th style="text-align: left; padding: 12px; background: #f5f5f5;">Actions</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">ID</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Customer</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Service</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Date</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Time</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Booking Status</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Caregiver Status</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Actions</th>
     </tr>
     
     <c:choose>

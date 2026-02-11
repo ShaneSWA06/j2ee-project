@@ -20,7 +20,7 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public Service getServiceById(int serviceId) throws SQLException {
         String sql = "SELECT s.service_id, s.service_name, s.description, s.base_price, s.duration_minutes, " +
-                     "s.category_id, s.is_active, s.company_id, c.category_name " +
+                     "s.category_id, s.is_active, s.company_id, s.image_url, c.category_name " +
                      "FROM service s " +
                      "LEFT JOIN service_category c ON s.category_id = c.category_id " +
                      "WHERE s.service_id = ?";
@@ -41,7 +41,7 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public List<Service> getAllServices() throws SQLException {
         String sql = "SELECT s.service_id, s.service_name, s.description, s.base_price, s.duration_minutes, " +
-                     "s.category_id, s.is_active, s.company_id, c.category_name " +
+                     "s.category_id, s.is_active, s.company_id, s.image_url, c.category_name " +
                      "FROM service s " +
                      "LEFT JOIN service_category c ON s.category_id = c.category_id " +
                      "ORDER BY s.service_id ASC";
@@ -51,7 +51,7 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public List<Service> getActiveServices() throws SQLException {
         String sql = "SELECT s.service_id, s.service_name, s.description, s.base_price, s.duration_minutes, " +
-                     "s.category_id, s.is_active, s.company_id, c.category_name " +
+                     "s.category_id, s.is_active, s.company_id, s.image_url, c.category_name " +
                      "FROM service s " +
                      "LEFT JOIN service_category c ON s.category_id = c.category_id " +
                      "WHERE s.is_active = TRUE " +
@@ -62,7 +62,7 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public List<Service> getServicesByCategory(int categoryId) throws SQLException {
         String sql = "SELECT s.service_id, s.service_name, s.description, s.base_price, s.duration_minutes, " +
-                     "s.category_id, s.is_active, s.company_id, c.category_name " +
+                     "s.category_id, s.is_active, s.company_id, s.image_url, c.category_name " +
                      "FROM service s " +
                      "LEFT JOIN service_category c ON s.category_id = c.category_id " +
                      "WHERE s.category_id = ? AND s.is_active = TRUE " +
@@ -84,8 +84,8 @@ public class ServiceDAOImpl implements ServiceDAO {
 
     @Override
     public Service createService(Service service) throws SQLException {
-        String sql = "INSERT INTO service (service_name, description, base_price, duration_minutes, category_id, is_active, company_id) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO service (service_name, description, base_price, duration_minutes, category_id, is_active, company_id, image_url) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -101,6 +101,7 @@ public class ServiceDAOImpl implements ServiceDAO {
             } else {
                 ps.setNull(7, java.sql.Types.INTEGER);
             }
+            ps.setString(8, service.getImageUrl());
 
             int rowsAffected = ps.executeUpdate();
 
@@ -119,7 +120,7 @@ public class ServiceDAOImpl implements ServiceDAO {
     @Override
     public boolean updateService(Service service) throws SQLException {
         String sql = "UPDATE service SET service_name = ?, description = ?, base_price = ?, " +
-                     "duration_minutes = ?, category_id = ?, is_active = ?, company_id = ? WHERE service_id = ?";
+                     "duration_minutes = ?, category_id = ?, is_active = ?, company_id = ?, image_url = ? WHERE service_id = ?";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -135,7 +136,8 @@ public class ServiceDAOImpl implements ServiceDAO {
             } else {
                 ps.setNull(7, java.sql.Types.INTEGER);
             }
-            ps.setInt(8, service.getServiceId());
+            ps.setString(8, service.getImageUrl());
+            ps.setInt(9, service.getServiceId());
 
             return ps.executeUpdate() > 0;
         }
@@ -206,6 +208,7 @@ public class ServiceDAOImpl implements ServiceDAO {
         service.setActive(rs.getBoolean("is_active"));
         service.setCategoryName(rs.getString("category_name"));
         service.setCompanyId(rs.getObject("company_id", Integer.class));
+        service.setImageUrl(rs.getString("image_url"));
         return service;
     }
 }

@@ -115,5 +115,58 @@
       </div>
     </c:if>
   </div>
+
+  <div class="grid" style="margin-top: 32px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+    <!-- Top Rated Caregivers -->
+    <div>
+      <h2>Top Rated Caregivers</h2>
+      <div style="margin-top: 16px;">
+        <c:forEach var="caregiver" items="${caregiverRatings}">
+          <div class="card" style="margin-bottom: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <h4 style="margin: 0;">${caregiver.name}</h4>
+                <small class="text-muted">${caregiver.review_count} reviews</small>
+              </div>
+              <span style="background: #4caf50; color: white; padding: 4px 12px; border-radius: 12px; font-weight: bold;">
+                <fmt:formatNumber value="${caregiver.avg_rating}" maxFractionDigits="1"/> ★
+              </span>
+            </div>
+          </div>
+        </c:forEach>
+        <c:if test="${empty caregiverRatings}">
+          <div class="card" style="text-align: center; padding: 20px; color: #666;">
+            <p>No ratings available.</p>
+          </div>
+        </c:if>
+      </div>
+    </div>
+
+    <!-- Top Clients -->
+    <div>
+      <h2>Top Clients</h2>
+      <div style="margin-top: 16px;">
+        <c:forEach var="client" items="${topClients}">
+          <div class="card" style="margin-bottom: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <h4 style="margin: 0;">${client.name}</h4>
+                <small class="text-muted">${client.email}</small>
+              </div>
+              <span style="background: #ff9800; color: white; padding: 4px 12px; border-radius: 12px; font-weight: bold;">
+                ${client.booking_count} bookings
+              </span>
+            </div>
+          </div>
+        </c:forEach>
+        <c:if test="${empty topClients}">
+          <div class="card" style="text-align: center; padding: 20px; color: #666;">
+            <p>No client data available.</p>
+          </div>
+        </c:if>
+      </div>
+    </div>
+  </div>
+
 </div>
 <jsp:include page="../includes/footer.jsp"/>

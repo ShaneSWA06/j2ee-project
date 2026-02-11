@@ -33,7 +33,9 @@
   <select id="caregiver_id" name="caregiver_id">
   <option value="">None</option>
   <c:forEach var="caregiver" items="${caregivers}">
-    <option value="${caregiver.caregiverId}" ${caregiver.caregiverId == booking.caregiverId ? 'selected' : ''}>${caregiver.name}</option>
+    <option value="${caregiver.caregiverId}" ${caregiver.caregiverId == booking.caregiverId ? 'selected' : ''}>
+        ${caregiver.name} ${caregiver.available ? '(Available)' : '(Unavailable)'}
+    </option>
   </c:forEach>
   </select>
   </div>

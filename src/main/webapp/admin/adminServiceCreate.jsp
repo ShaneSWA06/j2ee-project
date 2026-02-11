@@ -10,7 +10,7 @@
   <div class="alert alert-danger">Error: ${param.err}</div>
 </c:if>
 
-<form method="post" action="${pageContext.request.contextPath}/admin/service?action=create" class="form">
+<form method="post" action="${pageContext.request.contextPath}/admin/service?action=create" class="form" enctype="multipart/form-data">
 <div class="form-group">
 <label for="category_id">Category</label>
 <select id="category_id" name="category_id" required>
@@ -35,6 +35,10 @@
 <div class="form-group">
 <label for="duration_minutes">Duration (minutes)</label>
 <input type="number" id="duration_minutes" name="duration_minutes" min="1" required>
+</div>
+<div class="form-group">
+<label for="image">Service Image</label>
+<input type="file" id="image" name="image" accept="image/*" class="form-control">
 </div>
 <div class="form-group">
 <label>
