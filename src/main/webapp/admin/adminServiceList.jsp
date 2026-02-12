@@ -19,47 +19,76 @@
   <c:if test="${not empty param.err}">
     <div class="alert alert-danger">Unable to complete the action. Please try again.</div>
   </c:if>
-  </c:if>
   
-  <p><a href="${pageContext.request.contextPath}/admin/service?action=create" class="btn btn-primary">Add New Service</a></p>
+  <p style="margin-bottom: 2rem;">
+    <a href="${pageContext.request.contextPath}/admin/service?action=create" class="btn btn-primary">
+      <i class="fas fa-plus"></i> Add New Service
+    </a>
+  </p>
   
-  <table style="width:100%; border-collapse:collapse; margin-top:20px;">
-    <tr>
-      <th style="text-align: left; padding: 12px; background: var(--background-alt);">ID</th>
-      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Name</th>
-      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Category</th>
-      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Price</th>
-      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Duration</th>
-      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Active</th>
-      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Actions</th>
-    </tr>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Service</th>
+        <th>Category</th>
+        <th>Pricing</th>
+        <th>Efficiency</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
     
     <c:choose>
       <c:when test="${not empty services}">
         <c:forEach var="service" items="${services}">
-          <tr style="border-top:1px solid #eee">
-            <td style="vertical-align: middle; padding: 12px;">${service.serviceId}</td>
-            <td style="vertical-align: middle; padding: 12px;">${service.serviceName}</td>
-            <td style="vertical-align: middle; padding: 12px;">${service.categoryName}</td>
-            <td style="vertical-align: middle; padding: 12px;"><fmt:formatNumber value="${service.basePrice}" pattern="$#,##0.00"/></td>
-            <td style="vertical-align: middle; padding: 12px;">${service.durationMinutes} min</td>
-            <td style="vertical-align: middle; padding: 12px;">
+          <tr>
+            <td><span class="badge" style="background: var(--surface); color: var(--foreground-muted); border: 1px solid var(--border-default);">${service.serviceId}</span></td>
+            <td>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <c:if test="${not empty service.imageUrl}">
+                  <img src="${pageContext.request.contextPath}/${service.imageUrl}" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-default);">
+                </c:if>
+                <div style="font-weight: 600; color: var(--foreground);">${service.serviceName}</div>
+              </div>
+            </td>
+            <td><span class="badge" style="background: var(--accent-glow); color: var(--accent-bright); border: 1px solid var(--border-accent);">${service.categoryName}</span></td>
+            <td style="font-weight: 500;"><fmt:formatNumber value="${service.basePrice}" pattern="$#,##0.00"/></td>
+            <td style="color: var(--foreground-muted); font-size: 0.9rem;"><i class="far fa-clock" style="margin-right: 4px;"></i> ${service.durationMinutes} min</td>
+            <td>
               <c:choose>
-                <c:when test="${service.active}">✓ Active</c:when>
-                <c:otherwise>✗ Inactive</c:otherwise>
+                <c:when test="${service.active}">
+                  <span style="color: #22c55e; display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 0.85rem;">
+                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e;"></span>
+                    Active
+                  </span>
+                </c:when>
+                <c:otherwise>
+                  <span style="color: var(--foreground-muted); display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 0.85rem;">
+                    <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--foreground-muted);"></span>
+                    Inactive
+                  </span>
+                </c:otherwise>
               </c:choose>
             </td>
-            <td style="vertical-align: middle; padding: 12px; white-space: nowrap;">
-              <a class="btn" href="${pageContext.request.contextPath}/admin/service?action=edit&serviceId=${service.serviceId}" style="margin-right: 8px;">Edit</a>
-              <a class="btn" href="${pageContext.request.contextPath}/admin/service?action=delete&serviceId=${service.serviceId}">Delete</a>
+            <td>
+              <div style="display: flex; gap: 8px;">
+                <a class="btn btn-sm btn-secondary" href="${pageContext.request.contextPath}/admin/service?action=edit&serviceId=${service.serviceId}">
+                  <i class="fas fa-edit"></i> Edit
+                </a>
+                <a class="btn btn-sm btn-outline" href="${pageContext.request.contextPath}/admin/service?action=delete&serviceId=${service.serviceId}" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.2);">
+                  <i class="fas fa-trash"></i> Delete
+                </a>
+              </div>
             </td>
           </tr>
         </c:forEach>
       </c:when>
       <c:otherwise>
         <tr>
-          <td colspan="7" style="text-align:center; padding:20px; color:#888;">
-            No services found. Click "Add New Service" to create one.
+          <td colspan="7" style="text-align:center; padding:3rem; color: var(--foreground-muted);">
+            <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.2;">🏥</div>
+            <p>No services found. Click "Add New Service" to build your catalog.</p>
           </td>
         </tr>
       </c:otherwise>

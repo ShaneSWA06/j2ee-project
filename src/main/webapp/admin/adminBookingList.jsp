@@ -6,11 +6,8 @@
 <div class="container">
   <h1>Appointments</h1>
   
-  <div style="margin-bottom: 20px;">
-    <a href="${pageContext.request.contextPath}/admin/booking" class="btn ${viewType == 'all' || empty viewType ? 'btn-primary' : 'btn-secondary'}" style="margin-right: 10px;">All Appointments</a>
-    <a href="${pageContext.request.contextPath}/admin/booking?view=unassigned" class="btn ${viewType == 'unassigned' ? 'btn-primary' : 'btn-secondary'}">Pending Assignment</a>
-  </div>
-
+  <!-- Filters removed per user request -->
+  
   <c:if test="${not empty param.success}">
     <div class="alert alert-success">
       <c:choose>
@@ -24,39 +21,79 @@
     <div class="alert alert-danger">Unable to complete the action. Please try again.</div>
   </c:if>
   
-  <table style="width:100%; border-collapse:collapse; margin-top:20px;">
-    <tr>
-      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Booking #</th>
-      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Customer</th>
-      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Service</th>
-      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Caregiver</th>
-      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Date</th>
-      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Time</th>
-      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Status</th>
-      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Actions</th>
-    </tr>
+  <table>
+    <thead>
+      <tr>
+        <th>Booking #</th>
+        <th>Customer</th>
+        <th>Service</th>
+        <th>Caregiver</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
     
     <c:choose>
       <c:when test="${not empty bookings}">
         <c:forEach var="booking" items="${bookings}">
-          <tr style="border-top:1px solid #eee">
-            <td style="vertical-align: middle; padding: 12px;">${booking.bookingId}</td>
-            <td style="vertical-align: middle; padding: 12px;">${booking.userName}</td>
-            <td style="vertical-align: middle; padding: 12px;">${booking.serviceName}</td>
-            <td style="vertical-align: middle; padding: 12px;">${not empty booking.caregiverName ? booking.caregiverName : 'Not assigned'}</td>
-            <td style="vertical-align: middle; padding: 12px;"><fmt:formatDate value="${booking.bookingDate}" pattern="yyyy-MM-dd" timeZone="GMT+8"/></td>
-            <td style="vertical-align: middle; padding: 12px;"><fmt:formatDate value="${booking.bookingTime}" pattern="HH:mm" timeZone="GMT+8"/></td>
-            <td style="vertical-align: middle; padding: 12px;">${booking.status}</td>
-            <td style="vertical-align: middle; padding: 12px; white-space: nowrap;">
-              <a class="btn" href="${pageContext.request.contextPath}/admin/booking?action=edit&bookingId=${booking.bookingId}" style="margin-right: 8px;">Edit</a>
-              <a class="btn" href="${pageContext.request.contextPath}/admin/booking?action=delete&bookingId=${booking.bookingId}">Delete</a>
+          <tr>
+            <td><span class="badge" style="background: var(--surface); color: var(--foreground-muted); border: 1px solid var(--border-default);">${booking.bookingId}</span></td>
+            <td style="font-weight: 500;">${booking.userName}</td>
+            <td><span class="badge" style="background: var(--accent-glow); color: var(--accent-bright); border: 1px solid var(--border-accent);">${booking.serviceName}</span></td>
+            <td>
+              <c:choose>
+                <c:when test="${not empty booking.caregiverName}">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-user-md" style="color: var(--accent-bright);"></i>
+                    <span>${booking.caregiverName}</span>
+                  </div>
+                </c:when>
+                <c:otherwise>
+                  <span style="color: var(--foreground-muted); font-style: italic;">Pending Assignment</span>
+                </c:otherwise>
+              </c:choose>
+            </td>
+            <td>
+              <div style="font-weight: 600;">
+                <fmt:formatDate value="${booking.bookingDate}" pattern="MMM dd, yyyy" timeZone="GMT+8"/>
+              </div>
+            </td>
+            <td>
+              <c:choose>
+                <c:when test="${booking.status == 'Confirmed'}">
+                  <span class="badge" style="background: rgba(34, 197, 94, 0.1); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.2);">Confirmed</span>
+                </c:when>
+                <c:when test="${booking.status == 'Completed'}">
+                  <span class="badge" style="background: var(--surface); color: var(--foreground-muted); border: 1px solid var(--border-default);">Completed</span>
+                </c:when>
+                <c:when test="${booking.status == 'Cancelled'}">
+                  <span class="badge" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2);">Cancelled</span>
+                </c:when>
+                <c:otherwise>
+                  <span class="badge" style="background: rgba(234, 179, 8, 0.1); color: #eab308; border: 1px solid rgba(234, 179, 8, 0.2);">${booking.status}</span>
+                </c:otherwise>
+              </c:choose>
+            </td>
+            <td>
+              <div style="display: flex; gap: 8px;">
+                <a class="btn btn-sm btn-secondary" href="${pageContext.request.contextPath}/admin/booking?action=edit&bookingId=${booking.bookingId}">
+                  <i class="fas fa-edit"></i> Edit
+                </a>
+                <a class="btn btn-sm btn-outline" href="${pageContext.request.contextPath}/admin/booking?action=delete&bookingId=${booking.bookingId}" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.2);">
+                  <i class="fas fa-trash"></i> Delete
+                </a>
+              </div>
             </td>
           </tr>
         </c:forEach>
       </c:when>
       <c:otherwise>
         <tr>
-          <td colspan="8" style="text-align:center; padding:20px; color:#888;">No bookings found.</td>
+          <td colspan="7" style="text-align:center; padding:3rem; color: var(--foreground-muted);">
+            <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.2;">📅</div>
+            <p>No appointments found.</p>
+          </td>
         </tr>
       </c:otherwise>
     </c:choose>

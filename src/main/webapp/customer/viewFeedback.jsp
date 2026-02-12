@@ -25,6 +25,7 @@
                    "FROM feedback f " +
                    "JOIN app_user c ON f.user_id = c.user_id " +
                    "LEFT JOIN caregiver cg ON f.caregiver_id = cg.caregiver_id " +
+                   "WHERE c.role IN ('CUSTOMER', 'MEMBER') " +
                    "ORDER BY f.feedback_id ASC";
       pstmt = conn.prepareStatement(sql);
       rs = pstmt.executeQuery();

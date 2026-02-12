@@ -21,7 +21,7 @@ public class FeedbackDAOImpl implements FeedbackDAO {
     @Override
     public Feedback getFeedbackById(int feedbackId) throws SQLException {
         String sql = "SELECT f.feedback_id, f.user_id, f.rating, f.caregiver_id, f.comment, f.created_at, " +
-                     "f.admin_reply, f.admin_reply_at, " +
+                     "f.admin_reply, f.admin_reply_at, f.caregiver_reply, f.caregiver_reply_at, " +
                      "u.name as user_name, c.name as caregiver_name " +
                      "FROM feedback f " +
                      "LEFT JOIN app_user u ON f.user_id = u.user_id " +
@@ -44,7 +44,7 @@ public class FeedbackDAOImpl implements FeedbackDAO {
     @Override
     public List<Feedback> getAllFeedback() throws SQLException {
         String sql = "SELECT f.feedback_id, f.user_id, f.rating, f.caregiver_id, f.comment, f.created_at, " +
-                     "f.admin_reply, f.admin_reply_at, " +
+                     "f.admin_reply, f.admin_reply_at, f.caregiver_reply, f.caregiver_reply_at, " +
                      "u.name as user_name, c.name as caregiver_name " +
                      "FROM feedback f " +
                      "LEFT JOIN app_user u ON f.user_id = u.user_id " +
@@ -66,7 +66,7 @@ public class FeedbackDAOImpl implements FeedbackDAO {
     @Override
     public List<Feedback> getFeedbackByUser(int userId) throws SQLException {
         String sql = "SELECT f.feedback_id, f.user_id, f.rating, f.caregiver_id, f.comment, f.created_at, " +
-                     "f.admin_reply, f.admin_reply_at, " +
+                     "f.admin_reply, f.admin_reply_at, f.caregiver_reply, f.caregiver_reply_at, " +
                      "u.name as user_name, c.name as caregiver_name " +
                      "FROM feedback f " +
                      "LEFT JOIN app_user u ON f.user_id = u.user_id " +
@@ -91,7 +91,7 @@ public class FeedbackDAOImpl implements FeedbackDAO {
     @Override
     public List<Feedback> getFeedbackByCaregiver(int caregiverId) throws SQLException {
         String sql = "SELECT f.feedback_id, f.user_id, f.rating, f.caregiver_id, f.comment, f.created_at, " +
-                     "f.admin_reply, f.admin_reply_at, " +
+                     "f.admin_reply, f.admin_reply_at, f.caregiver_reply, f.caregiver_reply_at, " +
                      "u.name as user_name, c.name as caregiver_name " +
                      "FROM feedback f " +
                      "LEFT JOIN app_user u ON f.user_id = u.user_id " +
@@ -192,6 +192,19 @@ public class FeedbackDAOImpl implements FeedbackDAO {
         }
     }
 
+    @Override
+    public boolean addCaregiverReply(int feedbackId, String caregiverReply) throws SQLException {
+        String sql = "UPDATE feedback SET caregiver_reply = ?, caregiver_reply_at = CURRENT_TIMESTAMP WHERE feedback_id = ?";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, caregiverReply);
+            ps.setInt(2, feedbackId);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
     /**
      * Helper method to extract Feedback object from ResultSet
      */
@@ -210,6 +223,15 @@ public class FeedbackDAOImpl implements FeedbackDAO {
         feedback.setCreatedAt(rs.getTimestamp("created_at"));
         feedback.setAdminReply(rs.getString("admin_reply"));
         feedback.setAdminReplyAt(rs.getTimestamp("admin_reply_at"));
+        
+        // Try to get caregiver reply fields (may not exist in all queries)
+        try {
+            feedback.setCaregiverReply(rs.getString("caregiver_reply"));
+            feedback.setCaregiverReplyAt(rs.getTimestamp("caregiver_reply_at"));
+        } catch (SQLException e) {
+            // Columns not in result set, ignore
+        }
+        
         feedback.setUserName(rs.getString("user_name"));
         feedback.setCaregiverName(rs.getString("caregiver_name"));
 

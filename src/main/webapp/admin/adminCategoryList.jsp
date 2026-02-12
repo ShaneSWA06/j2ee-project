@@ -21,38 +21,48 @@
       Unable to complete the action. Please try again or contact support.
     </div>
   </c:if>
-      Error: ${param.err}
-    </div>
-  </c:if>
   
-  <p><a class="btn btn-primary" href="${pageContext.request.contextPath}/admin/category?action=create">Add New Category</a></p>
+  <p style="margin-bottom: 2rem;">
+    <a class="btn btn-primary" href="${pageContext.request.contextPath}/admin/category?action=create">
+      <i class="fas fa-plus"></i> Add New Category
+    </a>
+  </p>
   
-  <table style="width:100%; border-collapse:collapse; margin-top:20px;">
-    <tr>
-      <th style="text-align: left; padding: 12px; background: var(--background-alt);">ID</th>
-      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Name</th>
-      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Description</th>
-      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Actions</th>
-    </tr>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
     
     <c:choose>
       <c:when test="${not empty categories}">
         <c:forEach var="category" items="${categories}">
-          <tr style="border-top:1px solid #eee">
-            <td style="vertical-align: middle; padding: 12px;">${category.categoryId}</td>
-            <td style="vertical-align: middle; padding: 12px;">${category.categoryName}</td>
-            <td style="vertical-align: middle; padding: 12px;">${category.description}</td>
-            <td style="vertical-align: middle; padding: 12px; white-space: nowrap;">
-              <a class="btn" href="${pageContext.request.contextPath}/admin/category?action=edit&categoryId=${category.categoryId}" style="margin-right: 8px;">Edit</a>
-              <a class="btn" href="${pageContext.request.contextPath}/admin/category?action=delete&categoryId=${category.categoryId}">Delete</a>
+          <tr>
+            <td><span class="badge" style="background: var(--surface); color: var(--foreground-muted); border: 1px solid var(--border-default);">${category.categoryId}</span></td>
+            <td style="font-weight: 600; color: var(--foreground);">${category.categoryName}</td>
+            <td style="color: var(--foreground-muted); max-width: 400px;">${category.description}</td>
+            <td>
+              <div style="display: flex; gap: 8px;">
+                <a class="btn btn-sm btn-secondary" href="${pageContext.request.contextPath}/admin/category?action=edit&categoryId=${category.categoryId}">
+                  <i class="fas fa-edit"></i> Edit
+                </a>
+                <a class="btn btn-sm btn-outline" href="${pageContext.request.contextPath}/admin/category?action=delete&categoryId=${category.categoryId}" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.2);">
+                  <i class="fas fa-trash"></i> Delete
+                </a>
+              </div>
             </td>
           </tr>
         </c:forEach>
       </c:when>
       <c:otherwise>
         <tr>
-          <td colspan="4" style="text-align:center; padding:20px; color:#888;">
-            No categories found. Click "Add New Category" to create one.
+          <td colspan="4" style="text-align:center; padding:3rem; color: var(--foreground-muted);">
+            <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.2;">📂</div>
+            <p>No categories found. Get started by creating your first service category.</p>
           </td>
         </tr>
       </c:otherwise>

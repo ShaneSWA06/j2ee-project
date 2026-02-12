@@ -236,6 +236,24 @@ public class CaregiverDAOImpl implements CaregiverDAO {
     }
 
     @Override
+    public Caregiver getCaregiverByUserId(int userId) throws SQLException {
+        String sql = "SELECT caregiver_id, user_id, name, qualifications, specialties, experience, bio, phone, email, available, created_at, company_id " +
+                     "FROM caregiver WHERE user_id = ?";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return extractCaregiverFromResultSet(rs);
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
     public List<Caregiver> getCaregiversByCompany(int companyId) throws SQLException {
         String sql = "SELECT caregiver_id, user_id, name, qualifications, specialties, experience, bio, phone, email, available, created_at, company_id " +
                      "FROM caregiver WHERE company_id = ? ORDER BY name ASC";

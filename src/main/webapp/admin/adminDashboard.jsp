@@ -11,18 +11,6 @@
     </div>
   </div>
 
-  <div class="stats-overview animate-in" style="animation-delay: 100ms;">
-      <div class="card stat-card intel" onclick="window.open('https://assignmenttwo-fljm.onrender.com/user-ws/analytics.html', '_blank')">
-          <div class="stat-glow"></div>
-          <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
-          <div class="stat-content">
-              <h3>Business Analytics</h3>
-              <p>View bookings and revenue insights.</p>
-          </div>
-          <div class="stat-action">View Reports <i class="fas fa-external-link-alt"></i></div>
-      </div>
-  </div>
-
   <div class="admin-grid animate-in" style="animation-delay: 200ms;">
     <!-- Core Management -->
     <div class="card management-card">
@@ -78,15 +66,6 @@
         <p>View and respond to customer feedback and ratings.</p>
         <div class="card-actions">
             <a class="btn btn-secondary btn-sm" href="${pageContext.request.contextPath}/admin/feedback">View Reviews</a>
-        </div>
-    </div>
-
-    <div class="card management-card">
-        <div class="card-icon"><i class="fas fa-chart-pie"></i></div>
-        <h3>Reports</h3>
-        <p>View and export system reports and analytics.</p>
-        <div class="card-actions">
-            <a class="btn btn-secondary btn-sm" href="${pageContext.request.contextPath}/admin/reports">View Reports</a>
         </div>
     </div>
   </div>

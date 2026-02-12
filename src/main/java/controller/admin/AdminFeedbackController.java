@@ -50,6 +50,9 @@ public class AdminFeedbackController extends HttpServlet {
                 case "list":
                     listFeedback(request, response);
                     break;
+                case "create":
+                    showCreateForm(request, response);
+                    break;
                 case "edit":
                     showEditForm(request, response);
                     break;
@@ -81,6 +84,9 @@ public class AdminFeedbackController extends HttpServlet {
 
         try {
             switch (action) {
+                case "create":
+                    createFeedback(request, response);
+                    break;
                 case "edit":
                     updateFeedback(request, response);
                     break;
@@ -102,6 +108,44 @@ public class AdminFeedbackController extends HttpServlet {
         List<Feedback> feedbackList = feedbackDAO.getAllFeedback();
         request.setAttribute("feedbackList", feedbackList);
         request.getRequestDispatcher("/admin/adminFeedbackList.jsp").forward(request, response);
+    }
+
+    private void showCreateForm(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
+
+        List<Caregiver> caregivers = caregiverDAO.getAllCaregivers();
+        request.setAttribute("caregivers", caregivers);
+        request.getRequestDispatcher("/admin/adminFeedbackCreate.jsp").forward(request, response);
+    }
+
+    private void createFeedback(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
+
+        HttpSession session = request.getSession();
+        Integer adminUserId = (Integer) session.getAttribute("sessUserId");
+
+        String caregiverIdStr = request.getParameter("caregiver_id");
+        String ratingStr = request.getParameter("rating");
+        String comment = request.getParameter("comment");
+
+        if (caregiverIdStr == null || ratingStr == null || comment == null || comment.trim().isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/admin/feedback?action=create&err=missing_fields");
+            return;
+        }
+
+        Feedback feedback = new Feedback();
+        feedback.setUserId(adminUserId); // Admin is the one giving feedback
+        feedback.setCaregiverId(Integer.parseInt(caregiverIdStr));
+        feedback.setRating(Integer.parseInt(ratingStr));
+        feedback.setComment(comment.trim());
+
+        Feedback created = feedbackDAO.createFeedback(feedback);
+
+        if (created != null) {
+            response.sendRedirect(request.getContextPath() + "/admin/feedback?success=created");
+        } else {
+            response.sendRedirect(request.getContextPath() + "/admin/feedback?action=create&err=create_failed");
+        }
     }
 
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)

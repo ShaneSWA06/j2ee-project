@@ -174,6 +174,8 @@ CREATE TABLE feedback (
     comment TEXT,
     admin_reply TEXT,
     admin_reply_at TIMESTAMP,
+    caregiver_reply TEXT,
+    caregiver_reply_at TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

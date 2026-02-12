@@ -44,11 +44,13 @@ public class BookingServiceAPI {
     // via environment variables or a configuration server to support different deployment stages (Dev/Stage/Prod).
     private static final String API_BASE_URL = "https://assignmenttwo-fljm.onrender.com/user-ws/api/bookings";
     private UserDAO userDAO;
+    private dao.CaregiverDAO caregiverDAO;
 
     public BookingServiceAPI() {
         // We initialize DAOs here to support hybrid data fetching if the API response 
         // needs to be enriched with local database data (e.g., User details).
         this.userDAO = DAOFactory.getUserDAO();
+        this.caregiverDAO = DAOFactory.getCaregiverDAO();
     }
 
     /**
@@ -430,7 +432,19 @@ public class BookingServiceAPI {
                 case "caregiverId":
                     try {
                          String val = value.equals("null") ? "0" : value;
-                         booking.setCaregiverId(Integer.parseInt(val));
+                         int cId = Integer.parseInt(val);
+                         booking.setCaregiverId(cId);
+                         
+                         if (cId > 0) {
+                             try {
+                                 model.Caregiver cg = caregiverDAO.getCaregiverById(cId);
+                                 if (cg != null) {
+                                     booking.setCaregiverName(cg.getName());
+                                 }
+                             } catch (Exception e) {
+                                 booking.setCaregiverName("Caregiver #" + cId);
+                             }
+                         }
                     } catch (NumberFormatException e) {
                         booking.setCaregiverId(0); 
                     }

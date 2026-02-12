@@ -15,8 +15,8 @@
           if (!"ADMIN".equals(userRole) && !"CAREGIVER".equals(userRole)) { 
         %>
           <li><a class="nav-link" href="${pageContext.request.contextPath}/public/serviceCategories.jsp">Service Categories</a></li>
+          <li><a class="nav-link" href="${pageContext.request.contextPath}/customer/viewFeedback.jsp">Feedback</a></li>
         <% } %>
-        <li><a class="nav-link" href="${pageContext.request.contextPath}/customer/viewFeedback.jsp">Feedback</a></li>
       </ul>
     </div>
     <div class="nav-right">
@@ -26,11 +26,13 @@
         %>
           <!-- Admin Navigation -->
           <li><a class="nav-link" href="${pageContext.request.contextPath}/admin/dashboard">Admin Panel</a></li>
+          <li><a class="nav-link" href="${pageContext.request.contextPath}/admin/feedback">Feedback</a></li>
           <li><a class="nav-link" href="${pageContext.request.contextPath}/settings">Settings</a></li>
           <li><a class="nav-link" href="${pageContext.request.contextPath}/logout">Logout</a></li>
         <% } else if ("CAREGIVER".equals(userRole)) { %>
           <!-- Caregiver Navigation -->
           <li><a class="nav-link" href="${pageContext.request.contextPath}/mvc/caregiver/dashboard">Caregiver Portal</a></li>
+          <li><a class="nav-link" href="${pageContext.request.contextPath}/caregiver/feedback">My Feedback</a></li>
           <li><a class="nav-link" href="${pageContext.request.contextPath}/settings">Settings</a></li>
           <li><a class="nav-link" href="${pageContext.request.contextPath}/logout">Logout</a></li>
         <% } else if ("COMPANY_ADMIN".equals(userRole)) { %>

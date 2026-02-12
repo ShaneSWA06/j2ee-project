@@ -45,4 +45,9 @@ public interface FeedbackDAO {
      * Delete feedback by ID
      */
     boolean deleteFeedback(int feedbackId) throws SQLException;
+
+    /**
+     * Add caregiver reply to feedback
+     */
+    boolean addCaregiverReply(int feedbackId, String caregiverReply) throws SQLException;
 }
