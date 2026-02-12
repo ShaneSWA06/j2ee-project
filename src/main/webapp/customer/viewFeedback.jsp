@@ -9,7 +9,7 @@
   
   <% if (session.getAttribute("sessUserId") != null) { %>
     <p style="margin-bottom: 20px;">
-      <a class="btn btn-primary" href="${pageContext.request.contextPath}/customer/submitFeedback.jsp">Submit Feedback</a>
+      <a class="btn btn-primary" href="${pageContext.request.contextPath}/customer/feedback?action=submit">Submit Feedback</a>
     </p>
   <% } %>
 
@@ -20,7 +20,7 @@
     ResultSet rs = null;
     try {
       conn = DBUtil.getConnection();
-      String sql = "SELECT f.feedback_id, f.star_rating, f.comment, f.created_at, " +
+      String sql = "SELECT f.feedback_id, f.rating, f.comment, f.created_at, " +
                    "c.name AS customer_name, cg.name AS caregiver_name " +
                    "FROM feedback f " +
                    "JOIN app_user c ON f.user_id = c.user_id " +
@@ -32,7 +32,7 @@
       boolean hasResults = false;
       while (rs.next()) {
         hasResults = true;
-        int rating = rs.getInt("star_rating");
+        int rating = rs.getInt("rating");
         String comment = rs.getString("comment");
         String customerName = rs.getString("customer_name");
         String caregiverName = rs.getString("caregiver_name");

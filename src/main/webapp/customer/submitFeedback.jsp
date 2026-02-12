@@ -221,6 +221,12 @@
       box-shadow: 0 0 0 4px var(--accent-glow);
   }
 
+  .rating-picker select option,
+  .input-wrapper select option {
+      background: #0a0a0c;
+      color: #ededef;
+  }
+
   .select-icon {
       position: absolute;
       right: 1.25rem;

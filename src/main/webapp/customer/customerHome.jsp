@@ -71,7 +71,7 @@
         <h3>Feedback & Support</h3>
         <p>Your satisfaction is our priority. Share your experience or view your feedback.</p>
         <div class="card-links">
-            <a href="${pageContext.request.contextPath}/customer/submitFeedback.jsp" class="btn btn-secondary btn-sm">Give Feedback</a>
+            <a href="${pageContext.request.contextPath}/customer/feedback?action=submit" class="btn btn-secondary btn-sm">Give Feedback</a>
             <a href="${pageContext.request.contextPath}/customer/myFeedback.jsp" class="link-secondary">My History</a>
         </div>
     </div>

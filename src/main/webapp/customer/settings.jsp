@@ -36,7 +36,7 @@
             </div>
         </div>
         
-        <div class="nav-menu">
+        <div class="sidebar-nav">
             <a href="#profile" class="nav-item active"><i class="fas fa-user-edit"></i> Profile Details</a>
             <a href="#medical" class="nav-item"><i class="fas fa-heartbeat"></i> Medical Records</a>
             <a href="#security" class="nav-item"><i class="fas fa-shield-alt"></i> Security</a>
@@ -214,7 +214,7 @@
           position: relative;
           top: 0;
       }
-      .nav-menu {
+      .sidebar-nav {
           display: flex;
           flex-wrap: wrap;
           gap: 0.5rem;
@@ -252,7 +252,7 @@
       font-family: var(--font-mono);
   }
 
-  .nav-menu {
+  .sidebar-nav {
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
