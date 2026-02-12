@@ -155,6 +155,7 @@ public class AdminFeedbackController extends HttpServlet {
         String ratingStr = request.getParameter("rating");
         String caregiverIdStr = request.getParameter("caregiver_id");
         String comment = request.getParameter("comment");
+        String adminReply = request.getParameter("admin_reply");
 
         if (feedbackIdStr == null || ratingStr == null) {
             response.sendRedirect(request.getContextPath() + "/admin/feedback?err=missing_fields");
@@ -171,6 +172,7 @@ public class AdminFeedbackController extends HttpServlet {
         }
 
         feedback.setComment(comment != null ? comment.trim() : "");
+        feedback.setAdminReply(adminReply != null ? adminReply.trim() : "");
 
         boolean updated = feedbackDAO.updateFeedback(feedback);
 

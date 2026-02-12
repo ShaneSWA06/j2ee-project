@@ -12,7 +12,8 @@
 <div class="form-group"><label>Customer: <strong>${feedback.userName}</strong></label></div>
 <div class="form-group"><label for="rating">Rating (1-5)</label><input type="number" id="rating" name="rating" min="1" max="5" value="${feedback.rating}" required></div>
 <div class="form-group"><label for="caregiver_id">Caregiver (Optional)</label><select id="caregiver_id" name="caregiver_id"><option value="">None</option><c:forEach var="caregiver" items="${caregivers}"><option value="${caregiver.caregiverId}" ${caregiver.caregiverId == feedback.caregiverId ? 'selected' : ''}>${caregiver.name}</option></c:forEach></select></div>
-<div class="form-group"><label for="comment">Comment</label><textarea id="comment" name="comment" rows="4">${feedback.comment}</textarea></div>
+<div class="form-group"><label for="comment">Comment</label><textarea id="comment" name="comment" rows="4" readonly style="background-color: #f5f5f5;">${feedback.comment}</textarea></div>
+<div class="form-group"><label for="admin_reply">Admin Reply</label><textarea id="admin_reply" name="admin_reply" rows="4" placeholder="Enter your reply to the customer...">${feedback.adminReply}</textarea></div>
 <button type="submit" class="btn btn-primary">Update</button>
 <a href="${pageContext.request.contextPath}/admin/feedback" class="btn btn-secondary">Cancel</a>
 </form>

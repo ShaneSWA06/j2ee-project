@@ -14,6 +14,8 @@ public class Feedback implements Serializable {
     private Integer caregiverId; // Nullable
     private String comment;
     private java.sql.Timestamp createdAt;
+    private String adminReply;
+    private java.sql.Timestamp adminReplyAt;
 
     // For joined queries - display names
     private String userName;
@@ -95,6 +97,22 @@ public class Feedback implements Serializable {
         this.caregiverName = caregiverName;
     }
 
+    public String getAdminReply() {
+        return adminReply;
+    }
+
+    public void setAdminReply(String adminReply) {
+        this.adminReply = adminReply;
+    }
+
+    public java.sql.Timestamp getAdminReplyAt() {
+        return adminReplyAt;
+    }
+
+    public void setAdminReplyAt(java.sql.Timestamp adminReplyAt) {
+        this.adminReplyAt = adminReplyAt;
+    }
+
     @Override
     public String toString() {
         return "Feedback{" +
@@ -103,6 +121,7 @@ public class Feedback implements Serializable {
                 ", rating=" + rating +
                 ", caregiverId=" + caregiverId +
                 ", comment='" + comment + '\'' +
+                ", adminReply='" + adminReply + '\'' +
                 '}';
     }
 }

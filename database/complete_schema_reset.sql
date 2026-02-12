@@ -172,6 +172,8 @@ CREATE TABLE feedback (
     booking_id INTEGER REFERENCES booking(booking_id) ON DELETE CASCADE,
     rating INTEGER CHECK (rating >= 1 AND rating <= 5),
     comment TEXT,
+    admin_reply TEXT,
+    admin_reply_at TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

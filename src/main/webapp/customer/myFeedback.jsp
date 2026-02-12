@@ -15,6 +15,15 @@
 <c:if test="${not empty feedback.caregiverName}"><p><strong>Caregiver:</strong> ${feedback.caregiverName}</p></c:if>
 <c:if test="${not empty feedback.comment}"><p><strong>Comment:</strong> "${feedback.comment}"</p></c:if>
 <p style="font-size: 12px; color: #999;">Submitted: ${feedback.createdAt}</p>
+<c:if test="${not empty feedback.adminReply}">
+<div style="margin-top: 15px; padding: 15px; background-color: #f0f8ff; border-left: 4px solid #4a90e2; border-radius: 4px;">
+<p style="margin: 0 0 8px 0; font-weight: bold; color: #4a90e2;">💬 Admin Reply:</p>
+<p style="margin: 0; color: #333;">${feedback.adminReply}</p>
+<c:if test="${not empty feedback.adminReplyAt}">
+<p style="margin-top: 8px; font-size: 11px; color: #999;">Replied: ${feedback.adminReplyAt}</p>
+</c:if>
+</div>
+</c:if>
 </div>
 </c:forEach>
 </c:when>
