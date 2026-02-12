@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
@@ -13,73 +14,9 @@
     </context-param>
     
     <welcome-file-list>
-        <welcome-file>public/index.jsp</welcome-file>
         <welcome-file>index.jsp</welcome-file>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
-    
-    <!-- Service Categories Servlet -->
-    <servlet>
-        <servlet-name>ServiceCategoriesServlet</servlet-name>
-        <servlet-class>servlet.pub.ServiceCategoriesServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ServiceCategoriesServlet</servlet-name>
-        <url-pattern>/mvc/public/serviceCategories</url-pattern>
-    </servlet-mapping>
-    
-    <!-- Service Details Servlet -->
-    <servlet>
-        <servlet-name>ServiceDetailsServlet</servlet-name>
-        <servlet-class>servlet.pub.ServiceDetailsServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ServiceDetailsServlet</servlet-name>
-        <url-pattern>/mvc/public/serviceDetails</url-pattern>
-    </servlet-mapping>
-
-    <!-- Caregivers Servlet -->
-    <servlet>
-        <servlet-name>CaregiversServlet</servlet-name>
-        <servlet-class>servlet.pub.CaregiversServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>CaregiversServlet</servlet-name>
-        <url-pattern>/mvc/public/caregivers</url-pattern>
-    </servlet-mapping>
-    
-    <!-- Search Caregivers Servlet -->
-    <servlet>
-        <servlet-name>SearchCaregiversServlet</servlet-name>
-        <servlet-class>servlet.pub.SearchCaregiversServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SearchCaregiversServlet</servlet-name>
-        <url-pattern>/mvc/api/searchCaregivers</url-pattern>
-    </servlet-mapping>
-
-    <!-- Caregiver Controller -->
-    <servlet>
-        <servlet-name>CaregiverController</servlet-name>
-        <servlet-class>controller.caregiver.CaregiverController</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>CaregiverController</servlet-name>
-        <url-pattern>/mvc/caregiver/dashboard</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>CaregiverController</servlet-name>
-        <url-pattern>/mvc/caregiver/jobs</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>CaregiverController</servlet-name>
-        <url-pattern>/mvc/caregiver/accept</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>CaregiverController</servlet-name>
-        <url-pattern>/mvc/caregiver/*</url-pattern>
-    </servlet-mapping>
     
     <!-- Error Pages -->
     <error-page>

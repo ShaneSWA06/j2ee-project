@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*" %>
-<%@ page import="model.CartItem" %>
+
 <nav class="navbar">
   <div class="nav-container">
     <div class="nav-left">
@@ -42,8 +42,7 @@
           <li><a class="nav-link" href="${pageContext.request.contextPath}/logout">Logout</a></li>
         <% } else if (session.getAttribute("sessUserId") != null) {
              // Customer/Member Navigation
-             @SuppressWarnings("unchecked")
-             ArrayList<CartItem> cart = (ArrayList<CartItem>) session.getAttribute("shoppingCart");
+             java.util.ArrayList<model.CartItem> cart = (java.util.ArrayList<model.CartItem>) session.getAttribute("shoppingCart");
              int cartCount = (cart != null) ? cart.size() : 0;
         %>
           <li>

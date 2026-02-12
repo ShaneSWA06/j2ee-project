@@ -4,26 +4,25 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import model.Category;
 import model.Service;
 
 public class ServiceAPI {
     
-    private static final String API_BASE_URL = "https://assignmenttwo-fljm.onrender.com/user-ws/api/services";
-    private Gson gson = new Gson();
+    private static final String SERVICE_API_URL = "https://assignmenttwo-fljm.onrender.com/user-ws/api/services";
+    private static final String CATEGORY_API_URL = "https://assignmenttwo-fljm.onrender.com/user-ws/api/categories";
     
     public List<Service> getAllServices() {
         try {
-            String json = sendRequest(API_BASE_URL, "GET", null);
+            String json = sendRequest(SERVICE_API_URL, "GET", null);
             return parseServiceList(json);
         } catch (Exception e) {
             e.printStackTrace();
@@ -33,7 +32,7 @@ public class ServiceAPI {
     
     public Service getServiceById(int id) {
         try {
-            String json = sendRequest(API_BASE_URL + "/" + id, "GET", null);
+            String json = sendRequest(SERVICE_API_URL + "/" + id, "GET", null);
             return parseService(json);
         } catch (Exception e) {
             e.printStackTrace();
@@ -42,7 +41,7 @@ public class ServiceAPI {
     }
     
     private String sendRequest(String urlString, String method, String jsonBody) throws Exception {
-        URL url = new URL(urlString);
+        java.net.URL url = java.net.URI.create(urlString).toURL();
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod(method);
         conn.setRequestProperty("Content-Type", "application/json");
@@ -82,6 +81,70 @@ public class ServiceAPI {
         return parseServiceFromJson(JsonParser.parseString(json).getAsJsonObject());
     }
     
+    public List<Category> getAllCategories() {
+        try {
+            String json = sendRequest(CATEGORY_API_URL, "GET", null);
+            return parseCategoryList(json);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public List<Service> searchServices(String query, Integer categoryId) {
+        try {
+            // Since the Spring Boot API doesn't have a dedicated /search endpoint,
+            // we fetch all services and filter them on the client side to provide 
+            // the AJAX search functionality to the J2EE frontend.
+            List<Service> allServices = getAllServices();
+            if (allServices == null) return new ArrayList<>();
+
+            String lowerQuery = query.toLowerCase();
+            return allServices.stream()
+                .filter(s -> {
+                    // Category filter
+                    if (categoryId != null && s.getCategoryId() != categoryId) {
+                        return false;
+                    }
+                    // Keyword filter
+                    if (query.isEmpty()) return true;
+                    
+                    boolean matchName = s.getServiceName() != null && s.getServiceName().toLowerCase().contains(lowerQuery);
+                    boolean matchDesc = s.getDescription() != null && s.getDescription().toLowerCase().contains(lowerQuery);
+                    boolean matchCat = s.getCategoryName() != null && s.getCategoryName().toLowerCase().contains(lowerQuery);
+                    
+                    return matchName || matchDesc || matchCat;
+                })
+                .collect(java.util.stream.Collectors.toList());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    private List<Category> parseCategoryList(String json) {
+        List<Category> categories = new ArrayList<>();
+        JsonArray array = JsonParser.parseString(json).getAsJsonArray();
+        for (int i = 0; i < array.size(); i++) {
+            categories.add(parseCategoryFromJson(array.get(i).getAsJsonObject()));
+        }
+        return categories;
+    }
+
+    private Category parseCategoryFromJson(JsonObject obj) {
+        Category c = new Category();
+        if (obj.has("categoryId")) c.setCategoryId(obj.get("categoryId").getAsInt());
+        
+        if (obj.has("categoryName")) {
+            c.setCategoryName(obj.get("categoryName").getAsString());
+        } else if (obj.has("name")) {
+            c.setCategoryName(obj.get("name").getAsString());
+        }
+        
+        if (obj.has("description")) c.setDescription(obj.get("description").getAsString());
+        return c;
+    }
+
     private Service parseServiceFromJson(JsonObject obj) {
         Service s = new Service();
         if (obj.has("serviceId")) s.setServiceId(obj.get("serviceId").getAsInt());
@@ -89,7 +152,32 @@ public class ServiceAPI {
         if (obj.has("description")) s.setDescription(obj.get("description").getAsString());
         if (obj.has("basePrice")) s.setBasePrice(obj.get("basePrice").getAsDouble());
         if (obj.has("durationMinutes")) s.setDurationMinutes(obj.get("durationMinutes").getAsInt());
-        if (obj.has("categoryId")) s.setCategoryId(obj.get("categoryId").getAsInt());
+        
+        // Handle Category information (can be nested or flat)
+        if (obj.has("category") && !obj.get("category").isJsonNull()) {
+            JsonObject catObj = obj.getAsJsonObject("category");
+            if (catObj.has("categoryId")) s.setCategoryId(catObj.get("categoryId").getAsInt());
+            
+            // Check for categoryName or name
+            if (catObj.has("categoryName")) {
+                s.setCategoryName(catObj.get("categoryName").getAsString());
+            } else if (catObj.has("name")) {
+                s.setCategoryName(catObj.get("name").getAsString());
+            }
+        }
+        
+        // Fallback or override for flat properties
+        if (obj.has("categoryId") && s.getCategoryId() == 0) {
+            s.setCategoryId(obj.get("categoryId").getAsInt());
+        }
+        if (s.getCategoryName() == null) {
+            if (obj.has("categoryName")) {
+                s.setCategoryName(obj.get("categoryName").getAsString());
+            } else if (obj.has("name")) {
+                s.setCategoryName(obj.get("name").getAsString());
+            }
+        }
+        
         return s;
     }
 }

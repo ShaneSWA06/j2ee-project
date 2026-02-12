@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <% if (session.getAttribute("sessUserId") == null) { response.sendRedirect(request.getContextPath()+"/auth/login.jsp?err=notLoggedIn"); return; } %>
 <%@ page import="java.util.*" %>
-<%@ page import="model.CartItem" %>
+<%@ page import="model.*" %>
 <jsp:include page="../includes/header.jsp"><jsp:param name="title" value="Review Cart"/></jsp:include>
 <jsp:include page="../includes/navbar.jsp"/>
 
@@ -36,8 +36,7 @@
   <% } %>
 
   <%
-    @SuppressWarnings("unchecked")
-    ArrayList<CartItem> cart = (ArrayList<CartItem>) session.getAttribute("shoppingCart");
+    java.util.ArrayList<model.CartItem> cart = (java.util.ArrayList<model.CartItem>) session.getAttribute("shoppingCart");
 
     if (cart == null || cart.isEmpty()) {
   %>
