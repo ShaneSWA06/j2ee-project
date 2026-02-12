@@ -84,6 +84,9 @@ public class CheckoutServlet extends HttpServlet {
         ArrayList<CartItem> cart = (ArrayList<CartItem>) session.getAttribute("shoppingCart");
 
         if (cart == null || cart.isEmpty()) {
+            // Best Practice: Fail Fast
+            // If the cart is empty, we stop immediately. This avoids unnecessary processing
+            // and database connections, improving system efficiency.
             response.sendRedirect(request.getContextPath() + "/customer/viewCart.jsp?error=cart_empty");
             return;
         }
@@ -100,6 +103,11 @@ public class CheckoutServlet extends HttpServlet {
                 // Architectural Decision: Call external API ONLY
                 // We do not save to the local J2EE database to avoid "Split Brain" data issues.
                 // The Microservice is the single source of truth for Booking data.
+                
+                // Best Practice: Reservation Pattern
+                // We create the booking record BEFORE collecting payment.
+                // This ensures we have a record ID to attach to the payment metadata.
+                // If payment fails, we can clean up these "Pending" records later (via a cron job).
                 model.Booking apiBooking = new model.Booking();
                 apiBooking.setUserId(userId);
                 apiBooking.setServiceId(item.getServiceId());
@@ -110,6 +118,11 @@ public class CheckoutServlet extends HttpServlet {
                 apiBooking.setPickupAddress(item.getPickupAddress());
                 apiBooking.setDestinationAddress(item.getDestinationAddress());
                 apiBooking.setTotalPrice(item.getBasePrice());
+                
+                // Design Intent: Two-Phase Commit Pattern (Phase 1)
+                // We initially set the payment status to "Unpaid" and status to "Pending".
+                // This reserves the slot in the system but marks it as invalid for service delivery
+                // until the Payment Webhook or Success Callback confirms the transaction.
                 apiBooking.setPaymentStatus("Unpaid");
                 apiBooking.setStatus("Pending");
                 
@@ -130,7 +143,10 @@ public class CheckoutServlet extends HttpServlet {
             }
 
             // Financial Calculation: Apply 9% GST
-            // We calculate this on the server-side to prevent client-side tampering.
+            // Best Practice: Server-Side Calculation
+            // NEVER trust prices or totals sent from the client (browser).
+            // A malicious user could edit the HTML/JS to send "price=0.01".
+            // We always recalculate the total based on our trusted backend logic.
             double gstRate = 0.09;
             double gstAmount = totalAmount * gstRate;
             double grandTotal = totalAmount + gstAmount;
@@ -183,6 +199,10 @@ public class CheckoutServlet extends HttpServlet {
 					bookingIdsStr = bookingIdsStr.substring(0, 497) + "...";
 				}
 
+                // Best Practice: Metadata Tagging
+                // We attach the `bookingIds` to the PaymentIntent.
+                // This creates a permanent audit trail in the Stripe Dashboard.
+                // It allows support staff to look up a payment and see exactly what it paid for.
                 PaymentIntent intent = stripeService.createPaymentIntent(amountCents, "sgd", bookingIdsStr);
 
                 // Create local Payment record (Linked to first booking ID from API)

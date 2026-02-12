@@ -14,6 +14,23 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.StripeService;
 
+/**
+ * PaymentSuccessServlet handles the callback from Stripe after a successful transaction.
+ * <p>
+ * What it does:
+ * - Verifies the `payment_intent` ID returned by Stripe against the Stripe API.
+ * - Confirms the payment status is actually "succeeded" (prevents URL tampering).
+ * - Updates the local database: marks the Payment as "Paid".
+ * - Updates the Microservice: marks related Bookings as "Confirmed" and "Paid".
+ * - Clears the shopping cart and redirects to the "My Bookings" page.
+ * <p>
+ * Design Intent:
+ * - Security (Server-Side Verification): We never trust the client-side redirect alone.
+ *   Even if a user manually types `/PaymentSuccessServlet?payment_intent=xyz`, this servlet
+ *   calls `stripeService.retrievePaymentIntent(id)` to verify the status directly with Stripe.
+ * - Metadata Linking: We retrieve the list of `Booking IDs` stored in the Stripe PaymentIntent metadata.
+ *   This ensures we update exactly the right bookings without relying on fragile session state that might expire.
+ */
 @WebServlet("/PaymentSuccessServlet")
 public class PaymentSuccessServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -46,11 +63,14 @@ public class PaymentSuccessServlet extends HttpServlet {
 
             if ("succeeded".equals(intent.getStatus())) {
                 System.out.println("DEBUG - Stripe Payment Succeeded for ID: " + paymentIntentId);
-                // Update Payment Status
+                
+                // Design Intent: Idempotency & State Synchronization
+                // 1. Update Local Payment Record
                 boolean updated = paymentDAO.updatePaymentStatus(paymentIntentId, "Paid");
                 System.out.println("DEBUG - Local payment table update status: " + updated);
 
-                // Update Bookings Status using Metadata
+                // 2. Update Microservice Bookings
+                // We use the metadata attached during Checkout to find which bookings to confirm.
                 String bookingIdsStr = intent.getMetadata().get("Bookings"); // e.g., "[1, 2, 3]"
                 System.out.println("DEBUG - Booking IDs from Stripe Metadata: " + bookingIdsStr);
 
