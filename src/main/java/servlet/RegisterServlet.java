@@ -88,6 +88,12 @@ public class RegisterServlet extends HttpServlet {
             // Save user
             if (userDAO.createUser(user) != null) {
                 // Send verification email asynchronously
+                // Design Intent:
+                // - We spawn a new Thread here to prevent the UI from blocking.
+                // - SMTP operations can take 2-5 seconds. If we ran this on the main thread, 
+                //   the user would see a "Loading..." spinner for too long.
+                // - By using a separate thread, we redirect the user to the success page INSTANTLY 
+                //   while the email sends in the background.
                 String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
                 new Thread(() -> {
                     try {
