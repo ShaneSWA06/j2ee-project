@@ -6,9 +6,9 @@
 <div class="container feedback-portal">
   <div class="page-header animate-in">
     <div class="header-content">
-        <span class="badge">Quality Assurance</span>
+        <span class="badge">Your Opinion Matters</span>
         <h1>Share Your Experience</h1>
-        <p class="page-subtitle">Your feedback helps us maintain the highest standards of healthcare support.</p>
+        <p class="page-subtitle">Your feedback helps us provide better care.</p>
     </div>
   </div>
 
@@ -19,14 +19,14 @@
             
             <c:if test="${not empty param.err}">
                 <div class="alert alert-error">
-                    <i class="fas fa-exclamation-triangle"></i> Error: ${param.err}
+                    <i class="fas fa-exclamation-triangle"></i> Please check your information and try again.
                 </div>
             </c:if>
 
             <form method="post" action="${pageContext.request.contextPath}/customer/feedback?action=submit" class="modern-form">
                 <div class="section-title">
                     <i class="fas fa-star-half-alt"></i>
-                    Service Evaluation
+                    Rate Your Experience
                 </div>
 
                 <div class="form-group">

@@ -18,6 +18,9 @@
   
   <c:if test="${not empty param.err}">
     <div class="alert alert-danger">
+      Unable to complete the action. Please try again or contact support.
+    </div>
+  </c:if>
       Error: ${param.err}
     </div>
   </c:if>

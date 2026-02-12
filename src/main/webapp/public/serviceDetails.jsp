@@ -23,7 +23,7 @@
     <% } else { %>
       <h1>All Services</h1>
     <% } %>
-    <p class="page-subtitle">Find the right support service and book in minutes.</p>
+    <p class="page-subtitle">Browse and book the care services you need.</p>
   </div>
 
   <div class="search-panel">

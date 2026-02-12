@@ -9,8 +9,8 @@
     <div class="card card--glass p-5 max-w-2xl mx-auto">
         <div class="text-center">
             <div class="error-icon mb-4">⚠️</div>
-            <h1 class="mb-3">System Error</h1>
-            <p class="text-muted mb-4">Something went wrong on our end. We've been notified and are working on a fix.</p>
+            <h1 class="mb-3">Oops! Something Went Wrong</h1>
+            <p class="text-muted mb-4">We're sorry for the inconvenience. Our team has been notified and is working to fix this.</p>
         </div>
 
         <% if (request.getAttribute("jakarta.servlet.error.message") != null || exception != null) { %>

@@ -3,10 +3,10 @@
 <jsp:include page="../includes/header.jsp"><jsp:param name="title" value="My Feedback"/></jsp:include>
 <jsp:include page="../includes/navbar.jsp"/>
 <div class="container">
-<h1>My Feedback</h1>
-<c:if test="${not empty param.success}"><div class="alert alert-success">Feedback ${param.success}!</div></c:if>
-<c:if test="${not empty param.err}"><div class="alert alert-danger">Error: ${param.err}</div></c:if>
-<p><a href="${pageContext.request.contextPath}/customer/feedback?action=submit" class="btn btn-primary">Submit New Feedback</a></p>
+<h1>My Reviews</h1>
+<c:if test="${not empty param.success}"><div class="alert alert-success">Your feedback has been ${param.success eq 'submitted' ? 'submitted successfully' : 'updated'}!</div></c:if>
+<c:if test="${not empty param.err}"><div class="alert alert-danger">We're sorry, something went wrong. Please try again.</div></c:if>
+<p><a href="${pageContext.request.contextPath}/customer/feedback?action=submit" class="btn btn-primary">Write a Review</a></p>
 <c:choose>
 <c:when test="${not empty feedbackList}">
 <c:forEach var="feedback" items="${feedbackList}">
@@ -17,7 +17,7 @@
 <p style="font-size: 12px; color: #999;">Submitted: ${feedback.createdAt}</p>
 <c:if test="${not empty feedback.adminReply}">
 <div style="margin-top: 15px; padding: 15px; background-color: #f0f8ff; border-left: 4px solid #4a90e2; border-radius: 4px;">
-<p style="margin: 0 0 8px 0; font-weight: bold; color: #4a90e2;">💬 Admin Reply:</p>
+<p style="margin: 0 0 8px 0; font-weight: bold; color: #4a90e2;">💬 Our Response:</p>
 <p style="margin: 0; color: #333;">${feedback.adminReply}</p>
 <c:if test="${not empty feedback.adminReplyAt}">
 <p style="margin-top: 8px; font-size: 11px; color: #999;">Replied: ${feedback.adminReplyAt}</p>
@@ -27,7 +27,7 @@
 </div>
 </c:forEach>
 </c:when>
-<c:otherwise><p>No feedback yet.</p></c:otherwise>
+<c:otherwise><p>You haven't written any reviews yet. Share your experience with us!</p></c:otherwise>
 </c:choose>
 </div>
 <jsp:include page="../includes/footer.jsp"/>

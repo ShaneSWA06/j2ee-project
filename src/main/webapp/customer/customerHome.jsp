@@ -10,7 +10,7 @@
     <div class="welcome-text">
         <span class="greet">Good day,</span>
         <h1>Welcome Home, <%= String.valueOf(session.getAttribute("sessUserName")) %></h1>
-        <p class="subtitle">Access your health services, track bookings, and manage your personalized care profile.</p>
+        <p class="subtitle">Access your health services and manage your appointments.</p>
     </div>
   </div>
 
@@ -27,7 +27,7 @@
                 <span class="badge-count"><%= cartCount %></span>
             </div>
             <div class="banner-text">
-                <strong>Items in your cart</strong>
+                <strong>You have items in your cart</strong>
                 <p>You have pending bookings waiting for checkout.</p>
             </div>
         </div>

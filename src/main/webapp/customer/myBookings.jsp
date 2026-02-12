@@ -7,9 +7,9 @@
 <div class="container my-bookings">
   <div class="page-header animate-in">
     <div class="header-content">
-        <span class="badge">Booking Archive</span>
-        <h1>My Bookings</h1>
-        <p class="page-subtitle">Track your upcoming appointments, view service history, and monitor caregiver assignments.</p>
+        <span class="badge">Appointment History</span>
+        <h1>My Appointments</h1>
+        <p class="page-subtitle">View your upcoming and past appointments.</p>
     </div>
   </div>
 
@@ -20,7 +20,7 @@
   </c:if>
   <c:if test="${not empty param.err}">
     <div class="alert alert-error animate-in">
-        <i class="fas fa-exclamation-triangle"></i> Error: ${param.err}
+        <i class="fas fa-exclamation-triangle"></i> Sorry, we couldn't complete that action. Please try again or contact support.
     </div>
   </c:if>
 
@@ -38,7 +38,7 @@
                     <div class="booking-header">
                         <div class="service-identity">
                             <span class="service-name">${booking.serviceName}</span>
-                            <span class="booking-id">ID: BK-${booking.bookingId}</span>
+                            <span class="booking-id">Booking #${booking.bookingId}</span>
                         </div>
                         <div class="status-indicator">
                             <span class="status-badge ${booking.status.toLowerCase()}">

@@ -8,15 +8,15 @@
   <c:if test="${not empty param.success}">
     <div class="alert alert-success">
       <c:choose>
-        <c:when test="${param.success == 'created'}">Caregiver created successfully!</c:when>
+        <c:when test="${param.success == 'created'}">Caregiver added successfully!</c:when>
         <c:when test="${param.success == 'updated'}">Caregiver updated successfully!</c:when>
-        <c:when test="${param.success == 'deleted'}">Caregiver deleted successfully!</c:when>
+        <c:when test="${param.success == 'deleted'}">Caregiver removed successfully!</c:when>
       </c:choose>
     </div>
   </c:if>
   
   <c:if test="${not empty param.err}">
-    <div class="alert alert-danger">Error: ${param.err}</div>
+    <div class="alert alert-danger">Unable to complete the action. Please try again.</div>
   </c:if>
   
   <p><a href="${pageContext.request.contextPath}/admin/caregiver?action=create" class="btn btn-primary">Add New Caregiver</a></p>

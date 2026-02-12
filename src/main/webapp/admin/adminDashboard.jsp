@@ -5,21 +5,21 @@
 <div class="container admin-dashboard">
   <div class="dashboard-header animate-in">
     <div class="header-content">
-        <span class="badge">Operational Intelligence</span>
-        <h1>Admin Control Center</h1>
-        <p class="page-subtitle">Manage system resources, monitor live bookings, and access deep-learning analytics.</p>
+        <span class="badge">Management Dashboard</span>
+        <h1>Admin Dashboard</h1>
+        <p class="page-subtitle">Manage services, monitor appointments, and view system analytics.</p>
     </div>
   </div>
 
   <div class="stats-overview animate-in" style="animation-delay: 100ms;">
       <div class="card stat-card intel" onclick="window.open('https://assignmenttwo-fljm.onrender.com/user-ws/analytics.html', '_blank')">
           <div class="stat-glow"></div>
-          <div class="stat-icon"><i class="fas fa-microchip"></i></div>
+          <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
           <div class="stat-content">
-              <h3>MedCare AI Intelligence</h3>
-              <p>Real-time corporate analytics & market insights.</p>
+              <h3>Business Analytics</h3>
+              <p>View bookings and revenue insights.</p>
           </div>
-          <div class="stat-action">Launch Engine <i class="fas fa-external-link-alt"></i></div>
+          <div class="stat-action">View Reports <i class="fas fa-external-link-alt"></i></div>
       </div>
   </div>
 
@@ -27,8 +27,8 @@
     <!-- Core Management -->
     <div class="card management-card">
         <div class="card-icon"><i class="fas fa-layer-group"></i></div>
-        <h3>Inventory & Services</h3>
-        <p>Define healthcare categories and configure service parameters.</p>
+        <h3>Services & Categories</h3>
+        <p>Manage service offerings and categories.</p>
         <div class="card-actions">
             <a class="btn btn-secondary btn-sm" href="${pageContext.request.contextPath}/admin/category">Categories</a>
             <a class="btn btn-primary btn-sm" href="${pageContext.request.contextPath}/admin/service">Services</a>
@@ -37,56 +37,56 @@
 
     <div class="card management-card">
         <div class="card-icon"><i class="fas fa-user-md"></i></div>
-        <h3>Medical Staff</h3>
-        <p>Review caregiver credentials, availability, and assignments.</p>
+        <h3>Caregivers</h3>
+        <p>Manage caregiver profiles, availability, and assignments.</p>
         <div class="card-actions">
-            <a class="btn btn-primary btn-sm" href="${pageContext.request.contextPath}/admin/caregiver">Manage Professionals</a>
+            <a class="btn btn-primary btn-sm" href="${pageContext.request.contextPath}/admin/caregiver">View Caregivers</a>
         </div>
     </div>
 
     <div class="card management-card highlight">
         <div class="card-glow"></div>
         <div class="card-icon"><i class="fas fa-calendar-check"></i></div>
-        <h3>Booking Pipeline</h3>
-        <p>Monitor service requests, assign staff, and track fulfillment.</p>
+        <h3>Appointments</h3>
+        <p>View and manage service appointments and assignments.</p>
         <div class="card-actions">
-            <a class="btn btn-primary btn-sm" href="${pageContext.request.contextPath}/admin/booking">Active Pipeline</a>
+            <a class="btn btn-primary btn-sm" href="${pageContext.request.contextPath}/admin/booking">View Appointments</a>
         </div>
     </div>
 
     <div class="card management-card">
         <div class="card-icon"><i class="fas fa-credit-card"></i></div>
-        <h3>Financial Logs</h3>
-        <p>Audit sales transactions, Stripe signatures, and payment history.</p>
+        <h3>Payments</h3>
+        <p>View payment transactions and history.</p>
         <div class="card-actions">
-            <a class="btn btn-secondary btn-sm" href="${pageContext.request.contextPath}/admin/payments">Audit Logs</a>
+            <a class="btn btn-secondary btn-sm" href="${pageContext.request.contextPath}/admin/payments">View Payments</a>
         </div>
     </div>
 
     <div class="card management-card">
         <div class="card-icon"><i class="fas fa-users-cog"></i></div>
-        <h3>Client Relations</h3>
-        <p>Manage member profiles, history, and account settings.</p>
+        <h3>Customer Management</h3>
+        <p>View and manage customer profiles and accounts.</p>
         <div class="card-actions">
-            <a class="btn btn-secondary btn-sm" href="${pageContext.request.contextPath}/admin/client">Client Database</a>
+            <a class="btn btn-secondary btn-sm" href="${pageContext.request.contextPath}/admin/client">View Customers</a>
         </div>
     </div>
 
     <div class="card management-card">
         <div class="card-icon"><i class="fas fa-star"></i></div>
-        <h3>Quality Assurance</h3>
-        <p>Review customer feedback, ratings, and service reports.</p>
+        <h3>Customer Reviews</h3>
+        <p>View and respond to customer feedback and ratings.</p>
         <div class="card-actions">
-            <a class="btn btn-secondary btn-sm" href="${pageContext.request.contextPath}/admin/feedback">QA Dashboard</a>
+            <a class="btn btn-secondary btn-sm" href="${pageContext.request.contextPath}/admin/feedback">View Reviews</a>
         </div>
     </div>
 
     <div class="card management-card">
         <div class="card-icon"><i class="fas fa-chart-pie"></i></div>
-        <h3>System Reports</h3>
-        <p>Export operational data and generated performance reports.</p>
+        <h3>Reports</h3>
+        <p>View and export system reports and analytics.</p>
         <div class="card-actions">
-            <a class="btn btn-secondary btn-sm" href="${pageContext.request.contextPath}/admin/reports">Reporting Hub</a>
+            <a class="btn btn-secondary btn-sm" href="${pageContext.request.contextPath}/admin/reports">View Reports</a>
         </div>
     </div>
   </div>
