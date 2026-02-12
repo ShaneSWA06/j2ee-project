@@ -23,9 +23,6 @@ if (resetEmail == null) {
       <p style="margin: 8px 0 0 0;">
         A 6-digit verification code has been sent to <strong><%= resetEmail %></strong>.
       </p>
-      <p style="margin: 8px 0 0 0; font-size: 14px; color: #0c5460;">
-        <strong>Demo Note:</strong> Check your Eclipse Console to see the code!
-      </p>
     </div>
   <% } %>
 
@@ -55,7 +52,7 @@ if (resetEmail == null) {
                pattern="[0-9]{6}"
                maxlength="6"/>
         <small style="color: #666; display: block; margin-top: 4px;">
-          Enter the 6-digit code from the console
+          Check your email for the 6-digit verification code.
         </small>
       </div>
 
@@ -83,13 +80,6 @@ if (resetEmail == null) {
         </a>
       </div>
     </form>
-  </div>
-
-  <div style="background: #fff3cd; border: 2px solid #ffc107; color: #856404; padding: 15px; border-radius: 8px; margin-top: 20px;">
-    <p style="margin: 0; font-size: 14px;">
-      <strong>Tip:</strong> The verification code is displayed in your Eclipse Console window.
-      Look for "PASSWORD RESET REQUEST" in the console output.
-    </p>
   </div>
 </div>
 <jsp:include page="../includes/footer.jsp"/>

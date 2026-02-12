@@ -43,11 +43,5 @@
     </form>
   </div>
 
-  <div style="background: #e6f2ff; border: 2px solid #1f4a7c; padding: 15px; border-radius: 8px; margin-top: 20px;">
-    <p style="margin: 0; font-size: 14px; color: #1f4a7c;">
-      <strong>Note:</strong> For this demonstration, the verification code will be displayed in the server console
-      (Eclipse Console tab). In a production environment, this would be sent to your email.
-    </p>
-  </div>
 </div>
 <jsp:include page="../includes/footer.jsp"/>

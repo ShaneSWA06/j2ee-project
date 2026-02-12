@@ -77,4 +77,41 @@ public class EmailService {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Sends a password reset verification code email.
+     */
+    public static void sendPasswordResetEmail(String toEmail, String code, String userName) {
+        final String username = properties.getProperty("mail.username");
+        final String password = properties.getProperty("mail.password");
+
+        Session session = Session.getInstance(properties, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        });
+
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+            message.setSubject("Password Reset Request");
+
+            String htmlContent = "<h3>Hello " + userName + ",</h3>"
+                    + "<p>We received a request to reset your password. Please use the following verification code:</p>"
+                    + "<h2 style=\"color: #5e6ad2;\">" + code + "</h2>"
+                    + "<p>If you did not request this, please ignore this email.</p>";
+
+            message.setContent(htmlContent, "text/html; charset=utf-8");
+
+            Transport.send(message);
+
+            System.out.println("Password reset email sent to " + toEmail);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
 }

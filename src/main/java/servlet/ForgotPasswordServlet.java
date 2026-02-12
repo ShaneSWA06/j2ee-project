@@ -78,14 +78,16 @@ public class ForgotPasswordServlet extends HttpServlet {
                     HttpSession session = request.getSession();
                     session.setAttribute("resetEmail", email);
 
-                    // SIMULATED EMAIL: Print code to console instead of sending email
-                    System.out.println("\n========================================");
-                    System.out.println("PASSWORD RESET REQUEST");
-                    System.out.println("========================================");
-                    System.out.println("Customer: " + name);
-                    System.out.println("Email: " + email);
-                    System.out.println("Verification Code: " + resetToken);
-                    System.out.println("========================================\n");
+                    // Send real email via EmailService
+                    try {
+                        service.EmailService.sendPasswordResetEmail(email, resetToken, name);
+                    } catch (Exception e) {
+                        System.err.println("Failed to send reset email: " + e.getMessage());
+                        // Even if email fails, we continue to reset page so user can see code in console if needed for dev
+                    }
+
+                    // Log to console for debugging/audit
+                    System.out.println("DEBUG - Password reset email sent to: " + email + " with code: " + resetToken);
 
                     // Redirect to reset password page
                     response.sendRedirect(request.getContextPath() +
