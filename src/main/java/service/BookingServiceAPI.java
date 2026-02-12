@@ -23,22 +23,45 @@ import model.User;
 import java.time.LocalDateTime;
 
 /**
- * BookingServiceAPI - Client for Spring Boot Booking REST API
+ * BookingServiceAPI acts as a Client Adapter for the Spring Boot Microservice.
+ * <p>
+ * What it does:
+ * - Provides a Java interface for the J2EE application to communicate with the external REST API.
+ * - Handles HTTP requests (GET, POST, PUT, DELETE) to the microservice endpoints.
+ * - Parses JSON responses into Java `Booking` objects.
+ * <p>
+ * Design Intent:
+ * 1. Decoupling: This class isolates the legacy J2EE servlet container from the modern Spring Boot REST API.
+ *    The frontend (JSP/Servlets) doesn't need to know about HTTP calls or JSON parsing.
+ * 2. Resilience: All network operations are wrapped in try-catch blocks to prevent 
+ *    cascading failures from crashing the main application.
+ * 3. Centralization: It serves as the single source of truth for all booking-related 
+ *    external communications, making it easier to mock for testing or swap implementations.
  */
 public class BookingServiceAPI {
 
+    // The base URL for the microservice. In a production environment, this should be injected
+    // via environment variables or a configuration server to support different deployment stages (Dev/Stage/Prod).
     private static final String API_BASE_URL = "https://assignmenttwo-fljm.onrender.com/user-ws/api/bookings";
     private UserDAO userDAO;
 
     public BookingServiceAPI() {
+        // We initialize DAOs here to support hybrid data fetching if the API response 
+        // needs to be enriched with local database data (e.g., User details).
         this.userDAO = DAOFactory.getUserDAO();
     }
 
+    /**
+     * Fetches bookings that haven't been assigned a caregiver yet.
+     * Used by the Admin Dashboard to show pending work.
+     */
     public List<Booking> getUnassignedBookings() {
         try {
             String json = sendRequest(API_BASE_URL + "/unassigned", "GET", null);
             return parseBookingList(json);
         } catch (Exception e) {
+            // We log the error but return an empty list to allow the UI to render partially 
+            // rather than showing a 500 error page to the user.
             e.printStackTrace();
             return new ArrayList<>();
         }
@@ -95,13 +118,22 @@ public class BookingServiceAPI {
         }
     }
     
+    /**
+     * Updates an existing booking.
+     * <p>
+     * Implementation Note:
+     * We manually build the JSON string here instead of using a library like Jackson/Gson
+     * to avoid adding heavy dependencies to the legacy J2EE classpath. 
+     * This is a trade-off: higher maintenance cost for lighter deployment size.
+     */
     public boolean updateBooking(int bookingId, Booking booking) {
         try {
-            // Convert Date and Time to String format (ISO format)
+            // Convert Date and Time to String format (ISO 8601 preferred by REST APIs)
             String bookingDateStr = booking.getBookingDate() != null ? booking.getBookingDate().toString() : "";
             String bookingTimeStr = booking.getBookingTime() != null ? booking.getBookingTime().toString() : "";
             
-            // Escape special characters in string fields
+            // Security: We must escape special characters to prevent JSON injection attacks
+            // since we are building the JSON string manually.
             String notesStr = escapeJson(booking.getNotes());
             
             // Build JSON manually

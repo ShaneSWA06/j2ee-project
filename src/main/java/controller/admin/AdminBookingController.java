@@ -22,7 +22,18 @@ import model.Caregiver;
 import model.Service;
 
 /**
- * AdminBookingController - Handles booking management for admins via Spring Boot API
+ * AdminBookingController - Handles booking management for admins
+ * <p>
+ * What it does:
+ * - Lists bookings with filtering options (e.g., "unassigned" vs "all").
+ * - Provides forms for editing booking details (assigning caregivers, changing status).
+ * - Handles the deletion of bookings.
+ * - Interacts with `BookingServiceAPI` to fetch and update data.
+ * <p>
+ * Architecture: Hybrid MVC Controller
+ * - Acts as the "Controller" in MVC, receiving requests and selecting the correct "View" (JSP).
+ * - Integration: Uses `BookingServiceAPI` to fetch data, demonstrating how a legacy Servlet 
+ *   can consume data from a modern Microservice backend transparently.
  */
 @WebServlet("/admin/booking")
 public class AdminBookingController extends HttpServlet {

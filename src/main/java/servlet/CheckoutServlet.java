@@ -25,8 +25,20 @@ import model.Payment;
 import service.StripeService;
 
 /**
- * CheckoutServlet processes the shopping cart checkout
- * Initiates Stripe payment flow
+ * CheckoutServlet processes the shopping cart checkout and initiates the payment flow.
+ * <p>
+ * What it does:
+ * - Validates the user's session and shopping cart.
+ * - Iterates through cart items to create bookings via the external Booking Service API.
+ * - Calculates the total amount including GST.
+ * - Creates a Stripe PaymentIntent for the total amount.
+ * - Redirects the user to the payment page with the client secret.
+ * <p>
+ * Design Pattern: Post-Redirect-Get (PRG)
+ * - We process the heavy logic (Booking creation, Stripe Intent) in this servlet.
+ * - On success, we DO NOT render a JSP directly. Instead, we redirect to `payment.jsp`.
+ * - Reason: This prevents the user from accidentally re-submitting the order (and getting charged twice)
+ *   if they refresh the page.
  */
 @WebServlet("/CheckoutServlet")
 public class CheckoutServlet extends HttpServlet {
@@ -36,6 +48,7 @@ public class CheckoutServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
+        // Dependency Injection via Factory pattern to decouple implementation details
         paymentDAO = DAOFactory.getPaymentDAO();
         stripeService = new StripeService();
     }
@@ -52,11 +65,15 @@ public class CheckoutServlet extends HttpServlet {
         processCheckout(request, response);
     }
 
+    /**
+     * Centralized processing method to handle both GET and POST requests uniformly.
+     */
     private void processCheckout(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
 
+        // Security Check: Ensure user is logged in before processing any financial transaction
         Integer userId = (Integer) session.getAttribute("sessUserId");
         if (userId == null) {
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp?err=notLoggedIn");
@@ -78,8 +95,11 @@ public class CheckoutServlet extends HttpServlet {
 
             double totalAmount = 0;
 
+            // Iterate through cart items and create bookings in the external Microservice
             for (CartItem item : cart) {
-                // Call external API ONLY (Removes duplicate database insert)
+                // Architectural Decision: Call external API ONLY
+                // We do not save to the local J2EE database to avoid "Split Brain" data issues.
+                // The Microservice is the single source of truth for Booking data.
                 model.Booking apiBooking = new model.Booking();
                 apiBooking.setUserId(userId);
                 apiBooking.setServiceId(item.getServiceId());
@@ -109,13 +129,15 @@ public class CheckoutServlet extends HttpServlet {
                 return;
             }
 
-            // Calculate Total with GST (9%)
+            // Financial Calculation: Apply 9% GST
+            // We calculate this on the server-side to prevent client-side tampering.
             double gstRate = 0.09;
             double gstAmount = totalAmount * gstRate;
             double grandTotal = totalAmount + gstAmount;
             long amountCents = Math.round(grandTotal * 100);
 
-            // 3. Load Stripe Keys from properties (Reload on every request to ensure consistency)
+            // Dynamic Key Loading:
+            // We attempt to reload keys here to allow for key rotation without restarting the server.
             String stripePublicKey = null;
             String stripeSecretKey = null;
             try {

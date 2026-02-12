@@ -22,6 +22,17 @@ import model.Service;
 
 /**
  * AdminServiceController - Handles all service management operations
+ * <p>
+ * What it does:
+ * - Lists all available services.
+ * - Provides forms to create and edit services.
+ * - Handles file uploads for service images using Servlet 3.0 multipart support.
+ * - Processes form submissions to update the database via `ServiceDAO`.
+ * - Enforces admin authentication.
+ * <p>
+ * Design Note:
+ * This controller uses @MultipartConfig to enable native Servlet 3.0 file upload support.
+ * We avoid using external libraries like Apache Commons FileUpload to keep the dependency tree light.
  */
 @WebServlet("/admin/service")
 @MultipartConfig(
@@ -44,6 +55,9 @@ public class AdminServiceController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        // Security Barrier:
+        // We perform an explicit role check at the entry point of the controller.
+        // This ensures that even if a user guesses the URL, they cannot access admin functions.
         if (!isAdminLoggedIn(request)) {
             response.sendRedirect(request.getContextPath() + "/auth/login.jsp?err=unauthorised");
             return;
@@ -266,10 +280,15 @@ public class AdminServiceController extends HttpServlet {
             return null;
         }
         
+        // Sanitize the filename to remove any path information that might have been sent by the browser
         String fileName = Paths.get(submittedFileName).getFileName().toString();
+        
+        // Generate a unique filename using UUID to prevent naming collisions
+        // if two users upload different files with the same name (e.g., "image.jpg").
         String uniqueFileName = UUID.randomUUID().toString() + "_" + fileName;
         
-        // Get upload directory path
+        // Determine the upload directory relative to the web application's root.
+        // We use getRealPath("") to find where the WAR/folder is deployed on the server's filesystem.
         String uploadDir = getServletContext().getRealPath("") + java.io.File.separator + "uploads" + java.io.File.separator + subDir;
         java.io.File uploadDirFile = new java.io.File(uploadDir);
         if (!uploadDirFile.exists()) {
@@ -279,6 +298,7 @@ public class AdminServiceController extends HttpServlet {
         String filePath = uploadDir + java.io.File.separator + uniqueFileName;
         filePart.write(filePath);
         
+        // Return relative path for database storage
         return "uploads/" + subDir + "/" + uniqueFileName;
     }
 

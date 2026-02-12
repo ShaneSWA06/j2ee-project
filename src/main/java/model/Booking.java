@@ -5,7 +5,18 @@ import java.sql.Date;
 import java.sql.Time;
 
 /**
- * Booking represents a service booking in the booking table
+ * Booking - Data Transfer Object (DTO) & Domain Model
+ * <p>
+ * What it does:
+ * - Encapsulates all data related to a service appointment.
+ * - Maps directly to the `bookings` table columns (bookingId, userId, serviceId, etc.).
+ * - Includes additional fields for UI display (userName, serviceName) and API responses.
+ * <p>
+ * Data Modeling Intent:
+ * - Hybrid Structure: This class represents a union of the local database schema (Legacy)
+ *   and the external Microservice API schema (Modern).
+ * - `transient` fields (like userName, serviceName) are used for UI display efficiency,
+ *   avoiding the "N+1 Select" problem by fetching related data in joined queries.
  */
 public class Booking implements Serializable {
     private static final long serialVersionUID = 1L;

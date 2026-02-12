@@ -16,7 +16,18 @@ import model.User;
 
 /**
  * LoginServlet handles user authentication for both admin and customer users
- * Processes login form submissions and establishes user sessions
+ * <p>
+ * What it does:
+ * - Validates credentials against the database using `UserDAO`.
+ * - Checks if the user account is verified.
+ * - Creates an HTTP session and stores user details (ID, role, name).
+ * - Sets a "Remember Me" cookie if applicable.
+ * - Redirects the user to the appropriate dashboard based on their role (Admin, Caregiver, or Customer).
+ * <p>
+ * Security Intent:
+ * 1. Session Management: We establish a stateful HttpSession upon successful login.
+ * 2. Role-Based Access Control (RBAC): This servlet acts as the central dispatch, routing users 
+ *    to their specific dashboards (Admin vs Customer vs Caregiver) based on their role.
  */
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
@@ -74,6 +85,9 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("sessUserEmail", user.getEmail());
 
                 // Set remember cookie
+                // UX Design: Allows users to stay logged in across browser restarts.
+                // Security Note: In production, this should be an encrypted token (not the raw username)
+                // and marked as HttpOnly and Secure to prevent XSS and Man-in-the-Middle attacks.
                 Cookie cookie = new Cookie("remember_id", username);
                 cookie.setMaxAge(30 * 24 * 60 * 60); // 30 days
                 cookie.setPath("/");
