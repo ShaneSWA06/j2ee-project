@@ -284,19 +284,34 @@ public class CaregiverServiceAPI {
         if (obj.has("caregiverId")) caregiver.setCaregiverId(obj.get("caregiverId").getAsInt());
         if (obj.has("userId") && !obj.get("userId").isJsonNull()) 
             caregiver.setUserId(obj.get("userId").getAsInt());
-        if (obj.has("name")) caregiver.setName(obj.get("name").getAsString());
-        if (obj.has("email")) caregiver.setEmail(obj.get("email").getAsString());
-        if (obj.has("phone")) caregiver.setPhone(obj.get("phone").getAsString());
-        if (obj.has("qualifications")) caregiver.setQualifications(obj.get("qualifications").getAsString());
-        if (obj.has("specialties")) caregiver.setSpecialties(obj.get("specialties").getAsString());
-        if (obj.has("experience") && !obj.get("experience").isJsonNull()) 
-            caregiver.setExperience(obj.get("experience").getAsInt());
-        if (obj.has("bio")) caregiver.setBio(obj.get("bio").getAsString());
-        if (obj.has("available")) caregiver.setAvailable(obj.get("available").getAsBoolean());
-        if (obj.has("availableHours")) caregiver.setAvailableHours(obj.get("availableHours").getAsString());
+        if (obj.has("name") && !obj.get("name").isJsonNull()) 
+            caregiver.setName(obj.get("name").getAsString());
+        if (obj.has("email") && !obj.get("email").isJsonNull()) 
+            caregiver.setEmail(obj.get("email").getAsString());
+        if (obj.has("phone") && !obj.get("phone").isJsonNull()) 
+            caregiver.setPhone(obj.get("phone").getAsString());
+        if (obj.has("qualifications") && !obj.get("qualifications").isJsonNull()) 
+            caregiver.setQualifications(obj.get("qualifications").getAsString());
+        if (obj.has("specialties") && !obj.get("specialties").isJsonNull()) 
+            caregiver.setSpecialties(obj.get("specialties").getAsString());
+        if (obj.has("experienceYears") && !obj.get("experienceYears").isJsonNull()) 
+            caregiver.setExperienceYears(obj.get("experienceYears").getAsInt());
+        else if (obj.has("experience") && !obj.get("experience").isJsonNull()) 
+            caregiver.setExperienceYears(obj.get("experience").getAsInt());
+        if (obj.has("bio") && !obj.get("bio").isJsonNull()) 
+            caregiver.setBio(obj.get("bio").getAsString());
+        if (obj.has("isAvailable") && !obj.get("isAvailable").isJsonNull()) 
+            caregiver.setAvailable(obj.get("isAvailable").getAsBoolean());
+        else if (obj.has("available") && !obj.get("available").isJsonNull()) 
+            caregiver.setAvailable(obj.get("available").getAsBoolean());
+        if (obj.has("availableHours") && !obj.get("availableHours").isJsonNull()) 
+            caregiver.setAvailableHours(obj.get("availableHours").getAsString());
         if (obj.has("rating") && !obj.get("rating").isJsonNull()) 
             caregiver.setRating(obj.get("rating").getAsBigDecimal());
-        if (obj.has("profileImage")) caregiver.setProfileImage(obj.get("profileImage").getAsString());
+        if (obj.has("profileImage") && !obj.get("profileImage").isJsonNull()) 
+            caregiver.setProfileImage(obj.get("profileImage").getAsString());
+        if (obj.has("companyId") && !obj.get("companyId").isJsonNull()) 
+            caregiver.setCompanyId(obj.get("companyId").getAsInt());
         
         return caregiver;
     }
