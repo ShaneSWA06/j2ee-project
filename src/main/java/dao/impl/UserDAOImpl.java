@@ -203,7 +203,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public boolean updateUser(User user) throws SQLException {
-        String sql = "UPDATE app_user SET username = ?, email = ?, name = ?, role = ?, phone = ?, address = ?, relationship = ?, care_notes = ?, medical_history = ?, allergies = ? WHERE user_id = ?";
+        String sql = "UPDATE app_user SET username = ?, email = ?, name = ?, role = ?, phone = ?, address = ?, relationship = ?, care_notes = ?, medical_history = ?, allergies = ?, password = ? WHERE user_id = ?";
         
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -218,7 +218,8 @@ public class UserDAOImpl implements UserDAO {
             ps.setString(8, user.getCareNotes());
             ps.setString(9, user.getMedicalHistory());
             ps.setString(10, user.getAllergies());
-            ps.setInt(11, user.getUserId());
+            ps.setString(11, user.getPassword());
+            ps.setInt(12, user.getUserId());
             
             return ps.executeUpdate() > 0;
         }

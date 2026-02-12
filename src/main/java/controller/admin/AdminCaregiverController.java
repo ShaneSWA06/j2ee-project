@@ -235,6 +235,12 @@ public class AdminCaregiverController extends HttpServlet {
         // Handle image upload
         Part filePart = request.getPart("image");
         String imageUrl = saveImage(filePart, "caregivers");
+        
+        if (imageUrl == null) {
+            // Use default image if none uploaded
+            imageUrl = "default_profile.png"; 
+        }
+        
         caregiver.setProfileImage(imageUrl);
 
         // Create associated User account if email is provided

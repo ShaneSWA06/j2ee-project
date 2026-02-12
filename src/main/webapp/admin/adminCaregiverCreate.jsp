@@ -27,9 +27,9 @@
 <label for="bio">Bio</label>
 <textarea id="bio" name="bio" rows="4"></textarea>
 </div>
-<div class="form-group">
+<div class="form-group" style="display:none;">
 <label for="image">Profile Image</label>
-<input type="file" id="image" name="image" accept="image/*" class="form-control">
+<input type="hidden" name="image_default" value="true">
 </div>
 <div class="form-group">
 <label for="phone">Phone</label>
