@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import dao.CaregiverDAO;
+import service.CaregiverServiceAPI;
 import dao.DAOFactory;
 import dao.FeedbackDAO;
 import jakarta.servlet.ServletException;
@@ -23,12 +23,12 @@ import model.Feedback;
 public class AdminFeedbackController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private FeedbackDAO feedbackDAO;
-    private CaregiverDAO caregiverDAO;
+    private CaregiverServiceAPI caregiverAPI;
 
     @Override
     public void init() throws ServletException {
         feedbackDAO = DAOFactory.getFeedbackDAO();
-        caregiverDAO = DAOFactory.getCaregiverDAO();
+        caregiverAPI = new CaregiverServiceAPI();
     }
 
     @Override
@@ -113,7 +113,7 @@ public class AdminFeedbackController extends HttpServlet {
     private void showCreateForm(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
 
-        List<Caregiver> caregivers = caregiverDAO.getAllCaregivers();
+        List<Caregiver> caregivers = caregiverAPI.getAllCaregivers();
         request.setAttribute("caregivers", caregivers);
         request.getRequestDispatcher("/admin/adminFeedbackCreate.jsp").forward(request, response);
     }
@@ -165,7 +165,7 @@ public class AdminFeedbackController extends HttpServlet {
             return;
         }
 
-        List<Caregiver> caregivers = caregiverDAO.getAllCaregivers();
+        List<Caregiver> caregivers = caregiverAPI.getAllCaregivers();
         request.setAttribute("feedback", feedback);
         request.setAttribute("caregivers", caregivers);
         request.getRequestDispatcher("/admin/adminFeedbackEdit.jsp").forward(request, response);

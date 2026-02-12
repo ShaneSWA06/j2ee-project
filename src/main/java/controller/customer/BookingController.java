@@ -7,9 +7,8 @@ import java.sql.Time;
 import java.util.List;
 
 import service.BookingServiceAPI;
-import dao.CaregiverDAO;
-import dao.DAOFactory;
-import dao.ServiceDAO;
+import service.ServiceAPI;
+import service.CaregiverServiceAPI;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -26,14 +25,14 @@ import model.Service;
 public class BookingController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private BookingServiceAPI bookingAPI;
-    private ServiceDAO serviceDAO;
-    private CaregiverDAO caregiverDAO;
+    private ServiceAPI serviceAPI;
+    private CaregiverServiceAPI caregiverAPI;
 
     @Override
     public void init() throws ServletException {
         bookingAPI = new BookingServiceAPI();
-        serviceDAO = DAOFactory.getServiceDAO();
-        caregiverDAO = DAOFactory.getCaregiverDAO();
+        serviceAPI = new ServiceAPI();
+        caregiverAPI = new CaregiverServiceAPI();
     }
 
     @Override
@@ -150,7 +149,7 @@ public class BookingController extends HttpServlet {
             }
 
             // Validate service exists and is active
-            Service service = serviceDAO.getServiceById(serviceId);
+            Service service = serviceAPI.getServiceById(serviceId);
             if (service == null || !service.isActive()) {
                 response.sendRedirect(request.getContextPath() +
                     "/public/serviceDetails.jsp?err=" +

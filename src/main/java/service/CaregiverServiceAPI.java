@@ -54,6 +54,19 @@ public class CaregiverServiceAPI {
     }
     
     /**
+     * Get caregiver by User ID
+     */
+    public Caregiver getCaregiverByUserId(int userId) {
+        try {
+            String json = sendRequest(API_BASE_URL + "/user/" + userId, "GET", null);
+            return parseCaregiver(json);
+        } catch (Exception e) {
+            System.err.println("Error fetching caregiver by user ID: " + e.getMessage());
+            return null;
+        }
+    }
+    
+    /**
      * Search caregivers by specialty
      */
     public List<Caregiver> searchBySpecialty(String specialty) {

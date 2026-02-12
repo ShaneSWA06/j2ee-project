@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import dao.CaregiverDAO;
+import service.CaregiverServiceAPI;
 import dao.DAOFactory;
 import dao.FeedbackDAO;
 import jakarta.servlet.ServletException;
@@ -23,12 +23,12 @@ import model.Feedback;
 public class FeedbackController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private FeedbackDAO feedbackDAO;
-    private CaregiverDAO caregiverDAO;
+    private CaregiverServiceAPI caregiverAPI;
 
     @Override
     public void init() throws ServletException {
         feedbackDAO = DAOFactory.getFeedbackDAO();
-        caregiverDAO = DAOFactory.getCaregiverDAO();
+        caregiverAPI = new CaregiverServiceAPI();
     }
 
     @Override
@@ -104,7 +104,7 @@ public class FeedbackController extends HttpServlet {
     private void showSubmitForm(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
 
-        List<Caregiver> caregivers = caregiverDAO.getAllCaregivers();
+        List<Caregiver> caregivers = caregiverAPI.getAllCaregivers();
         request.setAttribute("caregivers", caregivers);
         request.getRequestDispatcher("/customer/submitFeedback.jsp").forward(request, response);
     }

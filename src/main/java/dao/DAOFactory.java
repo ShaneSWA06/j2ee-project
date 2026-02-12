@@ -1,10 +1,7 @@
 package dao;
 
-import dao.impl.CaregiverDAOImpl;
-import dao.impl.CategoryDAOImpl;
 import dao.impl.FeedbackDAOImpl;
 import dao.impl.PaymentDAOImpl;
-import dao.impl.ServiceDAOImpl;
 import dao.impl.UserDAOImpl;
 
 /**
@@ -18,27 +15,6 @@ public class DAOFactory {
      */
     public static UserDAO getUserDAO() {
         return new UserDAOImpl();
-    }
-
-    /**
-     * Get CategoryDAO instance
-     */
-    public static CategoryDAO getCategoryDAO() {
-        return new CategoryDAOImpl();
-    }
-
-    /**
-     * Get ServiceDAO instance
-     */
-    public static ServiceDAO getServiceDAO() {
-        return new ServiceDAOImpl();
-    }
-
-    /**
-     * Get CaregiverDAO instance
-     */
-    public static CaregiverDAO getCaregiverDAO() {
-        return new CaregiverDAOImpl();
     }
 
     /**

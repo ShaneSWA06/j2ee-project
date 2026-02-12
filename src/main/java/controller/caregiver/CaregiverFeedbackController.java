@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-import dao.CaregiverDAO;
+import service.CaregiverServiceAPI;
 import dao.DAOFactory;
 import dao.FeedbackDAO;
 import jakarta.servlet.ServletException;
@@ -23,12 +23,12 @@ import model.Feedback;
 public class CaregiverFeedbackController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private FeedbackDAO feedbackDAO;
-    private CaregiverDAO caregiverDAO;
+    private CaregiverServiceAPI caregiverAPI;
 
     @Override
     public void init() throws ServletException {
         feedbackDAO = DAOFactory.getFeedbackDAO();
-        caregiverDAO = DAOFactory.getCaregiverDAO();
+        caregiverAPI = new CaregiverServiceAPI();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class CaregiverFeedbackController extends HttpServlet {
 
         try {
             // Get caregiver profile by user ID
-            Caregiver caregiver = caregiverDAO.getCaregiverByUserId(userId);
+            Caregiver caregiver = caregiverAPI.getCaregiverByUserId(userId);
             
             if (caregiver == null) {
                 response.sendRedirect(request.getContextPath() + "/mvc/caregiver/dashboard?err=no_caregiver_profile");

@@ -8,9 +8,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import service.BookingServiceAPI;
-import dao.CaregiverDAO;
-import dao.DAOFactory;
-import dao.ServiceDAO;
+import service.CaregiverServiceAPI;
+import service.ServiceAPI;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -23,30 +22,19 @@ import model.Service;
 
 /**
  * AdminBookingController - Handles booking management for admins
- * <p>
- * What it does:
- * - Lists bookings with filtering options (e.g., "unassigned" vs "all").
- * - Provides forms for editing booking details (assigning caregivers, changing status).
- * - Handles the deletion of bookings.
- * - Interacts with `BookingServiceAPI` to fetch and update data.
- * <p>
- * Architecture: Hybrid MVC Controller
- * - Acts as the "Controller" in MVC, receiving requests and selecting the correct "View" (JSP).
- * - Integration: Uses `BookingServiceAPI` to fetch data, demonstrating how a legacy Servlet 
- *   can consume data from a modern Microservice backend transparently.
  */
 @WebServlet("/admin/booking")
 public class AdminBookingController extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private BookingServiceAPI bookingAPI;
-    private ServiceDAO serviceDAO;
-    private CaregiverDAO caregiverDAO;
+    private ServiceAPI serviceAPI;
+    private CaregiverServiceAPI caregiverAPI;
 
     @Override
     public void init() throws ServletException {
         bookingAPI = new BookingServiceAPI();
-        serviceDAO = DAOFactory.getServiceDAO();
-        caregiverDAO = DAOFactory.getCaregiverDAO();
+        serviceAPI = new ServiceAPI();
+        caregiverAPI = new CaregiverServiceAPI();
     }
 
     @Override
@@ -149,8 +137,8 @@ public class AdminBookingController extends HttpServlet {
             return;
         }
 
-        List<Service> services = serviceDAO.getAllServices();
-        List<Caregiver> caregivers = caregiverDAO.getAllCaregivers();
+        List<Service> services = serviceAPI.getAllServices();
+        List<Caregiver> caregivers = caregiverAPI.getAllCaregivers();
         
         // Sort caregivers: Available first, then by name
         caregivers.sort(Comparator.comparing(Caregiver::isAvailable).reversed()
