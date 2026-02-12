@@ -1,32 +1,32 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <%@ taglib uri="jakarta.tags.fmt" prefix="fmt" %>
-<jsp:include page="../includes/header.jsp"><jsp:param name="title" value="Manage Bookings"/></jsp:include>
+<jsp:include page="../includes/header.jsp"><jsp:param name="title" value="Appointments"/></jsp:include>
 <jsp:include page="../includes/navbar.jsp"/>
 <div class="container">
-  <h1>Bookings</h1>
+  <h1>Appointments</h1>
   
   <div style="margin-bottom: 20px;">
-    <a href="${pageContext.request.contextPath}/admin/booking" class="btn ${viewType == 'all' || empty viewType ? 'btn-primary' : 'btn-secondary'}" style="margin-right: 10px;">All Bookings</a>
-    <a href="${pageContext.request.contextPath}/admin/booking?view=unassigned" class="btn ${viewType == 'unassigned' ? 'btn-primary' : 'btn-secondary'}">Unassigned Bookings</a>
+    <a href="${pageContext.request.contextPath}/admin/booking" class="btn ${viewType == 'all' || empty viewType ? 'btn-primary' : 'btn-secondary'}" style="margin-right: 10px;">All Appointments</a>
+    <a href="${pageContext.request.contextPath}/admin/booking?view=unassigned" class="btn ${viewType == 'unassigned' ? 'btn-primary' : 'btn-secondary'}">Pending Assignment</a>
   </div>
 
   <c:if test="${not empty param.success}">
     <div class="alert alert-success">
       <c:choose>
-        <c:when test="${param.success == 'updated'}">Booking updated successfully!</c:when>
-        <c:when test="${param.success == 'deleted'}">Booking deleted successfully!</c:when>
+        <c:when test="${param.success == 'updated'}">Appointment updated successfully!</c:when>
+        <c:when test="${param.success == 'deleted'}">Appointment removed successfully!</c:when>
       </c:choose>
     </div>
   </c:if>
   
   <c:if test="${not empty param.err}">
-    <div class="alert alert-danger">Error: ${param.err}</div>
+    <div class="alert alert-danger">Unable to complete the action. Please try again.</div>
   </c:if>
   
   <table style="width:100%; border-collapse:collapse; margin-top:20px;">
     <tr>
-      <th style="text-align: left; padding: 12px; background: var(--background-alt);">ID</th>
+      <th style="text-align: left; padding: 12px; background: var(--background-alt);">Booking #</th>
       <th style="text-align: left; padding: 12px; background: var(--background-alt);">Customer</th>
       <th style="text-align: left; padding: 12px; background: var(--background-alt);">Service</th>
       <th style="text-align: left; padding: 12px; background: var(--background-alt);">Caregiver</th>

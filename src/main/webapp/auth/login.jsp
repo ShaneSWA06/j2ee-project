@@ -40,8 +40,10 @@ if (cookies != null) {
             Invalid username/email or password.
           <% } else if ("not_verified".equals(errorMsg)) { %>
             Your email is not verified. Check your inbox.
-          <% } else if ("notloggedin".equals(errorMsg)) { %>
-            Session expired. Please login again.
+          <% } else if ("notloggedin".equals(errorMsg) || "notLoggedIn".equals(errorMsg)) { %>
+            Please log in to continue.
+          <% } else if ("unauthorised".equals(errorMsg)) { %>
+            You don't have permission to access that page.
           <% } else { %>
             <%= errorMsg %>
           <% } %>

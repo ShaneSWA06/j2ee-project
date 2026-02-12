@@ -17,7 +17,8 @@
   </c:if>
   
   <c:if test="${not empty param.err}">
-    <div class="alert alert-danger">Error: ${param.err}</div>
+    <div class="alert alert-danger">Unable to complete the action. Please try again.</div>
+  </c:if>
   </c:if>
   
   <p><a href="${pageContext.request.contextPath}/admin/service?action=create" class="btn btn-primary">Add New Service</a></p>
