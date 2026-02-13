@@ -5,6 +5,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+/**
+ * SeedData - Database Seeder
+ * <p>
+ * Purpose:
+ * - Populates the database with initial/sample data.
+ * - Creates default Service Categories (Medical Escort, Cleaning, etc).
+ * - Creates default Services (Basic Medical Escort, Deep Cleaning, etc).
+ * <p>
+ * Usage:
+ * - Run this main class to initialize a fresh database with usable content.
+ */
 public class SeedData {
 
     public static void main(String[] args) {

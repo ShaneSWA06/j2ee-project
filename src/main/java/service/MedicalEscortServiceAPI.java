@@ -11,6 +11,14 @@ import java.sql.SQLException;
 import db.DBUtil;
 import model.Service;
 
+/**
+ * MedicalEscortServiceAPI - Service for Medical Escort Operations
+ * <p>
+ * Purpose:
+ * - Handles data access for medical escort services directly from the database (Legacy/Hybrid approach).
+ * - Unlike other services that use the REST API, this one queries the `medical_escort_service` table.
+ * - Used to fetch the catalog of available medical escort options.
+ */
 public class MedicalEscortServiceAPI {
     public List<Service> getMedicalEscorts() throws SQLException {
         List<Service> escorts = new ArrayList<>();

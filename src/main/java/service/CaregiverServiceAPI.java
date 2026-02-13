@@ -17,8 +17,12 @@ import com.google.gson.JsonParser;
 import model.Caregiver;
 
 /**
- * API Client for Spring Boot Caregiver REST API
- * Handles communication between J2EE frontend and Spring Boot backend
+ * CaregiverServiceAPI - API Client for Caregiver Operations
+ * <p>
+ * Purpose:
+ * - Bridges the J2EE frontend with the Spring Boot Microservice for caregiver data.
+ * - Handles retrieving caregiver profiles, availability, and search functionality.
+ * - Uses GSON for JSON serialization/deserialization.
  */
 public class CaregiverServiceAPI {
     

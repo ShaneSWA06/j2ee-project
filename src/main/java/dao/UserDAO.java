@@ -5,7 +5,11 @@ import java.sql.SQLException;
 import model.User;
 
 /**
- * UserDAO - Data Access Object interface for User operations
+ * UserDAO - Data Access Interface for Users
+ * <p>
+ * Purpose:
+ * - Defines the contract for accessing and modifying `app_user` data.
+ * - Handles authentication (login), registration, and profile management queries.
  */
 public interface UserDAO {
 

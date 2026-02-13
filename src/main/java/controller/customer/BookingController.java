@@ -19,7 +19,15 @@ import model.Booking;
 import model.Service;
 
 /**
- * BookingController - Handles customer booking operations via Spring Boot API
+ * BookingController - Handles customer booking operations
+ * <p>
+ * Purpose:
+ * - Manages the booking lifecycle for customers (Create, List).
+ * - Interfaces with BookingServiceAPI to persist booking data.
+ * <p>
+ * Scope:
+ * - Handles both viewing past bookings and initiating new ones.
+ * - Enforces customer login requirements.
  */
 @WebServlet("/customer/booking")
 public class BookingController extends HttpServlet {

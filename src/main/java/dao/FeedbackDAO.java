@@ -6,7 +6,11 @@ import java.util.List;
 import model.Feedback;
 
 /**
- * FeedbackDAO - Data Access Object interface for Feedback operations
+ * FeedbackDAO - Data Access Interface for Feedback
+ * <p>
+ * Purpose:
+ * - Defines the contract for accessing and modifying `feedback` data.
+ * - abstracts the underlying database operations.
  */
 public interface FeedbackDAO {
 

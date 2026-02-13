@@ -14,7 +14,12 @@ import db.DBUtil;
 import model.Feedback;
 
 /**
- * FeedbackDAOImpl - Implementation of FeedbackDAO using JDBC
+ * FeedbackDAOImpl - JDBC Implementation of FeedbackDAO
+ * <p>
+ * Purpose:
+ * - Implements the database operations for Feedback using raw JDBC.
+ * - Manages connections via DBUtil.
+ * - Handles result set mapping to Feedback objects.
  */
 public class FeedbackDAOImpl implements FeedbackDAO {
 

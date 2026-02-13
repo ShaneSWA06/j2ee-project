@@ -4,6 +4,14 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * PaymentSchemaInit - Database migration for Payment module
+ * <p>
+ * Purpose:
+ * - Creates the 'payment' table if it doesn't exist.
+ * - Adds 'payment_status' column to the 'booking' table.
+ * - Ensures the database is ready for the Payment processing features.
+ */
 public class PaymentSchemaInit {
     public static void main(String[] args) {
         try (Connection conn = DBUtil.getConnection();

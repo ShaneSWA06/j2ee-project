@@ -3,7 +3,12 @@ package model;
 import java.io.Serializable;
 
 /**
- * Category - DTO for Spring Boot API
+ * Category - Service Classification Entity
+ * <p>
+ * Purpose:
+ * - Represents a logical grouping of services (e.g., "Medical", "Cleaning", "Companionship").
+ * - Maps to the `categories` table.
+ * - Used to organize services in the UI for easier browsing.
  */
 public class Category implements Serializable {
     private static final long serialVersionUID = 1L;

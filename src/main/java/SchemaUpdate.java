@@ -3,6 +3,16 @@ import java.sql.Connection;
 import java.sql.Statement;
 import db.DBUtil;
 
+/**
+ * SchemaUpdate - Additional Database Migrations
+ * <p>
+ * Purpose:
+ * - Adds health-related columns (medical_history, allergies) to User table.
+ * - Adds image URL columns to Service and Caregiver tables.
+ * - Adds tax fields to Payment table.
+ * <p>
+ * Note: This appears to be a supplementary migration script used during development.
+ */
 public class SchemaUpdate {
     public static void main(String[] args) {
         try {

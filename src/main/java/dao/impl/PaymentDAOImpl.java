@@ -12,6 +12,13 @@ import dao.PaymentDAO;
 import db.DBUtil;
 import model.Payment;
 
+/**
+ * PaymentDAOImpl - JDBC Implementation of PaymentDAO
+ * <p>
+ * Purpose:
+ * - Implements the database operations for Payments using raw JDBC.
+ * - Handles insertion of new payments and retrieval by booking/transaction IDs.
+ */
 public class PaymentDAOImpl implements PaymentDAO {
 
     @Override

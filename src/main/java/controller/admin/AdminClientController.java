@@ -16,6 +16,14 @@ import model.User;
 
 /**
  * AdminClientController - Handles client/customer management for admins
+ * <p>
+ * Purpose:
+ * - Manages customer accounts (List, Edit, Delete).
+ * - Allows admins to update customer details or remove accounts.
+ * <p>
+ * Security:
+ * - Restricted to users with 'ADMIN' role.
+ * - Validates session before processing requests.
  */
 @WebServlet("/admin/client")
 public class AdminClientController extends HttpServlet {

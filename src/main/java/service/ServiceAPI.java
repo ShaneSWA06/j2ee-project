@@ -15,6 +15,14 @@ import com.google.gson.JsonParser;
 import model.Category;
 import model.Service;
 
+/**
+ * ServiceAPI - API Client for Service Catalog
+ * <p>
+ * Purpose:
+ * - Bridges the J2EE frontend with the Spring Boot Microservice for service catalog data.
+ * - Handles fetching all services, categories, and individual service details.
+ * - Implements client-side filtering/search logic since the API provides raw lists.
+ */
 public class ServiceAPI {
     
     private static final String SERVICE_API_URL = "https://assignmenttwo-fljm.onrender.com/user-ws/api/services";

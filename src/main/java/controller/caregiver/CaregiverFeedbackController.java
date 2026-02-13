@@ -18,6 +18,14 @@ import model.Feedback;
 
 /**
  * CaregiverFeedbackController - Handles caregiver viewing their feedback
+ * <p>
+ * Purpose:
+ * - Allows caregivers to view feedback left by customers.
+ * - Provides functionality to reply to feedback.
+ * <p>
+ * Security:
+ * - Ensures only logged-in caregivers can access this resource.
+ * - Filters feedback to show only those relevant to the current caregiver.
  */
 @WebServlet("/caregiver/feedback")
 public class CaregiverFeedbackController extends HttpServlet {

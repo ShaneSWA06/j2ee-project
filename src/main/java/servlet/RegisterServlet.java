@@ -16,7 +16,17 @@ import service.EmailService;
 
 /**
  * RegisterServlet handles customer registration
- * Validates input, checks for duplicates, and creates new customer accounts
+ * <p>
+ * Purpose:
+ * - Validates input parameters (required fields, duplicate checks).
+ * - Creates new customer accounts in the database via UserDAO.
+ * - Initiates the email verification process.
+ * <p>
+ * Key Features:
+ * - Asynchronous Processing: Spawns a background thread to send the verification email
+ *   to avoid blocking the UI response.
+ * - UUID Token Generation: Generates a unique token for email verification.
+ * - Error Handling: Redirects back to the form with specific error codes if validation fails.
  */
 @WebServlet("/RegisterServlet")
 public class RegisterServlet extends HttpServlet {

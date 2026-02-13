@@ -4,6 +4,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * AddCaregiverStatusColumn - Database migration script
+ * <p>
+ * Purpose:
+ * - Adds the 'caregiver_status' column to the 'booking' table.
+ * - This allows caregivers to Accept/Reject bookings independently of the main booking status.
+ */
 public class AddCaregiverStatusColumn {
     public static void main(String[] args) {
         try (Connection conn = DBUtil.getConnection();
