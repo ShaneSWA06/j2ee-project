@@ -207,7 +207,7 @@ INSERT INTO app_user (username, email, password, name, role, verified) VALUES
 -- SAMPLE DATA - Companies (Agencies)
 -- =====================================================
 INSERT INTO company (name, description, address, phone, email, website, rating) VALUES
-('Shalom Medcare', 'Professional and compassionate medical escort service providing accompaniment for hospital and clinic visits.', '101 Medical Lane, Singapore', '6555-1234', 'contact@shalommedcare.sg', 'http://www.shalommedcare.sg', 4.9),
+('Anglo Caregivers', 'Professional live-in care for elderly. Specialize in providing trained caregivers from Indonesia with nursing and eldercare experience.', '123 Care Street, Singapore', '6646-0000', 'contact@anglocaregivers.com', 'http://www.anglocaregivers.com', 4.9),
 ('Rapid Clinic Support', 'Focusing on efficient and safe transport for dialysis and outpatient treatments.', '202 Hospital Way, Singapore', '6555-5678', 'info@rapidsupport.sg', 'http://www.rapidsupport.sg', 4.7);
 
 -- =====================================================
@@ -215,7 +215,7 @@ INSERT INTO company (name, description, address, phone, email, website, rating) 
 -- =====================================================
 -- Password: admin123 (BCrypt hashed)
 INSERT INTO app_user (username, email, password, name, role, verified, company_id) VALUES
-('shalom.admin', 'admin@shalommedcare.sg', 'admin123', 'Agency Manager', 'COMPANY_ADMIN', TRUE, 1);
+('anglo.admin', 'admin@anglocaregivers.com', 'admin123', 'Anglo Administrator', 'COMPANY_ADMIN', TRUE, 1);
 
 -- =====================================================
 -- SAMPLE DATA - Service Categories
@@ -246,14 +246,13 @@ INSERT INTO medical_escort_service (service_name, description, base_price, durat
 ('Nurse Escort', 'Professional nurse accompaniment for dialysis/chemo', 120.00, 180, TRUE),
 ('Wheelchair Transport', 'Specialized transport with trained medical staff', 80.00, 60, TRUE);
 
--- =====================================================
--- SAMPLE DATA - Caregivers
--- =====================================================
 INSERT INTO caregiver (name, email, phone, qualifications, specialties, experience, bio, available, available_hours, rating, company_id) VALUES
-('Jane Smith', 'jane.smith@shalommedcare.sg', '555-0101', 'Registered Nurse, CPR Certified', 'Elderly Care, Dementia Care, Medical Escort', 8, 'Experienced caregiver specializing in elderly and dementia care with over 8 years of professional experience.', TRUE, 'Mon-Fri 8AM-6PM', 4.8, 1),
-('Michael Chen', 'michael.chen@shalommedcare.sg', '555-0102', 'Certified Nursing Assistant, First Aid', 'Personal Care, Mobility Assistance, Companionship', 5, 'Compassionate caregiver focused on personal care and mobility assistance.', TRUE, 'Mon-Sun 9AM-5PM', 4.9, 1),
-('Emily Rodriguez', 'emily.rodriguez@shalommedcare.sg', '555-0103', 'Licensed Practical Nurse', 'Post-Surgery Care, Medication Management, Wound Care', 10, 'Highly experienced in post-operative care and medical procedures.', TRUE, 'Mon-Fri 7AM-7PM', 5.0, 2),
-('David Williams', 'david.williams@shalommedcare.sg', '555-0104', 'Dementia Care Specialist', 'Dementia Care, Alzheimer''s Care, Memory Care', 6, 'Specialized in dementia and Alzheimer''s care with patience and understanding.', TRUE, 'Tue-Sat 10AM-6PM', 4.7, 2);
+('Rohana', 'rohana@anglocaregivers.com', '6646-0000', 'Ex-Sgp, Ex-Tw, Indonesia, Mandarin and Indonesian', 'Diabetes, Dementia, Tracheostomy, Kidney Problem, NG Tube Feeding, Blood Glucose Monitoring', 15, 'She has 15 years of eldercare experience in Singapore and Taiwan. Experienced in diabetes, dementia, and tracheostomy care. Specialized in NG Tube Feeding, suctioning, and catheter care.', TRUE, 'Mon-Sun 24/7', 4.9, 1),
+('Nur', 'nur@anglocaregivers.com', '6646-0000', 'Ex-Sgp, Indonesia, English and Indonesian', 'Dementia, Stroke, Kidney Problem, Diabetes, Edema, Injections, Blood Glucose Monitoring', 3, 'Nearly 3 years of eldercare experience in Singapore. Experienced with patients having dementia, stroke, and kidney problems. Skilled in giving injections and blood glucose monitoring.', TRUE, 'Mon-Sun 24/7', 4.8, 1),
+('Elysa', 'elysa@anglocaregivers.com', '6646-0000', 'New, Indonesia, Indonesian and Basic English, Trained, Certified', 'Elderly Care, Mobility Assistance, Wheelchair Support', 2, 'Trained and certified elderly care maid. Holds a certificate in caregiving. Previously cared for her own wheelchair-bound grandmother for a year.', TRUE, 'Mon-Sun 24/7', 4.7, 1),
+('Rina', 'rina@anglocaregivers.com', '6646-0000', 'Ex-Tw, Indonesia, Mandarin and Indonesian', 'Diabetes, Lung Cancer, Blood Glucose Monitoring', 5, '5 years of eldercare experience in Taiwan caring for elderly with diabetes and lung cancer. Skilled in Blood Glucose Monitoring.', TRUE, 'Mon-Sun 24/7', 4.8, 1),
+('Ismi', 'ismi@anglocaregivers.com', '6646-0000', 'Ex-Sgp, Ex-Tw, Indonesia, Mandarin and Indonesian', 'Diabetes, Injections, Blood Glucose Monitoring', 6, '6 years of eldercare experience in Taiwan. Good employment history in Singapore. Skilled in giving injections and monitoring blood glucose.', TRUE, 'Mon-Sun 24/7', 4.9, 1),
+('Ayu', 'ayu@anglocaregivers.com', '6646-0000', 'New, Indonesia, Indonesian and basic English, Trained, Certified', 'Elderly Care, Diabetes Support', 4, 'Trained, certified elderly care maid. Worked in Indonesia for 4 years caring for patient with diabetes.', TRUE, 'Mon-Sun 24/7', 4.7, 1);
 
 -- =====================================================
 -- SAMPLE DATA - Customer Users
@@ -268,20 +267,30 @@ INSERT INTO app_user (username, email, password, name, phone, address, role, ver
 -- =====================================================
 -- Password: admin123 (BCrypt hashed)
 INSERT INTO app_user (username, email, password, name, phone, role, verified) VALUES
-('jane.smith', 'jane.smith@shalommedcare.sg', 'admin123', 'Jane Smith', '555-0101', 'CAREGIVER', TRUE),
-('michael.chen', 'michael.chen@shalommedcare.sg', 'admin123', 'Michael Chen', '555-0102', 'CAREGIVER', TRUE),
-('emily.rodriguez', 'emily.rodriguez@shalommedcare.sg', 'admin123', 'Emily Rodriguez', '555-0103', 'CAREGIVER', TRUE),
-('david.williams', 'david.williams@shalommedcare.sg', 'admin123', 'David Williams', '555-0104', 'CAREGIVER', TRUE);
+('rohana', 'rohana@anglocaregivers.com', 'admin123', 'Rohana', '6646-0000', 'CAREGIVER', TRUE),
+('nur', 'nur@anglocaregivers.com', 'admin123', 'Nur', '6646-0000', 'CAREGIVER', TRUE),
+('elysa', 'elysa@anglocaregivers.com', 'admin123', 'Elysa', '6646-0000', 'CAREGIVER', TRUE),
+('rina', 'rina@anglocaregivers.com', 'admin123', 'Rina', '6646-0000', 'CAREGIVER', TRUE),
+('ismi', 'ismi@anglocaregivers.com', 'admin123', 'Ismi', '6646-0000', 'CAREGIVER', TRUE),
+('ayu', 'ayu@anglocaregivers.com', 'admin123', 'Ayu', '6646-0000', 'CAREGIVER', TRUE);
 
 -- Link caregivers to users
-UPDATE caregiver SET user_id = (SELECT user_id FROM app_user WHERE email = 'jane.smith@shalommedcare.sg') WHERE email = 'jane.smith@shalommedcare.sg';
-UPDATE caregiver SET user_id = (SELECT user_id FROM app_user WHERE email = 'michael.chen@shalommedcare.sg') WHERE email = 'michael.chen@shalommedcare.sg';
-UPDATE caregiver SET user_id = (SELECT user_id FROM app_user WHERE email = 'emily.rodriguez@shalommedcare.sg') WHERE email = 'emily.rodriguez@shalommedcare.sg';
-UPDATE caregiver SET user_id = (SELECT user_id FROM app_user WHERE email = 'david.williams@shalommedcare.sg') WHERE email = 'david.williams@shalommedcare.sg';
+UPDATE caregiver SET user_id = (SELECT user_id FROM app_user WHERE email = 'rohana@anglocaregivers.com') WHERE email = 'rohana@anglocaregivers.com';
+UPDATE caregiver SET user_id = (SELECT user_id FROM app_user WHERE email = 'nur@anglocaregivers.com') WHERE email = 'nur@anglocaregivers.com';
+UPDATE caregiver SET user_id = (SELECT user_id FROM app_user WHERE email = 'elysa@anglocaregivers.com') WHERE email = 'elysa@anglocaregivers.com';
+UPDATE caregiver SET user_id = (SELECT user_id FROM app_user WHERE email = 'rina@anglocaregivers.com') WHERE email = 'rina@anglocaregivers.com';
+UPDATE caregiver SET user_id = (SELECT user_id FROM app_user WHERE email = 'ismi@anglocaregivers.com') WHERE email = 'ismi@anglocaregivers.com';
+UPDATE caregiver SET user_id = (SELECT user_id FROM app_user WHERE email = 'ayu@anglocaregivers.com') WHERE email = 'ayu@anglocaregivers.com';
 
 -- =====================================================
 -- SAMPLE DATA - Bookings
 -- =====================================================
+INSERT INTO booking (user_id, service_id, caregiver_id, booking_date, booking_time, pickup_address, total_price, status, payment_status, notes) VALUES
+((SELECT user_id FROM app_user WHERE username = 'john.doe'), 1, (SELECT caregiver_id FROM caregiver WHERE name = 'Rohana'), CURRENT_DATE, '09:00:00', '123 Marina Bay Sands, Singapore', 120.00, 'In-Progress', 'Paid', 'Patient needs assistance with NG Tube feeding.'),
+((SELECT user_id FROM app_user WHERE username = 'mary.tan'), 2, (SELECT caregiver_id FROM caregiver WHERE name = 'Nur'), CURRENT_DATE + INTERVAL '1 day', '10:30:00', '456 Orchard Road, Singapore', 55.00, 'Confirmed', 'Paid', 'Regular doctor appointment escort.'),
+((SELECT user_id FROM app_user WHERE username = 'john.doe'), 3, (SELECT caregiver_id FROM caregiver WHERE name = 'Elysa'), CURRENT_DATE - INTERVAL '2 days', '14:00:00', '789 Geylang Rd, Singapore', 40.00, 'Completed', 'Paid', 'Mobility assistance for a walk in the park.'),
+((SELECT user_id FROM app_user WHERE username = 'mary.tan'), 1, (SELECT caregiver_id FROM caregiver WHERE name = 'Ismi'), CURRENT_DATE + INTERVAL '3 days', '08:00:00', '101 Woodlands St, Singapore', 120.00, 'Pending', 'Unpaid', 'Full day hospital escort for surgery.');
+
 -- Add sample clock-in timing for the in-progress job
 UPDATE booking SET clock_in_time = CURRENT_TIMESTAMP - INTERVAL '1 hour', clock_in_location = '1.3521,103.8198' WHERE status = 'In-Progress';
 
@@ -305,38 +314,26 @@ UPDATE booking SET clock_in_time = CURRENT_TIMESTAMP - INTERVAL '1 hour', clock_
 -- =====================================================
 /*
 ADMIN:
-  Username: admin
-  Password: admin123
+  Username: admin / Password: admin123
+  Username: anglo.admin / Password: admin123
 
 CUSTOMERS:
-  Username: john.doe
-  Password: admin123
+  Username: john.doe / Password: admin123
+  Username: mary.tan / Password: admin123
   
-  Username: mary.tan
-  Password: admin123
-
 CAREGIVERS:
-  Username: jane.smith
-  Password: admin123
-  
-  Username: michael.chen
-  Password: admin123
-  
-  Username: emily.rodriguez
-  Password: admin123
-  
-  Username: david.williams
-  Password: admin123
+  Username: rohana / Password: admin123
+  Username: nur / Password: admin123
+  Username: elysa / Password: admin123
+  Username: rina / Password: admin123
+  Username: ismi / Password: admin123
+  Username: ayu / Password: admin123
 */
 
 -- =====================================================
 -- SCRIPT COMPLETE
 -- =====================================================
--- Database: silvercare (or your database name)
+-- Database: silvercare
 -- Total Tables: 8
--- Sample Users: 7 (1 admin, 2 customers, 4 caregivers)
--- Sample Caregivers: 4
--- Sample Services: 10
--- Sample Categories: 4
--- Sample Bookings: 3
+-- Sample Bookings Added: 4
 -- =====================================================
