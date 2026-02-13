@@ -105,8 +105,29 @@ public class AdminFeedbackController extends HttpServlet {
     private void listFeedback(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
 
-        List<Feedback> feedbackList = feedbackDAO.getAllFeedback();
-        request.setAttribute("feedbackList", feedbackList);
+        List<Feedback> allFeedback = feedbackDAO.getAllFeedback();
+        
+        // Split lists by user role
+        List<Feedback> customerFeedback = new java.util.ArrayList<>();
+        List<Feedback> caregiverFeedback = new java.util.ArrayList<>();
+        
+        for (Feedback f : allFeedback) {
+            if ("CAREGIVER".equals(f.getUserRole())) {
+                caregiverFeedback.add(f);
+            } else {
+                // Includes CUSTOMER and potentially ADMIN (official evaluations)
+                customerFeedback.add(f);
+            }
+        }
+        
+        request.setAttribute("customerFeedback", customerFeedback);
+        request.setAttribute("caregiverFeedback", caregiverFeedback);
+        request.setAttribute("feedbackList", allFeedback); // Keep original for compatibility
+        
+        String type = request.getParameter("type");
+        if (type == null) type = "customer";
+        request.setAttribute("viewType", type);
+        
         request.getRequestDispatcher("/admin/adminFeedbackList.jsp").forward(request, response);
     }
 

@@ -22,7 +22,7 @@ public class FeedbackDAOImpl implements FeedbackDAO {
     public Feedback getFeedbackById(int feedbackId) throws SQLException {
         String sql = "SELECT f.feedback_id, f.user_id, f.rating, f.caregiver_id, f.comment, f.created_at, " +
                      "f.admin_reply, f.admin_reply_at, f.caregiver_reply, f.caregiver_reply_at, " +
-                     "u.name as user_name, c.name as caregiver_name " +
+                     "u.name as user_name, u.role as user_role, c.name as caregiver_name " +
                      "FROM feedback f " +
                      "LEFT JOIN app_user u ON f.user_id = u.user_id " +
                      "LEFT JOIN caregiver c ON f.caregiver_id = c.caregiver_id " +
@@ -45,7 +45,7 @@ public class FeedbackDAOImpl implements FeedbackDAO {
     public List<Feedback> getAllFeedback() throws SQLException {
         String sql = "SELECT f.feedback_id, f.user_id, f.rating, f.caregiver_id, f.comment, f.created_at, " +
                      "f.admin_reply, f.admin_reply_at, f.caregiver_reply, f.caregiver_reply_at, " +
-                     "u.name as user_name, c.name as caregiver_name " +
+                     "u.name as user_name, u.role as user_role, c.name as caregiver_name " +
                      "FROM feedback f " +
                      "LEFT JOIN app_user u ON f.user_id = u.user_id " +
                      "LEFT JOIN caregiver c ON f.caregiver_id = c.caregiver_id " +
@@ -67,7 +67,7 @@ public class FeedbackDAOImpl implements FeedbackDAO {
     public List<Feedback> getFeedbackByUser(int userId) throws SQLException {
         String sql = "SELECT f.feedback_id, f.user_id, f.rating, f.caregiver_id, f.comment, f.created_at, " +
                      "f.admin_reply, f.admin_reply_at, f.caregiver_reply, f.caregiver_reply_at, " +
-                     "u.name as user_name, c.name as caregiver_name " +
+                     "u.name as user_name, u.role as user_role, c.name as caregiver_name " +
                      "FROM feedback f " +
                      "LEFT JOIN app_user u ON f.user_id = u.user_id " +
                      "LEFT JOIN caregiver c ON f.caregiver_id = c.caregiver_id " +
@@ -92,7 +92,7 @@ public class FeedbackDAOImpl implements FeedbackDAO {
     public List<Feedback> getFeedbackByCaregiver(int caregiverId) throws SQLException {
         String sql = "SELECT f.feedback_id, f.user_id, f.rating, f.caregiver_id, f.comment, f.created_at, " +
                      "f.admin_reply, f.admin_reply_at, f.caregiver_reply, f.caregiver_reply_at, " +
-                     "u.name as user_name, c.name as caregiver_name " +
+                     "u.name as user_name, u.role as user_role, c.name as caregiver_name " +
                      "FROM feedback f " +
                      "LEFT JOIN app_user u ON f.user_id = u.user_id " +
                      "LEFT JOIN caregiver c ON f.caregiver_id = c.caregiver_id " +
@@ -233,6 +233,7 @@ public class FeedbackDAOImpl implements FeedbackDAO {
         }
         
         feedback.setUserName(rs.getString("user_name"));
+        feedback.setUserRole(rs.getString("user_role"));
         feedback.setCaregiverName(rs.getString("caregiver_name"));
 
         return feedback;

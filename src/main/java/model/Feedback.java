@@ -21,6 +21,7 @@ public class Feedback implements Serializable {
 
     // For joined queries - display names
     private String userName;
+    private String userRole; // "CUSTOMER" or "CAREGIVER"
     private String caregiverName;
 
     // Constructors
@@ -86,9 +87,17 @@ public class Feedback implements Serializable {
     public String getUserName() {
         return userName;
     }
+    
+    public String getUserRole() {
+        return userRole;
+    }
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+    
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
     }
 
     public String getCaregiverName() {

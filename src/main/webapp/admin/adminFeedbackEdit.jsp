@@ -5,7 +5,7 @@
 <jsp:include page="../includes/navbar.jsp"/>
 <div class="container">
 <div class="form-container">
-<h1>Review Details & Performance Evaluation</h1>
+<h1>${feedback.userRole == 'CAREGIVER' ? 'Caregiver Feedback Report' : 'Customer Review Details'}</h1>
 <c:if test="${not empty param.err}"><div class="alert alert-danger">Unable to save changes. Please try again.</div></c:if>
 <c:if test="${not empty feedback}">
 <form method="post" action="${pageContext.request.contextPath}/admin/feedback?action=edit" class="form">
@@ -13,7 +13,7 @@
 
 <div class="form-row">
     <div class="form-group">
-        <label>Submitted By</label>
+        <label>${feedback.userRole == 'CAREGIVER' ? 'Caregiver Name' : 'Customer Name'}</label>
         <div style="padding: 0.75rem 1rem; background: var(--surface); border: 1px solid var(--border-default); border-radius: var(--radius-lg); color: var(--foreground); font-weight: 600;">
             ${feedback.userName}
         </div>
@@ -35,7 +35,7 @@
 </div>
 
 <div class="form-group">
-    <label for="comment">Performance Observation / Review</label>
+    <label for="comment">${feedback.userRole == 'CAREGIVER' ? 'Feedback / Report Content' : 'Customer Review Comment'}</label>
     <textarea id="comment" name="comment" rows="4" readonly style="background: rgba(255,255,255,0.03); color: var(--foreground-muted); cursor: default; border-style: dashed; opacity: 0.8;">${feedback.comment}</textarea>
 </div>
 

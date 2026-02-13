@@ -20,6 +20,8 @@ public class ServiceAPI {
     private static final String SERVICE_API_URL = "https://assignmenttwo-fljm.onrender.com/user-ws/api/services";
     private static final String CATEGORY_API_URL = "https://assignmenttwo-fljm.onrender.com/user-ws/api/categories";
     
+    private com.google.gson.Gson gson = new com.google.gson.Gson();
+    
     public List<Service> getAllServices() {
         try {
             String json = sendRequest(SERVICE_API_URL, "GET", null);
@@ -37,6 +39,80 @@ public class ServiceAPI {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public Service createService(Service service) {
+        try {
+            String jsonBody = gson.toJson(service);
+            String json = sendRequest(SERVICE_API_URL, "POST", jsonBody);
+            return parseService(json);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Service updateService(int id, Service service) {
+        try {
+            String jsonBody = gson.toJson(service);
+            String json = sendRequest(SERVICE_API_URL + "/" + id, "PUT", jsonBody);
+            return parseService(json);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean deleteService(int id) {
+        try {
+            sendRequest(SERVICE_API_URL + "/" + id, "DELETE", null);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Category getCategoryById(int id) {
+        try {
+            String json = sendRequest(CATEGORY_API_URL + "/" + id, "GET", null);
+            return parseCategory(json);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Category createCategory(Category category) {
+        try {
+            String jsonBody = gson.toJson(category);
+            String json = sendRequest(CATEGORY_API_URL, "POST", jsonBody);
+            return parseCategory(json);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Category updateCategory(int id, Category category) {
+        try {
+            String jsonBody = gson.toJson(category);
+            String json = sendRequest(CATEGORY_API_URL + "/" + id, "PUT", jsonBody);
+            return parseCategory(json);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean deleteCategory(int id) {
+        try {
+            sendRequest(CATEGORY_API_URL + "/" + id, "DELETE", null);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
     
@@ -122,9 +198,13 @@ public class ServiceAPI {
         }
     }
 
+    private Category parseCategory(String json) {
+        return parseCategoryFromJson(com.google.gson.JsonParser.parseString(json).getAsJsonObject());
+    }
+
     private List<Category> parseCategoryList(String json) {
         List<Category> categories = new ArrayList<>();
-        JsonArray array = JsonParser.parseString(json).getAsJsonArray();
+        com.google.gson.JsonArray array = com.google.gson.JsonParser.parseString(json).getAsJsonArray();
         for (int i = 0; i < array.size(); i++) {
             categories.add(parseCategoryFromJson(array.get(i).getAsJsonObject()));
         }

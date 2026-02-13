@@ -61,11 +61,12 @@
     </div>
 
     <div class="card management-card">
-        <div class="card-icon"><i class="fas fa-star"></i></div>
-        <h3>Customer Reviews</h3>
-        <p>View and respond to customer feedback and ratings.</p>
+        <div class="card-icon"><i class="fas fa-comments"></i></div>
+        <h3>Feedback & Reviews</h3>
+        <p>Monitor service quality from both customers and caregivers.</p>
         <div class="card-actions">
-            <a class="btn btn-secondary btn-sm" href="${pageContext.request.contextPath}/admin/feedback">View Reviews</a>
+            <a class="btn btn-primary btn-sm" href="${pageContext.request.contextPath}/admin/feedback?type=customer">Customer Reviews</a>
+            <a class="btn btn-secondary btn-sm" href="${pageContext.request.contextPath}/admin/feedback?type=caregiver">Caregiver Feedback</a>
         </div>
     </div>
   </div>
