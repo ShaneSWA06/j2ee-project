@@ -94,17 +94,17 @@
                                                 <i class="fas fa-check-circle"></i> Replied
                                             </span>
                                         </c:when>
+                                        <c:when test="${not empty feedback.caregiverReply}">
+                                            <span style="color: #3b82f6; display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 0.85rem;">
+                                                <i class="fas fa-comment-dots"></i> Caregiver Replied
+                                            </span>
+                                        </c:when>
                                         <c:otherwise>
                                             <span style="color: #f59e0b; display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 0.85rem;">
                                                 <i class="fas fa-clock"></i> Pending
                                             </span>
                                         </c:otherwise>
                                     </c:choose>
-                                    <c:if test="${not empty feedback.caregiverReply}">
-                                        <div style="margin-top: 4px; color: #3b82f6; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;">
-                                            <i class="fas fa-reply"></i> Caregiver Replied
-                                        </div>
-                                    </c:if>
                                 </td>
                                 <td>
                                     <div style="display: flex; gap: 8px;">

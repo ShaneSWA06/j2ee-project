@@ -20,7 +20,7 @@
     ResultSet rs = null;
     try {
       conn = DBUtil.getConnection();
-      String sql = "SELECT f.feedback_id, f.rating, f.comment, f.created_at, " +
+      String sql = "SELECT f.feedback_id, f.rating, f.comment, f.admin_reply, f.created_at, " +
                    "c.name AS customer_name, cg.name AS caregiver_name " +
                    "FROM feedback f " +
                    "JOIN app_user c ON f.user_id = c.user_id " +
@@ -35,6 +35,7 @@
         hasResults = true;
         int rating = rs.getInt("rating");
         String comment = rs.getString("comment");
+        String adminReply = rs.getString("admin_reply");
         String customerName = rs.getString("customer_name");
         String caregiverName = rs.getString("caregiver_name");
         Timestamp createdAt = rs.getTimestamp("created_at");
@@ -50,7 +51,7 @@
         }
     %>
         <div class="card">
-          <div style="color: #f39c12; font-size: 20px; margin-bottom: 8px;">
+          <div style="color: #facc15; font-size: 20px; margin-bottom: 8px;">
             <%= stars.toString() %>
           </div>
           <p><strong>Customer:</strong> <%= customerName %></p>
@@ -58,9 +59,21 @@
             <p><strong>Caregiver:</strong> <%= caregiverName %></p>
           <% } %>
           <% if (comment != null && !comment.trim().isEmpty()) { %>
-            <p style="margin-top: 12px; font-style: italic;">"<%= comment %>"</p>
+            <p style="margin-top: 12px; font-style: italic; color: var(--foreground);">"<%= comment %>"</p>
           <% } %>
-          <p style="margin-top: 12px; color: #888; font-size: 14px;">
+          
+          <% if (adminReply != null && !adminReply.trim().isEmpty()) { %>
+            <div style="margin-top: 1.5rem; padding: 1.25rem; background: rgba(94, 106, 210, 0.05); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;">
+                <p style="color: var(--accent-bright); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">
+                    SilverCare Official Response
+                </p>
+                <p style="color: var(--foreground-muted); line-height: 1.5; font-size: 0.95rem;">
+                    <%= adminReply %>
+                </p>
+            </div>
+          <% } %>
+
+          <p style="margin-top: 15px; color: var(--foreground-muted); font-size: 13px; opacity: 0.6;">
             <%= new java.text.SimpleDateFormat("MMM dd, yyyy").format(createdAt) %>
           </p>
         </div>

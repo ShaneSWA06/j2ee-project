@@ -112,11 +112,11 @@ public class AdminFeedbackController extends HttpServlet {
         List<Feedback> caregiverFeedback = new java.util.ArrayList<>();
         
         for (Feedback f : allFeedback) {
-            if ("CAREGIVER".equals(f.getUserRole())) {
-                caregiverFeedback.add(f);
-            } else {
-                // Includes CUSTOMER and potentially ADMIN (official evaluations)
+            if ("CUSTOMER".equals(f.getUserRole())) {
                 customerFeedback.add(f);
+            } else {
+                // Includes CAREGIVER, ADMIN, and other roles
+                caregiverFeedback.add(f);
             }
         }
         

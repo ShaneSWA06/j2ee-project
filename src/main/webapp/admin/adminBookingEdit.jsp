@@ -60,6 +60,18 @@
   </select>
   </div>
   
+  <div class="form-row">
+      <div class="form-group">
+      <label for="pickup_address">Pickup Address</label>
+      <input type="text" id="pickup_address" name="pickup_address" value="${booking.pickupAddress}">
+      </div>
+      
+      <div class="form-group">
+      <label for="destination_address">Destination Address (Optional)</label>
+      <input type="text" id="destination_address" name="destination_address" value="${booking.destinationAddress}">
+      </div>
+  </div>
+  
   <div class="form-group">
   <label for="caregiver_status">Caregiver Status</label>
   <select id="caregiver_status" name="caregiver_status">

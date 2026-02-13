@@ -189,12 +189,21 @@ public class AdminBookingController extends HttpServlet {
         }
 
         int bookingId = Integer.parseInt(bookingIdStr);
-        Booking booking = new Booking();
-        booking.setBookingId(bookingId);
+        
+        // Fetch existing booking to preserve fields not in form (like pickup/destination address)
+        Booking booking = bookingAPI.getBookingById(bookingId);
+        if (booking == null) {
+            response.sendRedirect(request.getContextPath() + "/admin/booking?err=not_found");
+            return;
+        }
+
+        // Update fields from form
         booking.setServiceId(Integer.parseInt(serviceIdStr));
 
         if (caregiverIdStr != null && !caregiverIdStr.trim().isEmpty()) {
             booking.setCaregiverId(Integer.parseInt(caregiverIdStr));
+        } else {
+            booking.setCaregiverId(null);
         }
 
         booking.setBookingDate(Date.valueOf(bookingDateStr));
@@ -202,6 +211,10 @@ public class AdminBookingController extends HttpServlet {
         booking.setStatus(status != null ? status : "Pending");
         booking.setCaregiverStatus(caregiverStatus != null ? caregiverStatus : "Pending");
         booking.setNotes(notes);
+        
+        // Update locations
+        booking.setPickupAddress(request.getParameter("pickup_address"));
+        booking.setDestinationAddress(request.getParameter("destination_address"));
 
         boolean updated = bookingAPI.updateBooking(bookingId, booking);
 
