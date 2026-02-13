@@ -39,3 +39,4 @@ src/main/resources/stripe.properties
 src/main/webapp/WEB-INF/classes/mail.properties
 src/main/resources/mail.properties
 src/main/webapp/resources/stripe.properties
+src/main/resources/stripe.properties
