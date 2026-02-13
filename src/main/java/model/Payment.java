@@ -2,7 +2,19 @@ package model;
 
 import java.sql.Timestamp;
 
-public class Payment {
+/**
+ * Payment - Financial Transaction Record
+ * <p>
+ * Purpose:
+ * - Represents a processed payment for a booking.
+ * - Maps to the `payments` table.
+ * - Stores transaction details from payment gateways (e.g., Stripe).
+ * <p>
+ * usage:
+ * - Created after a successful checkout process.
+ * - Used for financial reporting and order history verification.
+ */
+public class Payment implements Serializable {
     private int paymentId;
     private int bookingId;
     private double amount;

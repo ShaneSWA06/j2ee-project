@@ -4,6 +4,17 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * UpdateSchema - Master Database Migration Tool
+ * <p>
+ * Purpose:
+ * - Applies a comprehensive set of schema updates.
+ * - Creates missing tables (service_category, service, booking, feedback).
+ * - Adds missing columns (is_verified, verification_token, payment_status, etc).
+ * <p>
+ * Usage:
+ * - Run this to bring a stale database schema up to date with the latest application code.
+ */
 public class UpdateSchema {
     public static void main(String[] args) {
         try (Connection conn = DBUtil.getConnection();

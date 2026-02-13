@@ -10,7 +10,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 /**
- * LogoutServlet - Handles user logout
+ * LogoutServlet - Handles User Session Invalidation
+ * <p>
+ * Purpose:
+ * - Invalidates the user's HTTP session to terminate the authenticated session.
+ * - Redirects the user to the homepage after logout.
+ * <p>
+ * Design Intent:
+ * - Supports both GET and POST requests to handle logout links and form submissions.
+ * - Uses session.invalidate() to clear all user-specific session attributes (cart, user profile, etc).
+ * - Redirects to the public index page to ensure the user knows they are logged out.
  */
 @WebServlet("/logout")
 public class LogoutServlet extends HttpServlet {

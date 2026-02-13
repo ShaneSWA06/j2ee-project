@@ -3,7 +3,16 @@ package model;
 import java.io.Serializable;
 
 /**
- * User represents a user in the app_user table
+ * User - Core Identity & Profile Entity
+ * <p>
+ * Purpose:
+ * - Represents a registered user in the system (Customer, Admin, Caregiver, etc.).
+ * - Maps to the `app_user` table.
+ * - Handles authentication (password, roles) and profile data.
+ * <p>
+ * Security Note:
+ * - Passwords should be hashed before storage.
+ * - Sensitive fields (resetToken, password) should be handled with care in logs/responses.
  */
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;

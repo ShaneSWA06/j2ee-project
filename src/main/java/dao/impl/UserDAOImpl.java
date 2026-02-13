@@ -12,7 +12,12 @@ import db.DBUtil;
 import model.User;
 
 /**
- * UserDAOImpl - Implementation of UserDAO using JDBC
+ * UserDAOImpl - JDBC Implementation of UserDAO
+ * <p>
+ * Purpose:
+ * - Implements the database operations for Users using raw JDBC.
+ * - Handles secure password hashing (BCrypt) during login and updates.
+ * - Manages user verification and profile updates.
  */
 public class UserDAOImpl implements UserDAO {
 

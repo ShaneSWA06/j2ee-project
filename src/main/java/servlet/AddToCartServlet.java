@@ -18,7 +18,13 @@ import model.CartItem;
 
 /**
  * AddToCartServlet handles adding service bookings to the shopping cart
- * Demonstrates ArrayList usage and session management
+ * <p>
+ * Implementation Details:
+ * - Session-Based Cart: The shopping cart is stored as an `ArrayList<CartItem>` in the HttpSession.
+ *   This allows the cart to persist across multiple requests without requiring database writes until checkout.
+ * - Data Retrieval: Fetches service details (price, description) from the database before adding to the cart
+ *   to ensure data integrity.
+ * - Input Validation: Checks for required fields (date, time, service ID) and valid formats.
  */
 @WebServlet("/AddToCartServlet")
 public class AddToCartServlet extends HttpServlet {

@@ -3,7 +3,12 @@ package model;
 import java.io.Serializable;
 
 /**
- * Caregiver - DTO for Spring Boot API
+ * Caregiver - Data Transfer Object (DTO) & Domain Model
+ * <p>
+ * Purpose:
+ * - Represents a professional caregiver in the system.
+ * - Maps to the `caregivers` table and contains profile information.
+ * - Used for displaying caregiver details in search results and bookings.
  */
 public class Caregiver implements Serializable {
     private static final long serialVersionUID = 1L;

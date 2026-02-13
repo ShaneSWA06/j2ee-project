@@ -18,6 +18,13 @@ import model.Feedback;
 
 /**
  * AdminFeedbackController - Handles feedback management for admins
+ * <p>
+ * Purpose:
+ * - Allows admins to view, create, edit, and delete feedback/reviews.
+ * - Manages the association between feedback and caregivers.
+ * <p>
+ * Security:
+ * - Protected resource requiring 'ADMIN' privileges.
  */
 @WebServlet("/admin/feedback")
 public class AdminFeedbackController extends HttpServlet {

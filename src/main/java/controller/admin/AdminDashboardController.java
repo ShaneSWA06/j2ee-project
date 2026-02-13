@@ -11,6 +11,13 @@ import jakarta.servlet.http.HttpSession;
 
 /**
  * AdminDashboardController - Handles admin dashboard view
+ * <p>
+ * Purpose:
+ * - Serves as the main entry point for the Admin backend.
+ * - Renders the dashboard view which aggregates links to other admin modules.
+ * <p>
+ * Security:
+ * - Verifies that the user is logged in and holds the 'ADMIN' role.
  */
 @WebServlet("/admin/dashboard")
 public class AdminDashboardController extends HttpServlet {

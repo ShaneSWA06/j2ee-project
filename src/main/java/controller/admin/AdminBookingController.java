@@ -22,6 +22,14 @@ import model.Service;
 
 /**
  * AdminBookingController - Handles booking management for admins
+ * <p>
+ * Purpose:
+ * - Provides CRUD operations for Bookings (List, Edit, Delete).
+ * - Acts as the controller for the Admin Booking Management module.
+ * <p>
+ * Security:
+ * - Enforces Role-Based Access Control (RBAC) by checking if the session user has 'ADMIN' role.
+ * - Redirects unauthorized users to the login page.
  */
 @WebServlet("/admin/booking")
 public class AdminBookingController extends HttpServlet {

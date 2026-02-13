@@ -3,7 +3,17 @@ package model;
 import java.io.Serializable;
 
 /**
- * Feedback represents customer feedback in the feedback table
+ * Feedback - User Review & Rating Entity
+ * <p>
+ * Purpose:
+ * - Captures customer satisfaction data for completed bookings.
+ * - Maps to the `feedback` table.
+ * - Supports a threaded conversation model (Admin and Caregiver replies).
+ * <p>
+ * Relationships:
+ * - Linked to `app_user` (Customer).
+ * - Linked to `caregivers` (Subject of review).
+ * - Includes transient fields (userName, caregiverName) for efficient display without extra queries.
  */
 public class Feedback implements Serializable {
     private static final long serialVersionUID = 1L;

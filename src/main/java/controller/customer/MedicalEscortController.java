@@ -18,6 +18,17 @@ import jakarta.servlet.http.HttpSession;
 import model.Service;
 import service.MedicalEscortServiceAPI;
 
+/**
+ * MedicalEscortController - Manages Medical Escort Service flows
+ * <p>
+ * Purpose:
+ * - Specialized controller for the "Medical Escort" service category.
+ * - Handles listing available escorts, booking flows, and payment processing.
+ * <p>
+ * Integration:
+ * - Integrates with StripeService for payments.
+ * - Uses MedicalEscortServiceAPI for fetching specialized service data.
+ */
 @WebServlet("/customer/medical-escort")
 public class MedicalEscortController extends HttpServlet {
     private static final long serialVersionUID = 1L;

@@ -3,7 +3,16 @@ package model;
 import java.io.Serializable;
 
 /**
- * Service - DTO for Spring Boot API
+ * Service - Product/Offering Entity
+ * <p>
+ * Purpose:
+ * - Represents a specific service offered by the platform (e.g., "Elderly Care", "House Cleaning").
+ * - Maps to the `services` table.
+ * - Contains pricing, duration, and categorization details.
+ * <p>
+ * Usage:
+ * - Central entity for the catalog and booking process.
+ * - Linked to `Category` for organization.
  */
 public class Service implements Serializable {
     private static final long serialVersionUID = 1L;

@@ -3,8 +3,17 @@ package model;
 import java.io.Serializable;
 
 /**
- * CartItem represents a service booking in the shopping cart
- * Stored in the user's session before checkout
+ * CartItem - Session-based Shopping Cart Entity
+ * <p>
+ * Purpose:
+ * - Represents a temporary holding object for a service booking before checkout.
+ * - Stored in the HttpSession (within a List or Map) rather than the database.
+ * - Allows users to accumulate multiple bookings before making a single payment.
+ * <p>
+ * Key Features:
+ * - Contains service details (snapshot at time of addition).
+ * - Holds user selections like booking date, time, and preferred caregiver.
+ * - Generates a unique UUID (`cartItemId`) to manage duplicates or updates in the session.
  */
 public class CartItem implements Serializable {
     private static final long serialVersionUID = 1L;

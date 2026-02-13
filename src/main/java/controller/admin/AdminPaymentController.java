@@ -13,6 +13,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Payment;
 
+/**
+ * AdminPaymentController - Handles payment history viewing for admins
+ * <p>
+ * Purpose:
+ * - Lists all payment transactions recorded in the system.
+ * - Provides financial overview for administrators.
+ * <p>
+ * Integration:
+ * - Uses PaymentDAO to fetch payment records.
+ */
 @WebServlet("/admin/payments")
 public class AdminPaymentController extends HttpServlet {
     private static final long serialVersionUID = 1L;

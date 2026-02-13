@@ -4,6 +4,16 @@ import java.sql.Connection;
 import java.sql.Statement;
 import db.DBUtil;
 
+/**
+ * SchemaUpdater - Utility to perform database schema updates
+ * <p>
+ * Purpose:
+ * - Executes SQL DDL statements to modify the database schema.
+ * - Used to apply migrations like adding columns or updating data types.
+ * <p>
+ * Usage:
+ * - Run as a standalone Java application (main method).
+ */
 public class SchemaUpdater {
     public static void main(String[] args) {
         try (Connection conn = DBUtil.getConnection();

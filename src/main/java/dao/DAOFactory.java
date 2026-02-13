@@ -5,8 +5,12 @@ import dao.impl.PaymentDAOImpl;
 import dao.impl.UserDAOImpl;
 
 /**
- * DAOFactory - Factory class for creating DAO instances
- * Centralizes DAO instantiation and makes it easier to swap implementations
+ * DAOFactory - Data Access Object Factory
+ * <p>
+ * Purpose:
+ * - Centralizes the creation of DAO instances.
+ * - Decouples the service layer from specific DAO implementations (Dependency Injection principle).
+ * - Makes it easier to swap implementations (e.g., from JDBC to JPA) without changing client code.
  */
 public class DAOFactory {
 

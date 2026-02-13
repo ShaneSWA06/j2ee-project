@@ -18,6 +18,14 @@ import model.Feedback;
 
 /**
  * FeedbackController - Handles customer feedback operations
+ * <p>
+ * Purpose:
+ * - Enables customers to submit feedback for services/caregivers.
+ * - Allows customers to view their submission history.
+ * <p>
+ * Workflow:
+ * - Customers submit feedback via a form.
+ * - Data is stored using FeedbackDAO.
  */
 @WebServlet("/customer/feedback")
 public class FeedbackController extends HttpServlet {
