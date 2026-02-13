@@ -13,14 +13,27 @@
             <p class="text-muted mb-4">We're sorry for the inconvenience. Our team has been notified and is working to fix this.</p>
         </div>
 
-        <% if (request.getAttribute("jakarta.servlet.error.message") != null || exception != null) { %>
-            <div class="error-details bg-black/20 p-4 rounded-lg text-left mb-5">
-                <p class="font-bold text-red-400 mb-2">Error Details:</p>
-                <code class="text-sm text-gray-300">
-                    <%= request.getAttribute("jakarta.servlet.error.message") != null ? request.getAttribute("jakarta.servlet.error.message") : exception.getMessage() %>
-                </code>
-            </div>
-        <% } %>
+        <% 
+            String errorMsg = (String) request.getAttribute("jakarta.servlet.error.message");
+            if (errorMsg == null && exception != null) errorMsg = exception.getMessage();
+            if (errorMsg == null) errorMsg = "An unexpected server error occurred.";
+        %>
+        <div class="error-details bg-black/20 p-4 rounded-lg text-left mb-5">
+            <p class="font-bold text-red-400 mb-2">Error Details:</p>
+            <code class="text-sm text-gray-300">
+                <%= errorMsg %>
+            </code>
+            <% if (exception != null) { %>
+                <pre class="text-xs text-gray-500 mt-2" style="max-height: 200px; overflow: auto;">
+                    <% 
+                        java.io.StringWriter sw = new java.io.StringWriter();
+                        java.io.PrintWriter pw = new java.io.PrintWriter(sw);
+                        exception.printStackTrace(pw);
+                        out.print(sw.toString());
+                    %>
+                </pre>
+            <% } %>
+        </div>
 
         <div class="flex justify-center flex-col sm:flex-row gap-4">
             <a href="javascript:history.back()" class="btn btn-secondary">Go Back</a>

@@ -1,7 +1,6 @@
 package controller.admin;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 import dao.DAOFactory;
@@ -11,6 +10,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.Payment;
 
 /**
@@ -37,13 +37,30 @@ public class AdminPaymentController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        if (!isAdminLoggedIn(request)) {
+            response.sendRedirect(request.getContextPath() + "/auth/login.jsp?err=unauthorised");
+            return;
+        }
+
         try {
             List<Payment> payments = paymentDAO.getAllPayments();
             request.setAttribute("payments", payments);
             request.getRequestDispatcher("/admin/adminPaymentList.jsp").forward(request, response);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/admin/dashboard?error=" + e.getMessage());
+        } catch (Throwable t) {
+            t.printStackTrace();
+            // Redirect with error message
+            String msg = t.getMessage() != null ? t.getMessage() : t.getClass().getName();
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard?err=" + java.net.URLEncoder.encode("Critical Error: " + msg, "UTF-8"));
         }
+    }
+
+    private boolean isAdminLoggedIn(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) return false;
+        
+        Integer userId = (Integer) session.getAttribute("sessUserId");
+        String role = (String) session.getAttribute("sessUserRole");
+        
+        return userId != null && "ADMIN".equals(role);
     }
 }
