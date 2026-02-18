@@ -6,9 +6,13 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.util.List;
 
+import dao.DAOFactory;
+import dao.PaymentDAO;
+import model.Payment;
 import service.BookingServiceAPI;
 import service.ServiceAPI;
 import service.CaregiverServiceAPI;
+import service.StripeService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -35,12 +39,16 @@ public class BookingController extends HttpServlet {
     private BookingServiceAPI bookingAPI;
     private ServiceAPI serviceAPI;
     private CaregiverServiceAPI caregiverAPI;
+    private PaymentDAO paymentDAO;
+    private StripeService stripeService;
 
     @Override
     public void init() throws ServletException {
         bookingAPI = new BookingServiceAPI();
         serviceAPI = new ServiceAPI();
         caregiverAPI = new CaregiverServiceAPI();
+        paymentDAO = DAOFactory.getPaymentDAO();
+        stripeService = new StripeService();
     }
 
     @Override
@@ -92,6 +100,9 @@ public class BookingController extends HttpServlet {
             switch (action) {
                 case "create":
                     createBooking(request, response);
+                    break;
+                case "cancel":
+                    cancelBooking(request, response);
                     break;
                 default:
                     response.sendRedirect(request.getContextPath() + "/customer/booking");
@@ -200,5 +211,67 @@ public class BookingController extends HttpServlet {
 		}
         Integer userId = (Integer) session.getAttribute("sessUserId");
         return userId != null;
+    }
+
+    private void cancelBooking(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
+        HttpSession session = request.getSession();
+        int userId = (Integer) session.getAttribute("sessUserId");
+
+        String bookingIdStr = request.getParameter("bookingId");
+        if (bookingIdStr == null || bookingIdStr.isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/customer/booking?err=missing_id");
+            return;
+        }
+
+        try {
+            int bookingId = Integer.parseInt(bookingIdStr);
+
+            // Verify the booking belongs to this user before cancelling
+            model.Booking booking = bookingAPI.getBookingById(bookingId);
+            if (booking == null || booking.getUserId() != userId) {
+                response.sendRedirect(request.getContextPath() + "/customer/booking?err=unauthorised");
+                return;
+            }
+
+            // Only allow cancellation of Pending or Confirmed bookings
+            String status = booking.getStatus();
+            if (!"Pending".equals(status) && !"Confirmed".equals(status)) {
+                response.sendRedirect(request.getContextPath() + "/customer/booking?err=cannot_cancel");
+                return;
+            }
+
+            // --- Stripe Refund ---
+            // Look up the payment record for this booking
+            Payment payment = paymentDAO.getPaymentByBookingId(bookingId);
+            if (payment != null && "Paid".equals(payment.getStatus())) {
+                try {
+                    // Issue full refund via Stripe
+                    com.stripe.model.Refund refund = stripeService.refundPayment(payment.getTransactionId());
+                    System.out.println("Stripe refund issued: " + refund.getId() + " for booking " + bookingId);
+
+                    // Update local payment record to 'Refunded'
+                    paymentDAO.updatePaymentStatus(payment.getTransactionId(), "Refunded");
+
+                    // Update booking payment status
+                    bookingAPI.updatePaymentStatus(bookingId, "Refunded");
+                } catch (Exception stripeEx) {
+                    System.err.println("Stripe refund failed for booking " + bookingId + ": " + stripeEx.getMessage());
+                    // Still cancel the booking even if refund fails — admin can handle manually
+                }
+            }
+
+            // Cancel the booking
+            boolean success = bookingAPI.updateBookingStatus(bookingId, "Cancelled");
+            if (success) {
+                response.sendRedirect(request.getContextPath() + "/customer/booking?success=cancelled");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/customer/booking?err=cancel_failed");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect(request.getContextPath() + "/customer/booking?err=cancel_error");
+        }
     }
 }

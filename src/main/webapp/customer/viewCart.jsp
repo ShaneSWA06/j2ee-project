@@ -45,7 +45,7 @@
       <h2>Your basket is empty</h2>
       <p>It looks like you haven't added any services yet. Start exploring our healthcare options.</p>
       <div class="empty-actions">
-        <a href="<%= request.getContextPath() %>/public/serviceDetails.jsp" class="btn btn-primary">Browse Services</a>
+        <a href="<%= request.getContextPath() %>/mvc/public/serviceDetails" class="btn btn-primary">Browse Services</a>
         <a href="<%= request.getContextPath() %>/customer/customerHome.jsp" class="btn btn-secondary">Back to Workspace</a>
       </div>
     </div>
@@ -156,7 +156,7 @@
                        onclick="if(this.classList.contains('disabled')) return false; this.classList.add('disabled'); this.innerText='Securing Session...';">
                       <i class="fas fa-lock"></i> Proceed to Checkout
                     </a>
-                    <a href="<%= request.getContextPath() %>/public/serviceDetails.jsp" class="btn btn-secondary">
+                    <a href="<%= request.getContextPath() %>/mvc/public/serviceDetails" class="btn btn-secondary">
                       <i class="fas fa-plus"></i> Add More Services
                     </a>
                 </div>

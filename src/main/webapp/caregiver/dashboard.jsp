@@ -55,10 +55,7 @@
 function handleClockAction(formId) {
     console.log("Clock action triggered for form:", formId);
     const form = document.getElementById(formId);
-    if (!form) {
-        console.error("Form not found:", formId);
-        return;
-    }
+    if (!form || form.dataset.submitted === 'true') return;
 
     const button = form.querySelector('button');
     if (button) {
@@ -66,33 +63,38 @@ function handleClockAction(formId) {
         button.innerHTML = `<svg class="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Please wait...`;
     }
 
-    // Attempt to get location, but don't let it block the app
+    function submitForm() {
+        if (form.dataset.submitted === 'true') return; // guard against double-submit
+        form.dataset.submitted = 'true';
+        form.submit();
+    }
+
     if (navigator.geolocation) {
+        // Safety timeout: submit without location if geolocation takes too long
+        const geoTimeout = setTimeout(() => {
+            console.warn("Geolocation timeout — submitting without location");
+            submitForm();
+        }, 5000);
+
         navigator.geolocation.getCurrentPosition(
             (position) => {
+                clearTimeout(geoTimeout);
                 const loc = position.coords.latitude + "," + position.coords.longitude;
                 const locInput = document.getElementById(formId + "_location");
                 if (locInput) locInput.value = loc;
                 console.log("Location captured:", loc);
-                form.submit();
+                submitForm();
             },
             (error) => {
+                clearTimeout(geoTimeout);
                 console.warn("Geolocation error:", error.message);
-                form.submit(); // Submit without location if denied/failed
+                submitForm(); // Submit without location if denied/failed
             },
-            { timeout: 5000, enableHighAccuracy: true }
+            { timeout: 4000, enableHighAccuracy: true }
         );
-        
-        // Safety timeout: If geolocation doesn't respond in 6 seconds, just submit
-        setTimeout(() => {
-            if (form && !form.submitted) {
-                console.log("Geolocation safety timeout reached, submitting...");
-                form.submit();
-            }
-        }, 6000);
     } else {
         console.warn("Geolocation not supported");
-        form.submit();
+        submitForm();
     }
 }
 </script>

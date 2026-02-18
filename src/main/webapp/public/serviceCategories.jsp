@@ -20,7 +20,7 @@
   </div>
 
   <div class="action-row">
-    <a href="<%= request.getContextPath() %>/public/serviceDetails.jsp" class="btn btn-secondary">View All Services</a>
+    <a href="<%= request.getContextPath() %>/mvc/public/serviceDetails" class="btn btn-secondary">View All Services</a>
   </div>
 
   <div class="feature-grid">
@@ -53,7 +53,7 @@
             <h3><%= c.getCategoryName() %></h3>
             <p><%= c.getDescription() %></p>
           </div>
-          <a class="btn btn-primary" href="${pageContext.request.contextPath}/public/serviceDetails.jsp?categoryId=<%= c.getCategoryId() %>">View Services</a>
+          <a class="btn btn-primary" href="${pageContext.request.contextPath}/mvc/public/serviceDetails?categoryId=<%= c.getCategoryId() %>">View Services</a>
         </div>
       <% } %>
     <% } %>

@@ -45,7 +45,7 @@
         <h3 style="color: #ffc107;">No Caregivers Available</h3>
         <p style="color: rgba(255, 255, 255, 0.7);">We are currently updating our caregiver roster. Please check back soon!</p>
         <p style="margin-top: 16px;">
-          <a href="<%= request.getContextPath() %>/public/serviceDetails.jsp" class="btn btn-primary">View Our Services</a>
+          <a href="<%= request.getContextPath() %>/mvc/public/serviceDetails" class="btn btn-primary">View Our Services</a>
         </p>
       </div>
     <% } else { %>
@@ -104,8 +104,8 @@
   </div>
 
   <div style="margin-top: 24px; text-align: center;">
-    <a href="<%= request.getContextPath() %>/public/serviceCategories.jsp" class="btn btn-secondary">View Service Categories</a>
-    <a href="<%= request.getContextPath() %>/public/serviceDetails.jsp" class="btn btn-secondary">View All Services</a>
+    <a href="<%= request.getContextPath() %>/mvc/public/serviceCategories" class="btn btn-secondary">View Service Categories</a>
+    <a href="<%= request.getContextPath() %>/mvc/public/serviceDetails" class="btn btn-secondary">View All Services</a>
   </div>
 </div>
 
@@ -254,7 +254,7 @@ function renderCaregivers(caregivers) {
 function clearSearch() {
   document.getElementById('searchInput').value = '';
   document.getElementById('searchStatus').innerHTML = '';
-  window.location.href = contextPath + '/public/caregivers.jsp';
+  window.location.href = contextPath + '/mvc/public/caregivers';
 }
 
 // Helper function to escape HTML to prevent XSS

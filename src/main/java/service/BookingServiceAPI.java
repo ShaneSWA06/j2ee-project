@@ -210,9 +210,9 @@ public class BookingServiceAPI {
 
     public boolean clockIn(int bookingId, String location) {
         try {
+            if (location == null || location.trim().isEmpty()) location = "Unknown";
             String url = API_BASE_URL + "/" + bookingId + "/clock-in?location=" + java.net.URLEncoder.encode(location, "UTF-8");
             System.out.println("DEBUG - Calling Clock-In API: " + url);
-            // Sending "{}" instead of null to be more compatible with strict POST handlers
             String response = sendRequest(url, "POST", "{}");
             System.out.println("DEBUG - Clock-In API Response: " + response);
             return true;
@@ -225,6 +225,7 @@ public class BookingServiceAPI {
 
     public boolean clockOut(int bookingId, String location) {
         try {
+            if (location == null || location.trim().isEmpty()) location = "Unknown";
             String url = API_BASE_URL + "/" + bookingId + "/clock-out?location=" + java.net.URLEncoder.encode(location, "UTF-8");
             System.out.println("DEBUG - Calling Clock-Out API: " + url);
             String response = sendRequest(url, "POST", "{}");

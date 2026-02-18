@@ -64,10 +64,12 @@ public class CaregiverActionController extends HttpServlet {
             errorMsg = "accept_failed";
         } else if (path.endsWith("/clockin")) {
             String location = request.getParameter("location");
+            if (location == null || location.trim().isEmpty()) location = "Unknown";
             success = bookingAPI.clockIn(bookingId, location);
             successMsg = "clocked_in";
         } else if (path.endsWith("/clockout")) {
             String location = request.getParameter("location");
+            if (location == null || location.trim().isEmpty()) location = "Unknown";
             success = bookingAPI.clockOut(bookingId, location);
             successMsg = "clocked_out";
         }

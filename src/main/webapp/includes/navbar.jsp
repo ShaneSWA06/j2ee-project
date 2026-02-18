@@ -14,7 +14,7 @@
           // Only show Service Categories for customers (MEMBER) or non-logged-in users
           if (!"ADMIN".equals(userRole) && !"CAREGIVER".equals(userRole)) { 
         %>
-          <li><a class="nav-link" href="${pageContext.request.contextPath}/public/serviceCategories.jsp">Service Categories</a></li>
+          <li><a class="nav-link" href="${pageContext.request.contextPath}/mvc/public/serviceCategories">Service Categories</a></li>
           <li><a class="nav-link" href="${pageContext.request.contextPath}/customer/viewFeedback.jsp">Feedback</a></li>
         <% } %>
       </ul>

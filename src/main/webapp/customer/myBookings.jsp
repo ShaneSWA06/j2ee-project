@@ -25,7 +25,7 @@
   </c:if>
 
   <div class="booking-controls animate-in" style="animation-delay: 100ms;">
-    <a href="${pageContext.request.contextPath}/public/serviceDetails.jsp" class="btn btn-primary">
+    <a href="${pageContext.request.contextPath}/mvc/public/serviceDetails" class="btn btn-primary">
         <i class="fas fa-plus"></i> New Appointment
     </a>
   </div>
@@ -80,7 +80,10 @@
                                 <div class="cg-details">
                                     <div class="cg-name">${booking.caregiverName}</div>
                                     <div class="cg-status">
-                                        <i class="fas fa-circle ${booking.caregiverStatus == 'Accepted' ? 'online' : 'away'}"></i>
+                                        <i class="fas fa-circle 
+                                            ${booking.caregiverStatus == 'Accepted' ? 'online' :
+                                              booking.caregiverStatus == 'In-Progress' ? 'inprogress' :
+                                              booking.caregiverStatus == 'Completed' ? 'done' : 'away'}"></i>
                                         Assignment Status: <strong>${booking.caregiverStatus}</strong>
                                     </div>
                                 </div>
@@ -99,8 +102,15 @@
                         <a href="${pageContext.request.contextPath}/customer/viewFeedback.jsp?serviceId=${booking.serviceId}" class="link-action">
                             <i class="fas fa-star text-amber-400"></i> View Service Feedback
                         </a>
-                        <c:if test="${booking.status == 'Pending'}">
-                            <button class="btn btn-ghost btn-sm" style="color: #ff4d4d;">Cancel Request</button>
+                        <c:if test="${booking.status == 'Pending' || booking.status == 'Confirmed'}">
+                            <form method="post"
+                                  action="${pageContext.request.contextPath}/customer/booking?action=cancel"
+                                  onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                                <input type="hidden" name="bookingId" value="${booking.bookingId}">
+                                <button type="submit" class="btn btn-ghost btn-sm" style="color: #ff4d4d;">
+                                    <i class="fas fa-times-circle"></i> Cancel Request
+                                </button>
+                            </form>
                         </c:if>
                     </div>
                 </div>
@@ -111,7 +121,7 @@
                 <i class="fas fa-calendar-times empty-icon"></i>
                 <h2>No bookings found</h2>
                 <p>You haven't scheduled any services yet. Our professionals are ready to assist you.</p>
-                <a href="${pageContext.request.contextPath}/public/serviceDetails.jsp" class="btn btn-primary">Schedule First Service</a>
+                <a href="${pageContext.request.contextPath}/mvc/public/serviceDetails" class="btn btn-primary">Schedule First Service</a>
             </div>
         </c:otherwise>
     </c:choose>
@@ -284,6 +294,8 @@
 
   .online { color: #4ade80; }
   .away { color: #fbbf24; }
+  .inprogress { color: #60a5fa; }
+  .done { color: #a78bfa; }
 
   .booking-notes {
       padding: 1rem;

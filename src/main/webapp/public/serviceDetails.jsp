@@ -42,9 +42,9 @@
 
   <div class="action-row">
     <% if (cid != null) { %>
-      <a href="<%= request.getContextPath() %>/public/serviceDetails.jsp" class="btn btn-secondary">← View All Services</a>
+      <a href="<%= request.getContextPath() %>/mvc/public/serviceDetails" class="btn btn-secondary">← View All Services</a>
     <% } %>
-    <a href="<%= request.getContextPath() %>/public/serviceCategories.jsp" class="btn btn-secondary">View by Category</a>
+    <a href="<%= request.getContextPath() %>/mvc/public/serviceCategories" class="btn btn-secondary">View by Category</a>
   </div>
 
   <div id="servicesGrid" class="grid service-grid">
@@ -59,8 +59,8 @@
         <% if (categoryName != null) { %>
           <p class="alert-text">There are currently no services available in the "<%= categoryName %>" category.</p>
           <div class="alert-actions">
-            <a href="<%= request.getContextPath() %>/public/serviceDetails.jsp" class="btn btn-primary">View All Services</a>
-            <a href="<%= request.getContextPath() %>/public/serviceCategories.jsp" class="btn btn-secondary">Browse Other Categories</a>
+            <a href="<%= request.getContextPath() %>/mvc/public/serviceDetails" class="btn btn-primary">View All Services</a>
+            <a href="<%= request.getContextPath() %>/mvc/public/serviceCategories" class="btn btn-secondary">Browse Other Categories</a>
           </div>
         <% } else { %>
           <p class="alert-text">There are currently no services available. Please check back later.</p>
@@ -199,9 +199,9 @@ function clearSearch() {
 
   // Reload the page to show original results
   if (currentCategoryId) {
-    window.location.href = contextPath + '/public/serviceDetails.jsp?categoryId=' + currentCategoryId;
+    window.location.href = contextPath + '/mvc/public/serviceDetails?categoryId=' + currentCategoryId;
   } else {
-    window.location.href = contextPath + '/public/serviceDetails.jsp';
+    window.location.href = contextPath + '/mvc/public/serviceDetails';
   }
 }
 

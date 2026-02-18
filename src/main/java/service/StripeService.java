@@ -2,7 +2,9 @@ package service;
 
 import com.stripe.Stripe;
 import com.stripe.model.PaymentIntent;
+import com.stripe.model.Refund;
 import com.stripe.param.PaymentIntentCreateParams;
+import com.stripe.param.RefundCreateParams;
 
 /**
  * Service class for handling Stripe Payment Processing.
@@ -85,5 +87,21 @@ public class StripeService {
 
     public PaymentIntent retrievePaymentIntent(String id) throws Exception {
         return PaymentIntent.retrieve(id);
+    }
+
+    /**
+     * Issues a full refund for a given PaymentIntent ID.
+     * Retrieves the latest charge from the intent and refunds it entirely.
+     *
+     * @param paymentIntentId The Stripe PaymentIntent ID (pi_xxx)
+     * @return The created Refund object (contains refund ID for logging)
+     */
+    public Refund refundPayment(String paymentIntentId) throws Exception {
+        RefundCreateParams params = RefundCreateParams.builder()
+            .setPaymentIntent(paymentIntentId)
+            // No .setAmount() = full refund
+            .putMetadata("reason", "customer_cancellation")
+            .build();
+        return Refund.create(params);
     }
 }

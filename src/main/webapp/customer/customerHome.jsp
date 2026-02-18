@@ -43,8 +43,8 @@
         <h3>New Booking</h3>
         <p>Explore our healthcare categories and find the right service for your needs.</p>
         <div class="card-links">
-            <a href="${pageContext.request.contextPath}/public/serviceCategories.jsp" class="btn btn-primary btn-sm">Browse Categories</a>
-            <a href="${pageContext.request.contextPath}/public/serviceDetails.jsp" class="link-secondary">All Services</a>
+            <a href="${pageContext.request.contextPath}/mvc/public/serviceCategories" class="btn btn-primary btn-sm">Browse Categories</a>
+            <a href="${pageContext.request.contextPath}/mvc/public/serviceDetails" class="link-secondary">All Services</a>
         </div>
     </div>
 
@@ -62,7 +62,7 @@
         <h3>Our Professionals</h3>
         <p>Meet our certified caregivers and medical escorts ready to assist you.</p>
         <div class="card-links">
-            <a href="${pageContext.request.contextPath}/public/caregivers.jsp" class="btn btn-secondary btn-sm">Meet Caregivers</a>
+            <a href="${pageContext.request.contextPath}/mvc/public/caregivers" class="btn btn-secondary btn-sm">Meet Caregivers</a>
         </div>
     </div>
 
